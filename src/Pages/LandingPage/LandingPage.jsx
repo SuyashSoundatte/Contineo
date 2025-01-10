@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import MainPage from "../MainPage/MainPage";
 import Login from "../Login/Login";
-import Register from "../Register/Register";
 
 const LandingPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
     <>
-      <div className='w-full bg-zinc-400 h-screen'>{isLoggedIn ? <Login /> : <Register />}</div>
+      <div className='w-full bg-zinc-100 h-screen flex items-center justify-center'>
+        {isLoggedIn ? <MainPage /> : <Login />}
+      </div>
     </>
   );
 };
