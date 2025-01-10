@@ -20,17 +20,17 @@ const Dashboard = () => {
                   Teacher Master Form
                 </li>
               </Link>
-              <Link to=''>
+              <Link to='/MainPage/ClassTeacherForm'>
                 <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
                   Class Teacher Allotment
                 </li>
               </Link>
-              <Link to=''>
+              <Link to='/MainPage/TeacherAllotment'>
                 <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
                   Teacher Allotment
                 </li>
               </Link>
-              <Link to=''>
+              <Link to='/MainPage/MentorAllotment'>
                 <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
                   Mentor Allotment
                 </li>
