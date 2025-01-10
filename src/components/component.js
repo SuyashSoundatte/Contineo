@@ -1,3 +1,5 @@
 import Dashboard from "./Dashboard";
-
-export{Dashboard};
+import Input from "./Input";
+import Button from "./Button";
+import Table from "./Table";
+export { Dashboard, Input, Button, Table };
