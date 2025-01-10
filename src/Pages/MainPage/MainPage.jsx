@@ -5,10 +5,9 @@ import TeacherForm from './TeacherForm'
 const MainPage = () => {
   return (
     <>
-    <div>
+    <div>MainPage</div>
     <Dashboard />
     <TeacherForm />
-    </div>
     </>
   )
 }
