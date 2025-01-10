@@ -15,7 +15,7 @@ const Dashboard = () => {
               <span className='text-lg font-medium'>Teacher</span>
             </div>
             <ul className='ml-4 text-sm mt-1 space-y-1'>
-              <Link to=''>
+              <Link to='/MainPage/TeacherForm'>
                 <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
                   Teacher Master Form
                 </li>

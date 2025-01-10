@@ -1,12 +1,18 @@
 import React from 'react'
 import Dashboard from '../../components/Dashboard'
-import TeacherForm from './TeacherForm'
+import { Outlet } from 'react-router-dom'
 
 const MainPage = () => {
   return (
     <>
-    <Dashboard />
-    <TeacherForm />
+    <div>
+      <div className="left">
+        <Dashboard />
+      </div>
+      <div className="right">
+        <Outlet />
+      </div>
+    </div>
     </>
   )
 }
