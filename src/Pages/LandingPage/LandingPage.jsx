@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import MainPage from "../MainPage/MainPage";
-import Login from "../Login/Login";
-
+import { Login, MainPage } from "../page.js";
 const LandingPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   return (
