@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Dashboard = () => {
   return (
        
-        <aside className='w-60 h-screen bg-gray-800 text-white shadow-md fixed left-0 top-0 bottom-0 py-8 px-1'>
+      <aside className='w-60 h-screen bg-gray-800 text-white shadow-md fixed left-0 top-0 bottom-0 py-8 px-1'>
       <div className='py-4 px-6'>
         <h1 className='text-2xl font-semibold text-blue-400'>Dashboard</h1>
       </div>
