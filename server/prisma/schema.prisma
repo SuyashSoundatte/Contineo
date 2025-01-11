@@ -9,7 +9,116 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"  // Change to your preferred database provider
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  Teacher
+  OfficeStaff
+}
+
+enum StandardName {
+  Eleven
+  Twelve
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  fullname  String
+  email     String  @unique
+  password  String
+  address   String
+  phone     String
+  role      Role
+  isActive  Boolean @default(true)
+
+  Teacher        Teacher?
+  OfficeStaff    OfficeStaff?
+  DocumentHistory DocumentHistory[]
+}
+
+model Teacher {
+  id       Int     @id @default(autoincrement())
+  userId   Int     @unique
+  User     User    @relation(fields: [userId], references: [id])
+
+  TeacherSubjects   TeacherSubject[]
+  TeacherStandards  TeacherStandard[]
+  Documents         Document[]
+}
+
+model OfficeStaff {
+  id       Int     @id @default(autoincrement())
+  userId   Int     @unique
+  User     User    @relation(fields: [userId], references: [id])
+
+  Documents Document[]
+}
+
+model Subject {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+
+  TeacherSubjects TeacherSubject[]
+}
+
+model Standard {
+  id       Int          @id @default(autoincrement())
+  name     StandardName
+
+  TeacherStandards TeacherStandard[]
+}
+
+model TeacherSubject {
+  id         Int     @id @default(autoincrement())
+  teacherId  Int
+  subjectId  Int
+
+  Teacher    Teacher  @relation(fields: [teacherId], references: [id])
+  Subject    Subject  @relation(fields: [subjectId], references: [id])
+}
+
+model TeacherStandard {
+  id         Int     @id @default(autoincrement())
+  teacherId  Int
+  standardId Int
+
+  Teacher    Teacher  @relation(fields: [teacherId], references: [id])
+  Standard   Standard @relation(fields: [standardId], references: [id])
+}
+
+model Category {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+
+  Documents Document[]
+}
+
+model Document {
+  id          Int      @id @default(autoincrement())
+  uploadedBy  Int
+  name        String
+  description String?  // Optional
+  fileUrl     String
+  teacherId   Int
+  categoryId  Int
+
+  OfficeStaff OfficeStaff @relation(fields: [uploadedBy], references: [id])
+  Teacher     Teacher     @relation(fields: [teacherId], references: [id])
+  Category    Category    @relation(fields: [categoryId], references: [id])
+
+  DocumentHistories DocumentHistory[]
+}
+
+model DocumentHistory {
+  id         Int      @id @default(autoincrement())
+  documentId Int
+  changedBy  Int
+  action     String
+  timestamp  DateTime @default(now())
+
+  Document Document @relation(fields: [documentId], references: [id])
+  User     User     @relation(fields: [changedBy], references: [id])
 }
 
