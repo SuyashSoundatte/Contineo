@@ -22,7 +22,7 @@ const TeacherForm = () => {
 
       {/* Form Section (80% width) */}
       <div className='w-4/5 p-8'>
-        <h1 className='text-2xl font-bold mb-6'>Student Admission Form</h1>
+        <h1 className='text-2xl font-bold mb-6'>Teacher Information Form</h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className='grid grid-cols-3 gap-6'
@@ -80,16 +80,15 @@ const TeacherForm = () => {
           </div>
 
           <div>
-            <label className='block mb-2'>City or Village</label>
+            <label className='block mb-2'>Qualification</label>
             <Input
               type='text'
-              name='city'
-              {...register("city", { required: "City or Village is required" })}
+              {...register("qualification", { required: "qualification is required" })}
               className='w-full p-2 border border-gray-300 rounded'
-              placeholder='Enter city or village'
+              placeholder='Enter qualification'
             />
-            {errors.city && (
-              <p className='text-red-500 text-sm'>{errors.city.message}</p>
+            {errors.qualification && (
+              <p className='text-red-500 text-sm'>{errors.qualification.message}</p>
             )}
           </div>
           <div>
@@ -101,7 +100,6 @@ const TeacherForm = () => {
               <option value=''>Select</option>
               <option value='male'>Male</option>
               <option value='female'>Female</option>
-              <option value='other'>Other</option>
             </select>
             {errors.gender && (
               <p className='text-red-500 text-sm'>{errors.gender.message}</p>
@@ -120,43 +118,43 @@ const TeacherForm = () => {
           </div>
 
           <div>
-            <label className='block mb-2'>Disability</label>
+            <label className='block mb-2'>Specialization</label>
             <Input
               type='text'
-              {...register("disability")}
+              {...register("specialization")}
               className='w-full p-2 border border-gray-300 rounded'
-              placeholder='Yes, then specify'
+              placeholder='Enter specialization'
             />
           </div>
           <div>
-            <label className='block mb-2'>Caste Category</label>
+            <label className='block mb-2'>Years of Experience</label>
             <Input
               type='text'
-              {...register("casteCategory", {
-                required: "Caste Category is required",
+              {...register("experience", {
+                required: "Experience is required",
               })}
               className='w-full p-2 border border-gray-300 rounded'
-              placeholder='Enter caste category'
+              placeholder='Enter Experience'
             />
-            {errors.casteCategory && (
+            {errors.experience && (
               <p className='text-red-500 text-sm'>
-                {errors.casteCategory.message}
+                {errors.experience.message}
               </p>
             )}
           </div>
           <div>
-            <label className='block mb-2'>Last Year Marks (%)</label>
+            <label className='block mb-2'>Profile Photo</label>
             <Input
               type='text'
-              {...register("lastYearMarks", {
-                required: "Last Year Marks are required",
+              {...register("profilePhoto", {
+                required: "profile photo is required",
               })}
               className='w-full p-2 border border-gray-300 rounded'
-              placeholder='Enter marks'
+              placeholder='Enter profile photo'
             />
-            {errors.lastYearMarks && (
+            {errors.profilePhoto && (
               <p className='text-red-500 text-sm'>
-                {errors.lastYearMarks.message}
+                {errors.profilePhoto.message}
               </p>
             )}
           </div>
