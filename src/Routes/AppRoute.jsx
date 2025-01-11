@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom' 
 import { LandingPage, Login, MainPage } from '../Pages/page.js'
-import { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment } from '../Forms/Forms.js'
+import { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment, OfficeLanding } from '../Forms/Forms.js'
 const AppRoute = () => {
   return (
     <BrowserRouter>
@@ -18,6 +18,7 @@ const AppRoute = () => {
           <Route path="ClassTeacherForm" element={<ClassTeacherForm />} />
           <Route path="TeacherAllotment" element={<TeacherAllotment />} />
           <Route path="MentorAllotment" element={<MentorAllotment />} />  
+          <Route path="OfficeLanding" element={<OfficeLanding />} />  
         </Route>
       </Routes>
     </BrowserRouter>
