@@ -9,6 +9,12 @@ const TeacherForm = () => {
     formState: { errors },
   } = useForm();
 
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    console.log("Selected file:", selectedFile);
+  };
+
   const onSubmit = (data) => {
     console.log("Form Data:", data);
   };
@@ -78,7 +84,7 @@ const TeacherForm = () => {
               <p className='text-red-500 text-sm'>{errors.address.message}</p>
             )}
           </div>
-
+            
           <div>
             <label className='block mb-2'>Qualification</label>
             <Input
@@ -159,34 +165,20 @@ const TeacherForm = () => {
             )}
           </div>
 
-          <div className='col-span-3'>
-            <label className='block mb-2'>Documents</label>
-            <div className='flex space-x-4'>
-              <button
-                type='button'
-                className='bg-blue-500 text-white px-4 py-2 rounded'
-              >
-                LC
-              </button>
-              <button
-                type='button'
-                className='bg-blue-500 text-white px-4 py-2 rounded'
-              >
-                Caste Certificate
-              </button>
-              <button
-                type='button'
-                className='bg-blue-500 text-white px-4 py-2 rounded'
-              >
-                Other Documents
-              </button>
-            </div>
+          <div className="col-span-3">
+            <label className="block mb-2">Upload Documents</label>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-900 border border-gray-300 rounded cursor-pointer bg-gray-50"
+            />
           </div>
 
-          <div className='col-span-3 text-right'>
+          <div className="col-span-3 text-right">
             <button
-              type='submit'
-              className='bg-blue-500 text-white px-6 py-2 rounded'
+              type="submit"
+              className="bg-blue-500 text-white px-6 py-2 rounded"
             >
               Submit
             </button>
