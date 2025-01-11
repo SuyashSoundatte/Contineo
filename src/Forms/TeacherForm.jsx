@@ -21,10 +21,6 @@ const TeacherForm = () => {
 
   return (
     <div className='flex'>
-      {/* Sidebar (20% width) */}
-      <div className='w-2/12 bg-#[fffff] p-6'>
-        {/* Side dashboard content can go here */}
-      </div>
 
       {/* Form Section (80% width) */}
       <div className='w-4/5 p-8'>

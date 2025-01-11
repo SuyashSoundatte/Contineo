@@ -2,5 +2,6 @@ import TeacherForm from './TeacherForm'
 import ClassTeacherForm from './ClassTeacherForm'
 import TeacherAllotment from './TeacherAllotment'
 import MentorAllotment from './MentorAllotment'
+import UserCreate from './UserCreate'
 
-export { TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment }
+export { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment }
