@@ -9,36 +9,50 @@ function ReactTable () {
             sortable: true
         },
         {
-            fname: "Fname",
+            name: "Fname",  
             selector: row => row.fname,
             sortable: true
         },
         {
-            mname: "Mname",
+            name: "Mname",  
             selector: row => row.mname,
             sortable: true
         },
         {
-            lname: "Lname",
+            name: "Lname",  
             selector: row => row.lname,
             sortable: true
         },
         {
-            role: "Role",
+            name: "Role",  
             selector: row => row.role,
             sortable: true
         }
     ];
-    
+
     const data = [  
         {
-            id: id,
-            fname: fname,
-            mname: mname,
-            lname: lname,
-            role: role
+            id: 1,
+            fname: "John",
+            mname: "Doe",
+            lname: "Smith",
+            role: "Admin"
+        },
+        {
+            id: 2,
+            fname: "Jane",
+            mname: "Alice",
+            lname: "Doe",
+            role: "User"
+        },
+        {
+            id: 3,
+            fname: "Michael",
+            mname: "David",
+            lname: "Brown",
+            role: "Moderator"
         }
-    ]
+    ];
 
     const [records, setRecords] = useState(data);
 
@@ -48,21 +62,23 @@ function ReactTable () {
         })
         setRecords(newData);
     }
-     
+
     return (
         <>
             <div className="container mt-5">
-                <div className="text-end "><input type="text" onChange={handleFilter} /></div>
-                <DataTable>
+                <div className="text-end">
+                    <input type="text" onChange={handleFilter} placeholder="Search by first name" />
+                </div>
+                <DataTable
                     columns={columns}
                     data={records}
                     selectableRows
                     fixedHeader
                     pagination
-                </DataTable>
+                />
             </div>
         </>
     )
 }
 
-export default ReactTable
+export default ReactTable;
