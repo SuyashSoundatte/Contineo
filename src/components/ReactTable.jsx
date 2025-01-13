@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 
 function ReactTable() {
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
   const columns = [
     {
@@ -36,7 +36,7 @@ function ReactTable() {
       cell: (row) => (
         <button
           className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          onClick={() => navigate("/MainPage/TeacherMaster")}
+          onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.id}`)} // Pass user ID as part of URL
         >
           Action
         </button>
