@@ -10,7 +10,7 @@ const MainPage = () => {
           <Dashboard />
         </div>
         <div className='right w-[80%] h-screen flex justify-center items-center '>
-          <div className="">
+          <div className="w-full h-full">
             <Outlet />
           </div>
         </div>

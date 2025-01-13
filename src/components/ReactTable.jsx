@@ -1,7 +1,10 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import { useState } from "react";
 
-function ReactTable({ buttonAction }) {
+function ReactTable() {
+  const navigate = useNavigate(); // Initialize navigate function
+
   const columns = [
     {
       id: "Id",
@@ -33,46 +36,31 @@ function ReactTable({ buttonAction }) {
       cell: (row) => (
         <button
           className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          onClick={() => buttonAction(row)} // Call the passed buttonAction function
+          onClick={() => navigate("/MainPage/TeacherMaster")}
         >
           Action
         </button>
       ),
       ignoreRowClick: true,
-      button: true,
     },
   ];
 
   const data = [
-    {
-      id: 1,
-      fname: "John",
-      mname: "Doe",
-      lname: "Smith",
-      role: "Admin",
-    },
-    {
-      id: 2,
-      fname: "Jane",
-      mname: "Alice",
-      lname: "Doe",
-      role: "User",
-    },
-    {
-      id: 3,
-      fname: "Michael",
-      mname: "David",
-      lname: "Brown",
-      role: "Moderator",
-    },
+    { id: 1, fname: "John", mname: "Doe", lname: "Smith", role: "Admin" },
+    { id: 2, fname: "Jane", mname: "Alice", lname: "Doe", role: "User" },
+    // Add more data...
   ];
 
   const [records, setRecords] = useState(data);
 
   const handleFilter = (e) => {
-    const newData = data.filter((row) => {
-      return row.fname.toLowerCase().includes(e.target.value.toLowerCase());
-    });
+    const searchTerm = e.target.value.toLowerCase();
+    const newData = data.filter((row) =>
+      row.fname.toLowerCase().includes(searchTerm) ||
+      row.mname.toLowerCase().includes(searchTerm) ||
+      row.lname.toLowerCase().includes(searchTerm) ||
+      row.role.toLowerCase().includes(searchTerm)
+    );
     setRecords(newData);
   };
 
@@ -83,13 +71,12 @@ function ReactTable({ buttonAction }) {
           className="w-full border border-gray-300 rounded-md p-2"
           type="text"
           onChange={handleFilter}
-          placeholder="Search by first name"
+          placeholder="Search by first name, middle name, last name, or role"
         />
       </div>
       <DataTable
         columns={columns}
         data={records}
-        selectableRows
         fixedHeader
         pagination
       />

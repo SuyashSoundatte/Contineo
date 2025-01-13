@@ -1,28 +1,26 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom' 
-import { LandingPage, Login, MainPage } from '../Pages/page.js'
-import { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment, OfficeLanding } from '../Forms/Forms.js'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { LandingPage, Login, MainPage } from '../Pages/page.js';
+import { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment, OfficeLanding } from '../Forms/Forms.js';
+import { TeacherMasterForm } from '../Forms/Forms.js';
 const AppRoute = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* public Routes */}
+        {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
 
-        {/* private Routes */}
+        {/* Private Routes */}
         <Route path="/MainPage" element={<MainPage />}>
           {/* Nested Routes */}
           <Route path="UserForm" element={<UserCreate />} />
           <Route path="TeacherForm" element={<TeacherForm />} />
-          <Route path="ClassTeacherForm" element={<ClassTeacherForm />} />
-          <Route path="TeacherAllotment" element={<TeacherAllotment />} />
-          <Route path="MentorAllotment" element={<MentorAllotment />} />  
-          <Route path="OfficeLanding" element={<OfficeLanding />} />  
+          <Route path="TeacherMaster" element={<TeacherMasterForm />} />
         </Route>
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default AppRoute
+export default AppRoute;
