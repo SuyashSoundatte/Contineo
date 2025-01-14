@@ -1,10 +1,18 @@
-import express from "express";
 import dotenv from "dotenv";
-import ConnectDB from "./config/db.js";
+dotenv.config();
+
+import express from "express";
+import fileUpload from 'express-fileupload';
 import cors from "cors";
+import bodyParser from "body-parser"
 import GlobalErrorHandler from "./config/errorHandler.js";
 
-dotenv.config();
+// db paths 
+import ConnectDB from "./config/db.js";
+
+// routes paths
+import superadmin from "./routes/superadmin.routes.js";
+
 const app = express();
 const port = process.env.PORT || 8080;
 
@@ -14,19 +22,34 @@ app.use(
     origin: "http://localhost:5173/",
   })
 );
+// middlewares
+app.use(cors({
+  origin: "http://localhost:5173/",
+}));
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload());
+app.use('/api/v1', superadmin);
+app.use((req, res, next) => {
+  console.log('Request Headers:', req.headers);
+  console.log('Request Body:', req.body);
+  console.log('Request Method:', req.method);
+  console.log('Request URL:', req.url);
+  next();
+});
 app.use(GlobalErrorHandler);
+
+
   
 
 function serverStart() {
-  ConnectDB()
+  Promise.all([ConnectDB()])
   .then(() => {
     app.on("error", (err) => {
       throw err;
     });
-    app.listen(port, '0.0.0.0',() => {
-      console.log(`server started at http://0.0.0.0:${port}`);
+    app.listen(port,() => {
+      console.log(`server started at http://localhost:${port}`);
     });
 
     app.get("/", (req, res) => {
