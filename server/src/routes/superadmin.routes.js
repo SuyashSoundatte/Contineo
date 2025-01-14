@@ -3,13 +3,13 @@ import { loginUser, getAllUsers, getUserById } from "../controllers/user.control
 import { createUser } from "../controllers/superadmin.controller.js" 
 import verifyToken  from "../middlewares/auth.middleware.js";
 import authRole from "../middlewares/role.middleware.js";
-import { validUser } from "../middlewares/superadmin.middleware.js";
+import { validUser , validLogin } from "../middlewares/superadmin.middleware.js";
 import { getTeachers, getTeacherById } from "../controllers/teacher.controller.js";
 
 const router = Router();
 
 router.post("/createUser", verifyToken, authRole("SuperAdmin"), validUser, createUser);
-router.post("/login", loginUser);
+router.post("/login", validLogin, loginUser);
 router.get("/getTeachers", verifyToken, authRole("SuperAdmin"), getTeachers);
 router.get("/getTeacherById/:teacherId", verifyToken, authRole("SuperAdmin"), getTeacherById);
 
