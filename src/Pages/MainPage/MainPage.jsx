@@ -1,15 +1,15 @@
 import React from "react";
 import Dashboard from "../../components/Dashboard";
 import { Outlet } from "react-router-dom";
-
-const MainPage = ({ setisLoggedIn }) => {
+import { useAuth } from "../../context/AuthContext";
+const MainPage = () => {
   
-  console.log("setisLoggedIn in MainPage:", setisLoggedIn);
+  const { setIsLoggedIn, isLoggedIn } = useAuth();
   return (
     <>
       <div className='w-full flex'>
         <div className='left w-[20%] h-screen'>
-          <Dashboard setisLoggedIn={setisLoggedIn} />
+          <Dashboard setisLoggedIn={setIsLoggedIn} />
         </div>
         <div className='right w-[80%] h-screen flex justify-center items-center '>
           <div className="w-full h-full">

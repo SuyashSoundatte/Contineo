@@ -1,13 +1,20 @@
 import { Button } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 import axios from "axios"
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
 
-  console.log("setisLoggedIn in Dashboard:", setisLoggedIn);
+  const { setIsLoggedIn, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(!isLoggedIn){
+      navigate("/Login")
+    }
+  })
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -21,7 +28,7 @@ const Dashboard = () => {
       });
 
       // Log out user by setting isLoggedIn to false
-      setisLoggedIn(false);
+      setIsLoggedIn(false);
     } catch (err) {
       console.error("Error during logout:", err);
     }

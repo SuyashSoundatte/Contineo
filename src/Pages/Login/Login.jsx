@@ -1,21 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button } from "../../components/component.js";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { setIsLoggedIn, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setisLoggedIn(true);
+    if (isLoggedIn) {
+      navigate("/MainPage");
     }
-  }, [setisLoggedIn]);
+  }, [isLoggedIn, navigate]);
 
   const loginHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
+
     try {
       const response = await axios.post(
         "http://localhost:3000/api/v1/login",
@@ -25,21 +34,20 @@ const Login = () => {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          withCredentials: true,  
+          withCredentials: true,
         }
       );
 
-      console.log("Login Response:", response.data);
       const data = response.data.data.token;
       localStorage.setItem("token", data);
-      setisLoggedIn(true);
-  
-      
+      setIsLoggedIn(true);
     } catch (err) {
+      setError("Invalid email or password. Please try again.");
       console.error("Error during login:", err);
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   return (
     <div className="loginForm flex items-center justify-center h-screen">
