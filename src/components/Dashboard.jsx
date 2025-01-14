@@ -14,7 +14,7 @@ const Dashboard = () => {
     if(!isLoggedIn){
       navigate("/Login")
     }
-  })
+  },[isLoggedIn])
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -28,6 +28,7 @@ const Dashboard = () => {
       });
 
       // Log out user by setting isLoggedIn to false
+      localStorage.removeItem("token");
       setIsLoggedIn(false);
     } catch (err) {
       console.error("Error during logout:", err);
