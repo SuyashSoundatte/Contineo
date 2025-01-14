@@ -1,68 +1,83 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
+import axios from "axios";
 
 function ReactTable() {
   const navigate = useNavigate();
-
   const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true); // For loading state
-  const [error, setError] = useState(null); // For error handling
+  const [filteredRecords, setFilteredRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const columns = [
-    {
-      id: "Id",
-      selector: (row) => row.id,
-      sortable: true,
-    },
-    {
-      name: "First Name",
-      selector: (row) => row.fname,
-      sortable: true,
-    },
-    {
-      name: "Middle Name",
-      selector: (row) => row.mname,
-      sortable: true,
-    },
-    {
-      name: "Last Name",
-      selector: (row) => row.lname,
-      sortable: true,
-    },
-    {
-      name: "Role",
-      selector: (row) => row.role,
-      sortable: true,
-    },
-    {
-      name: "Action",
-      cell: (row) => (
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.id}`)}
-        >
-          Action
-        </button>
-      ),
-      ignoreRowClick: true,
-    },
-  ];
+  // Define table columns
+  const columns = useMemo(
+    () => [
+      {
+        id: "Id",
+        selector: (row) => row.id || NA,
+        sortable: true,
+      },
+      {
+        name: "First Name",
+        selector: (row) => row.fname || NA,
+        sortable: true,
+      },
+      {
+        name: "Middle Name",
+        selector: (row) => row.mname || NA,
+        sortable: true,
+      },
+      {
+        name: "Last Name",
+        selector: (row) => row.lname || NA,
+        sortable: true,
+      },
+      {
+        name: "Role",
+        selector: (row) => row.role || NA,
+        sortable: true,
+      },
+      {
+        name: "Action",
+        cell: (row) => (
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.id}`)}
+          >
+            Action
+          </button>
+        ),
+        ignoreRowClick: true,
+      },
+    ],
+    [navigate]
+  );
 
   // Fetch data from the backend
   useEffect(() => {
     const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Token not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch("http://localhost:5000/api/users"); // Replace with your API URL
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
-        const data = await response.json();
-        setRecords(data); // Set data to state
+        const response = await axios.get("http://localhost:3000/api/v1/getUsers", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = response.data;
+        console.log("Fetched Data:", data.data); // Make sure this is an array
+
+        setRecords(response.data.data);
+        console.log(response.data.data)
+        setFilteredRecords(response.data.data); // Initialize filtered data
       } catch (err) {
-        setError(err.message); // Set error message
+        setError(err.response?.data?.message || "Error fetching data");
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 
@@ -75,11 +90,10 @@ function ReactTable() {
     const filteredData = records.filter((row) =>
       Object.values(row).some(
         (value) =>
-          value &&
-          value.toString().toLowerCase().includes(searchTerm)
+          value && value.toString().toLowerCase().includes(searchTerm)
       )
     );
-    setRecords(filteredData);
+    setFilteredRecords(filteredData);
   };
 
   return (
@@ -96,11 +110,20 @@ function ReactTable() {
         <p className="text-center text-gray-500">Loading...</p>
       ) : error ? (
         <p className="text-center text-red-500">Error: {error}</p>
-      ) : records.length === 0 ? (
-        <p className="text-center text-gray-500">No records found.</p>
+      ) : filteredRecords.length === 0 ? (
+        <p className="text-center text-gray-500">No matching records found.</p>
       ) : (
         <div className="overflow-x-auto">
-          <DataTable columns={columns} data={records} fixedHeader pagination />
+          <DataTable
+            columns={columns}
+            data={filteredRecords}
+            fixedHeader
+            pagination
+            highlightOnHover
+            pointerOnHover
+            responsive
+            noDataComponent={<p className="text-center text-gray-500">No records to display.</p>}
+          />
         </div>
       )}
     </div>

@@ -64,6 +64,7 @@ const getUserById = asyncHandler(async (req, res) => {
       id: parseInt(userId),
     },
     select:{
+      id: true,
       email: true,
       fname: true,
       lname: true,

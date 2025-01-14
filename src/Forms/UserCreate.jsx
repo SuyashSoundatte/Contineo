@@ -14,8 +14,26 @@ const UserCreate = () => {
 
   const onSubmit = async (data) => {
     try {
+      console.log(data)
+      const formatDate = (dateString) => {
+        const [year, month, day] = dateString.split("-");
+        return `${day}-${month}-${year}`;
+      };
+
+      const formattedData = {
+        ...data,
+        DOB: formatDate(data.DOB), // Replace DOB with the formatted date
+      };
+      
+      const token = localStorage.getItem("token");
       // Send data to the backend
-      const response = await axios.post("http://localhost:5000/api/users/create", data);
+      const response = await axios.post("http://localhost:3000/api/v1/createUser", formattedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // Include token in the header
+          }
+        }
+      );
 
       // Log the response or show success feedback
       console.log("User created successfully:", response.data);
@@ -37,13 +55,13 @@ const UserCreate = () => {
               <Input
                 label='First Name'
                 type='text'
-                name='firstName'
+                name='fname'
                 placeholder='First Name'
-                {...register("firstName", { required: "First Name is required" })}
+                {...register("fname", { required: "First Name is required" })}
               />
-              {errors.firstName && (
+              {errors.fname && (
                 <p className='text-red-500 text-sm'>
-                  {errors.firstName.message}
+                  {errors.fname.message}
                 </p>
               )}
             </div>
@@ -51,13 +69,13 @@ const UserCreate = () => {
               <Input
                 label='Middle Name'
                 type='text'
-                name='middleName'
+                name='mname'
                 placeholder='Middle Name'
-                {...register("middleName", { required: "Middle Name is required" })}
+                {...register("mname", { required: "Middle Name is required" })}
               />
-              {errors.middleName && (
+              {errors.mname && (
                 <p className='text-red-500 text-sm'>
-                  {errors.middleName.message}
+                  {errors.mname.message}
                 </p>
               )}
             </div>
@@ -65,13 +83,13 @@ const UserCreate = () => {
               <Input
                 label='Last Name'
                 type='text'
-                name='lastName'
+                name='lname'
                 placeholder='Last Name'
-                {...register("lastName", { required: "Last Name is required" })}
+                {...register("lname", { required: "Last Name is required" })}
               />
-              {errors.lastName && (
+              {errors.lname && (
                 <p className='text-red-500 text-sm'>
-                  {errors.lastName.message}
+                  {errors.lname.message}
                 </p>
               )}
             </div>
@@ -105,12 +123,12 @@ const UserCreate = () => {
               <Input
                 label='Date of Birth'
                 type='date'
-                name='dob'
+                name='DOB'
                 placeholder='Enter Date of Birth'
-                {...register("dob", { required: "Date of Birth is required" })}
+                {...register("DOB", { required: "Date of Birth is required" })}
               />
-              {errors.dob && (
-                <p className='text-red-500 text-sm'>{errors.dob.message}</p>
+              {errors.DOB && (
+                <p className='text-red-500 text-sm'>{errors.DOB.message}</p>
               )}
             </div>
           </div>
