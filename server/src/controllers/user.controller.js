@@ -76,4 +76,9 @@ const getUserById = asyncHandler(async (req, res) => {
   return res.send(new ApiResponse(200, user, "User found successfully"));
 });
 
-export { loginUser, getAllUsers, getUserById };
+const logOutUser = asyncHandler(async (req, res) => {
+  res.clearCookie("token");
+  return res.send(new ApiResponse(200, "User logged out successfully"));
+});
+
+export { loginUser, getAllUsers, getUserById, logOutUser };

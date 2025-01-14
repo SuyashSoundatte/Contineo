@@ -1,7 +1,33 @@
+import { Button } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import ButtonComponent from "./ButtonComponent";
+import axios from "axios"
+import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
+
+  console.log("setisLoggedIn in Dashboard:", setisLoggedIn);
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      // Logout logic
+      await axios.get("http://localhost:3000/api/v1/logout", {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        withCredentials: true,
+      });
+
+      // Log out user by setting isLoggedIn to false
+      setisLoggedIn(false);
+    } catch (err) {
+      console.error("Error during logout:", err);
+    }
+  };
+  
+
   return (
     <aside className='bg-gray-800 text-white shadow-md fixed h-screen py-8 px-1'>
       <div className='py-4 px-6'>
@@ -50,6 +76,9 @@ const Dashboard = () => {
           </li>
         </ul>
       </nav>
+      <ButtonComponent className="absolute bottom-4 " onClick={handleLogout}>
+        Log Out
+      </ButtonComponent>
     </aside>
   );
 };
