@@ -31,7 +31,7 @@ const Dashboard = () => {
                   Teacher Master Form
                 </li>
               </Link>
-              <Link to='/MainPage/ClassTeacherForm'>
+              {/* <Link to='/MainPage/ClassTeacherForm'>
                 <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
                   Class Teacher Allotment
                 </li>
@@ -45,7 +45,7 @@ const Dashboard = () => {
                 <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
                   Mentor Allotment
                 </li>
-              </Link>
+              </Link> */}
             </ul>
           </li>
         </ul>
