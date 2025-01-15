@@ -1,4 +1,7 @@
 import sql from "mssql";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const ConnectDB = async () => {
   const config = {
