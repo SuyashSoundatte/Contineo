@@ -48,7 +48,7 @@ const StudentCreate = () => {
   return (
     <div className='flex justify-center items-center absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%]'>
       <div className='w-[70%]'>
-        <h1 className='text-2xl font-bold mb-6'>User Information Form</h1>
+        <h1 className='text-2xl font-bold mb-6'>Student Information Form</h1>
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
           <div className='flex justify-between items-center gap-2'>
             <div className='flex flex-col w-[calc(100%/3)]'>

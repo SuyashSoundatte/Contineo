@@ -88,6 +88,11 @@ const Dashboard = () => {
                   Student Form
                 </li>
               </Link>
+              <Link to='/MainPage/AllocateTeacher'>
+                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
+                  Teacher Allocate Form
+                </li>
+              </Link>
             </ul>
           </li>
         </ul>

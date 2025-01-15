@@ -15,27 +15,27 @@ function ReactTable() {
     () => [
       {
         id: "Id",
-        selector: (row) => row.id || NA,
+        selector: (row) => row.id,
         sortable: true,
       },
       {
         name: "First Name",
-        selector: (row) => row.fname || NA,
+        selector: (row) => row.fname,
         sortable: true,
       },
       {
         name: "Middle Name",
-        selector: (row) => row.mname || NA,
+        selector: (row) => row.mname,
         sortable: true,
       },
       {
         name: "Last Name",
-        selector: (row) => row.lname || NA,
+        selector: (row) => row.lname,
         sortable: true,
       },
       {
         name: "Role",
-        selector: (row) => row.role || NA,
+        selector: (row) => row.role,
         sortable: true,
       },
       {
