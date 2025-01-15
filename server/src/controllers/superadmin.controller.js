@@ -34,8 +34,8 @@ const createUser = asyncHandler(async (req, res) => {
 
   // Insert into User table
   const insertUserQuery = `
-    INSERT INTO Users (fname, mname, lname, address, gender, DOB, email, password, phone, role)
-    VALUES (@Fname, @Mname, @Lname, @Address, @Gender, @DOB, @Email, @Password, @Phone, @Role);
+    INSERT INTO users (user_id, fname, mname, lname, address, gender, DOB, email, password, phone_number, role)
+    VALUES (NEWID(),@Fname, @Mname, @Lname, @Address, @Gender, @DOB, @Email, @Password, @Phone, @Role);
     SELECT SCOPE_IDENTITY() AS id;
   `;
 
