@@ -2,7 +2,6 @@ import asyncHandler from "../config/asyncHandler.js";
 import poolPromise from "../config/dbConnect.js";
 import ApiError from "../config/ApiError.js";
 import ApiResponse from "../config/ApiResponse.js";
-import { hashPassword } from "../config/hashPass.js";
 
 // SQL Server query helper functions
 const executeQuery = async (query, params) => {
@@ -21,16 +20,13 @@ const createStudent = asyncHandler(async (req, res) => {
     lname,
     address,
     gender,
-    DOB,
+    dob,
     email,
-    password,
-    phone,
-    grade,
-    guardianName,
-    guardianContact
+    roll_no,
+    phone_number,
   } = req.body;
 
-  if (!fname || !mname || !lname || !address || !gender || !DOB || !email || !password || !phone || !grade || !guardianName || !guardianContact) {
+  if (!fname || !mname || !lname || !address || !gender || !dob || !email || !roll_no || !phone_number) {
     throw new ApiError(400, "Please provide all the required fields");
   }
 
@@ -42,13 +38,10 @@ const createStudent = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Email already in use");
   }
 
-  // Hash password
-  const hashedPassword = await hashPassword(password);
-
-  // Insert into User table
+  // Insert into Users table
   const insertUserQuery = `
-    INSERT INTO Users (fname, mname, lname, address, gender, DOB, email, password, phone, role)
-    VALUES (@Fname, @Mname, @Lname, @Address, @Gender, @DOB, @Email, @Password, @Phone, 'Student');
+    INSERT INTO Users (fname, mname, lname, address, gender, dob, email, phone_number, role)
+    VALUES (@Fname, @Mname, @Lname, @Address, @Gender, @dob, @Email, @phone_number, 'Student');
     SELECT SCOPE_IDENTITY() AS id;
   `;
 
@@ -58,29 +51,26 @@ const createStudent = asyncHandler(async (req, res) => {
     { name: 'Lname', value: lname },
     { name: 'Address', value: address },
     { name: 'Gender', value: gender },
-    { name: 'DOB', value: DOB },
+    { name: 'dob', value: dob },
     { name: 'Email', value: email },
-    { name: 'Password', value: hashedPassword },
-    { name: 'Phone', value: phone },
+    { name: 'phone_number', value: phone_number },
   ];
 
   const userResult = await executeQuery(insertUserQuery, userParams);
   const userId = userResult.recordset[0].id;
 
-  // Insert into Students table
-//   const insertStudentQuery = `
-//     INSERT INTO Students (userId, grade, guardianName, guardianContact)
-//     VALUES (@UserId, @Grade, @GuardianName, @GuardianContact);
-//   `;
+  // Insert into Student table
+  const insertStudentQuery = `
+    INSERT INTO student (user_id, roll_no)
+    VALUES (@UserId, @RollNo);
+  `;
 
-//   const studentParams = [
-//     { name: 'UserId', value: userId },
-//     { name: 'Grade', value: grade },
-//     { name: 'GuardianName', value: guardianName },
-//     { name: 'GuardianContact', value: guardianContact },
-//   ];
+  const studentParams = [
+    { name: 'UserId', value: userId },
+    { name: 'RollNo', value: roll_no },
+  ];
 
-//   await executeQuery(insertStudentQuery, studentParams);
+  await executeQuery(insertStudentQuery, studentParams);
 
   // Return successful response
   return res.send(new ApiResponse(201, { id: userId, email }, "Student created successfully"));

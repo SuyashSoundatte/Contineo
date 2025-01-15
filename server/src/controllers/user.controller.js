@@ -18,7 +18,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // SQL query to fetch user by email
   const userQuery = `
-    SELECT id, email, password, role FROM Users WHERE email = @Email;
+    SELECT  email, password, role FROM Users WHERE email = @Email;
   `;
   const userResult = await request.input('Email', email).query(userQuery);
 
@@ -62,7 +62,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
   // SQL query to fetch all users
   const usersQuery = `
-    SELECT id, email, fname, lname, role, phone, gender
+    SELECT email, fname, lname, role, phone, gender
     FROM Users;
   `;
   const usersResult = await request.query(usersQuery);
@@ -84,7 +84,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
   // SQL query to fetch user by ID
   const userQuery = `
-    SELECT id, email, fname, lname, role, phone, gender
+    SELECT email, fname, lname, role, phone, gender
     FROM Users
     WHERE id = @UserId;
   `;
