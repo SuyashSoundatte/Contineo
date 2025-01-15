@@ -76,4 +76,41 @@ const createStudent = asyncHandler(async (req, res) => {
   return res.send(new ApiResponse(201, { id: userId, email }, "Student created successfully"));
 });
 
-export { createStudent };
+//Get All Students
+const getAllStudent = asyncHandler(async (req, res) => {
+  const pool = await poolPromise;
+  const request = pool.request();
+
+  const usersQuery = `
+    SELECT u.email, u.fname, u.lname, u.role, u.phone_number AS phone, u.gender, s.roll_no
+    FROM Users u
+    INNER JOIN student s ON u.user_id = s.user_id
+    WHERE u.role = 'Student';
+  `;
+  
+  const usersResult = await request.query(usersQuery);
+
+  return res.send(new ApiResponse(200, usersResult.recordset, "Users fetched successfully"));
+});
+
+//get student by std
+const getStudentByStd = asyncHandler(async (req, res) => {
+  const pool = await poolPromise;
+  const request = pool.request();
+
+  const { class_std } = req.params; 
+
+  const usersQuery = `
+    SELECT u.email, u.fname, u.lname, u.role, u.phone_number AS phone, u.gender, s.roll_no, s.class_std
+    FROM Users u
+    INNER JOIN student s ON u.user_id = s.user_id
+    WHERE u.role = 'Student' AND s.class_std = @ClassStd;
+  `;
+
+  const usersResult = await request.input('ClassStd', class_std).query(usersQuery);
+
+  return res.send(new ApiResponse(200, usersResult.recordset, "Students fetched successfully"));
+});
+
+
+export { createStudent, getAllStudent, getStudentByStd };
