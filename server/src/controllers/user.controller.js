@@ -38,7 +38,7 @@ const loginUser = asyncHandler(async (req, res) => {
   // Generate JWT token
   const token = jwt.sign(
     {
-      userId: user.id,
+      user_id: user.user_id,
       role: user.role,
       email: user.email,
     },
@@ -62,7 +62,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
   // SQL query to fetch all users
   const usersQuery = `
-    SELECT email, fname, lname, role, phone, gender
+    SELECT user_id, email, fname, lname, role, phone, gender
     FROM Users;
   `;
   const usersResult = await request.query(usersQuery);
@@ -72,10 +72,10 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 // Get user by ID handler
 const getUserById = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  const { user_id } = req.params;
 
-  const parsedUserId = parseInt(userId);
-  if (isNaN(parsedUserId)) {
+  const parseduser_id = parseInt(user_id);
+  if (isNaN(parseduser_id)) {
     throw new ApiError(400, "Invalid user ID");
   }
 
@@ -84,11 +84,11 @@ const getUserById = asyncHandler(async (req, res) => {
 
   // SQL query to fetch user by ID
   const userQuery = `
-    SELECT email, fname, lname, role, phone, gender
+    SELECT user_id, email, fname, lname, role, phone, gender
     FROM Users
-    WHERE id = @UserId;
+    WHERE user_id = @user_id;
   `;
-  const userResult = await request.input('UserId', parsedUserId).query(userQuery);
+  const userResult = await request.input('user_id', parseduser_id).query(userQuery);
 
   if (userResult.recordset.length === 0) {
     throw new ApiError(404, "User not found");

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button } from "../../components/component.js";
+import { Input, ButtonComponent } from "../../components/component.js";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +70,7 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button type="submit">Login</Button>
+          <ButtonComponent type="submit">Login</ButtonComponent>
         </form>
       </div>
     </div>

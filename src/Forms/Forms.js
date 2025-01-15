@@ -1,11 +1,21 @@
-import TeacherForm from './TeacherForm'
-import ClassTeacherForm from './ClassTeacherForm'
-import TeacherAllotment from './TeacherAllotment'
-import MentorAllotment from './MentorAllotment'
-import UserCreate from './UserCreate'
-import OfficeLanding from '../Pages/LandingPage/OfficeLanding'
-import TeacherMasterForm from './TeacherMasterForm'
-import SubjectForm from './SubjectForm'
-import StudentCreate from './StudentCreate'
 import AllocateTeacher from './AllocateTeacher'
-export { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment, OfficeLanding, TeacherMasterForm, SubjectForm, StudentCreate, AllocateTeacher }
+import ClassTeacherForm from './ClassTeacherForm'
+import MentorAllotment from './MentorAllotment'
+import StudentCreate from './StudentCreate'
+import SubjectForm from './SubjectForm'
+import TeacherAllocate from './TeacherAllocate'
+import TeacherForm from './TeacherForm'
+import TeacherMasterForm from './TeacherMasterForm'
+import UserCreate from './UserCreate'
+
+export {
+  AllocateTeacher,
+  ClassTeacherForm,
+  MentorAllotment,
+  StudentCreate,
+  SubjectForm,
+  TeacherAllocate,
+  TeacherForm,
+  TeacherMasterForm,
+  UserCreate
+}

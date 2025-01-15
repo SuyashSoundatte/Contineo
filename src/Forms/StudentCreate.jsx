@@ -46,10 +46,10 @@ const StudentCreate = () => {
   };
 
   return (
-    <div className='flex justify-center items-center absolute top-1/2 left-[60%] -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%]'>
-      <div className='w-[70%]'>
+    <div className='flex justify-center items-center h-full w-full'>
+      <div className='w-[80%] h-full  absolute top-[55%] left-[55%] -translate-x-1/2 -translate-y-1/2'>
         <h1 className='text-2xl font-bold mb-6'>Student Information Form</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-16'>
           <div className='flex justify-between items-center gap-2'>
             <div className='flex flex-col w-[calc(100%/3)]'>
               <Input
@@ -161,7 +161,7 @@ const StudentCreate = () => {
             </div>
           </div>
           <div className='flex justify-between items-center gap-2'>
-            <div>
+            <div className="flex flex-col w-[calc(100%/2)]">
               <Input
                 label='Phone Number'
                 type='number'
@@ -173,7 +173,7 @@ const StudentCreate = () => {
                 <p className='text-red-500 text-sm'>{errors.phone.message}</p>
               )}
             </div>
-            <div>
+            <div className="flex flex-col w-[calc(100%/2)]">  
               <Select
                 label='Role'
                 options={["Student"]}

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
@@ -12,8 +12,8 @@ function ReactTable({ records, loading, error }) {
   const columns = useMemo(
     () => [
       {
-        id: 'Id',
-        selector: (row) => row.id,
+        id: 'User ID',
+        selector: (row) => row.user_id,
         sortable: true,
       },
       {
@@ -21,11 +21,11 @@ function ReactTable({ records, loading, error }) {
         selector: (row) => row.fname,
         sortable: true,
       },
-      {
-        name: 'Middle Name',
-        selector: (row) => row.mname,
-        sortable: true,
-      },
+      // {
+      //   name: 'Middle Name',
+      //   selector: (row) => row.mname,
+      //   sortable: true,
+      // },
       {
         name: 'Last Name',
         selector: (row) => row.lname,
@@ -41,7 +41,7 @@ function ReactTable({ records, loading, error }) {
         cell: (row) => (
           <button
             className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'
-            onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.id}`)}
+            onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.user_id}`)}
           >
             Action
           </button>
@@ -52,44 +52,25 @@ function ReactTable({ records, loading, error }) {
     [navigate]
   );
 
-  // Filter functionality
-  const handleFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredData = records.filter((row) =>
-      Object.values(row).some(
-        (value) => value && value.toString().toLowerCase().includes(searchTerm)
-      )
-    );
-    setFilteredRecords(filteredData);
-  };
-
-  return (
-    <div className='container mx-auto mt-5'>
-      <div className='text-end mb-4'>
-        <input
-          className='w-full border border-gray-300 rounded-md p-2'
-          type='text'
-          onChange={handleFilter}
-          placeholder='Search by any field'
-        />
-      </div>
+ return (
+    <div className="container mx-auto mt-5">
       {loading ? (
-        <p className='text-center text-gray-500'>Loading...</p>
+        <p className="text-center text-gray-500">Loading...</p>
       ) : error ? (
-        <p className='text-center text-red-500'>Error: {error}</p>
-      ) : filteredRecords.length === 0 ? (
-        <p className='text-center text-gray-500'>No matching records found.</p>
+        <p className="text-center text-red-500">Error: {error}</p>
+      ) : records.length === 0 ? (
+        <p className="text-center text-gray-500">No records to display.</p>
       ) : (
-        <div className='overflow-x-auto'>
+        <div className="overflow-x-auto">
           <DataTable
             columns={columns}
-            data={filteredRecords}
+            data={records}
             fixedHeader
             pagination
             highlightOnHover
             pointerOnHover
             responsive
-            noDataComponent={<p className='text-center text-gray-500'>No records to display.</p>}
+            noDataComponent={<p className="text-center text-gray-500">No records to display.</p>}
           />
         </div>
       )}

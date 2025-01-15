@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ReactTable from '../components/ReactTable';
 import axios from 'axios';
+import {Input , ReactTable} from '../components/component.js';
 
 const TeacherForm = () => {
   const [records, setRecords] = useState([]);
@@ -20,8 +20,11 @@ const TeacherForm = () => {
         const response = await axios.get('http://localhost:3000/api/v1/getUsers', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setRecords(response.data.data);
+
+        console.log("Fetched Data:", response.data); // Log full response
+        setRecords(response.data.data); // Set records after fetching data
       } catch (err) {
+        console.error("Error fetching data:", err); // Log error for better debugging
         setError(err.response?.data?.message || 'Error fetching data');
       } finally {
         setLoading(false);
@@ -31,11 +34,24 @@ const TeacherForm = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {// Log records after they are set
+  }, [records]);
+
   return (
     <div className='w-full'>
+      <div>
+        <Input 
+          label='User ID'
+          type='text'
+          name='user_id'
+          placeholder='Enter User ID'
+        />
+      </div>
       <ReactTable records={records} loading={loading} error={error} />
+      {/* Check if records is populated */}
     </div>
   );
+  
 };
 
 export default TeacherForm;
