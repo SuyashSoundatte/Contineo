@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LandingPage, Login, MainPage } from "../Pages/page.js";
-import { TeacherMasterForm, UserCreate, TeacherForm, SubjectForm, StudentCreate, AllocateTeacher } from "../Forms/Forms.js";git 
+import { TeacherMasterForm, UserCreate, TeacherForm, SubjectForm, StudentCreate, AllocateTeacher } from "../Forms/Forms.js" 
 
 const AppRoute = () => {
   return (
