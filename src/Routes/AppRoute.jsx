@@ -8,7 +8,7 @@ const AppRoute = () => {
     <BrowserRouter>
       <Routes>
         {/* public Routes */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={ <Login /> } />  
         <Route path="/login" element={<Login />} />
 
         {/* private Routes */}
