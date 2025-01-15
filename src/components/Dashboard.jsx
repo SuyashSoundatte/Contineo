@@ -2,19 +2,18 @@ import { Button } from "@mui/material";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
-import axios from "axios"
+import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-
   const { setIsLoggedIn, isLoggedIn } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    if(!isLoggedIn){
-      navigate("/Login")
+    if (!isLoggedIn) {
+      navigate("/Login");
     }
-  },[isLoggedIn])
+  }, [isLoggedIn]);
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -34,7 +33,6 @@ const Dashboard = () => {
       console.error("Error during logout:", err);
     }
   };
-  
 
   return (
     <aside className='bg-gray-800 text-white shadow-md fixed h-screen py-8 px-1'>
@@ -80,11 +78,16 @@ const Dashboard = () => {
                   Mentor Allotment
                 </li>
               </Link> */}
+              <Link to='/MainPage/SubjectForm'>
+                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'>
+                  Subject Master Form
+                </li>
+              </Link>
             </ul>
           </li>
         </ul>
       </nav>
-      <ButtonComponent className="absolute bottom-4 " onClick={handleLogout}>
+      <ButtonComponent className='absolute bottom-4 ' onClick={handleLogout}>
         Log Out
       </ButtonComponent>
     </aside>

@@ -5,5 +5,6 @@ import MentorAllotment from './MentorAllotment'
 import UserCreate from './UserCreate'
 import OfficeLanding from '../Pages/LandingPage/OfficeLanding'
 import TeacherMasterForm from './TeacherMasterForm'
+import SubjectForm from './SubjectForm'
 
-export { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment, OfficeLanding, TeacherMasterForm }
+export { UserCreate, TeacherForm, ClassTeacherForm, TeacherAllotment, MentorAllotment, OfficeLanding, TeacherMasterForm, SubjectForm }
