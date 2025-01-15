@@ -8,6 +8,8 @@ import { getTeachers, getTeacherById } from "../controllers/teacher.controller.j
 
 const router = Router();
 
+router.post("/register", validUser, createUser);
+
 router.post("/createUser", verifyToken, authRole("SuperAdmin"), validUser, createUser);
 router.post("/login", validLogin, loginUser);
 router.get("/logout", logOutUser);

@@ -1,17 +1,24 @@
-import pkg from 'pg';
-const { Client } = pkg;
+import sql from "mssql";
 
 const ConnectDB = async () => {
-  const url = process.env.DATABASE_URL;
-
-  const client = new Client({ connectionString: url });
+  const config = {
+    user: process.env.DB_USER, 
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_HOST, 
+    port: parseInt(process.env.DB_PORT) || 1433, 
+    database: process.env.DB_NAME, 
+    options: {
+      encrypt: true, 
+      trustServerCertificate: true, 
+    },
+  };
 
   try {
-    await client.connect();
-    console.log("Connected to the database");
-    return client;
+    const pool = await sql.connect(config);
+    console.log("Connected to the SQL Server database");
+    return pool; 
   } catch (err) {
-    console.error("Error connecting to the database:", err.message);
+    console.error("Error connecting to the SQL Server database:", err.message);
     process.exit(1);
   }
 };

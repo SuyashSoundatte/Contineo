@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ButtonComponent from './ButtonComponent';
 import Input from './Input';
+import axios from 'axios';
+import js from '@eslint/js';
 
 const AddFiles = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,14 +31,35 @@ const AddFiles = () => {
   };
 
   // Add file to the uploadedFiles array
-  const handleAddFile = () => {
-    if (fileName && file) {
-      const newFile = { name: fileName, file };
-      setUploadedFiles((prev) => [...prev, newFile]);
-      setFileName(''); // Clear file name input
-      setFile(null); // Clear file input
-    } else {
-      alert('Please provide both file name and file.');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!file || !fileName || !teacherId) {
+      alert("All fields are required!");
+      return;
+    }
+
+    try {
+      // Create a FormData object
+      const formData = new FormData();
+      const jsonData = JSON.stringify({ fileName, teacherId }); // Convert the JSON data to a string
+      console.log(formData, jsonData)
+
+      formData.append("jsonData", jsonData); // Add JSON data as a string
+      formData.append("file", file); // Add the file
+
+      // Send data using axios
+      const response = await axios.post("http://localhost:3000/api/v1/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure the request is treated as multipart
+        },
+      });
+
+      console.log("Response:", response.data);
+      alert("File uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading file:", error.response?.data || error.message);
+      alert("Error uploading file. Please try again.");
     }
   };
 
@@ -61,7 +84,7 @@ const AddFiles = () => {
               placeholder=""
               onChange={handleFileChange}
             />
-            <ButtonComponent type="button" onClick={handleAddFile}>
+            <ButtonComponent type="button" onClick={handleSubmit}>
               Add
             </ButtonComponent>
           </div>

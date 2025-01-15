@@ -15,7 +15,7 @@ const validUser = (req, res, next) => {
     password: Joi.string().min(4).required(),
     phone: Joi.string().required(),
     role: Joi.string().valid('SuperAdmin', 'Teacher', 'OfficeStaff').required(),
-    isActive: Joi.boolean().optional()
+    // isActive: Joi.boolean().optional()
   });
 
   console.log('Request Body:', req.body);
