@@ -15,47 +15,27 @@ function ReactTable() {
     () => [
       {
         id: "Id",
-<<<<<<< HEAD
-        selector: (row) => row.id ,
-=======
-        selector: (row) => row.id,
->>>>>>> 55f27b861cd8016b3e1c8b142eff8207461b5489
+        selector: (row) => row.id || NA,
         sortable: true,
       },
       {
         name: "First Name",
-<<<<<<< HEAD
-        selector: (row) => row.fname ,
-=======
-        selector: (row) => row.fname,
->>>>>>> 55f27b861cd8016b3e1c8b142eff8207461b5489
+        selector: (row) => row.fname || NA,
         sortable: true,
       },
       {
         name: "Middle Name",
-<<<<<<< HEAD
-        selector: (row) => row.mname ,
-=======
-        selector: (row) => row.mname,
->>>>>>> 55f27b861cd8016b3e1c8b142eff8207461b5489
+        selector: (row) => row.mname || NA,
         sortable: true,
       },
       {
         name: "Last Name",
-<<<<<<< HEAD
-        selector: (row) => row.lname ,
-=======
-        selector: (row) => row.lname,
->>>>>>> 55f27b861cd8016b3e1c8b142eff8207461b5489
+        selector: (row) => row.lname || NA,
         sortable: true,
       },
       {
         name: "Role",
-<<<<<<< HEAD
-        selector: (row) => row.role ,
-=======
-        selector: (row) => row.role,
->>>>>>> 55f27b861cd8016b3e1c8b142eff8207461b5489
+        selector: (row) => row.role || NA,
         sortable: true,
       },
       {
