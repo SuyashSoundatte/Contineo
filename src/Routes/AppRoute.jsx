@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LandingPage, Login, MainPage } from "../Pages/page.js";
-import { TeacherMasterForm, UserCreate, TeacherForm } from "../Forms/Forms.js";
+import { TeacherMasterForm, UserCreate, TeacherForm, SubjectForm } from "../Forms/Forms.js";
 
 const AppRoute = () => {
   return (
@@ -17,6 +17,7 @@ const AppRoute = () => {
           <Route path="UserForm" element={<UserCreate />} /> {/* Static route */}
           <Route path="TeacherForm" element={<TeacherForm />} /> {/* Static route */}
           <Route path="TeacherMasterForm" element={<TeacherMasterForm />} /> {/* Static route */}
+          <Route path="SubjectForm" element={<SubjectForm />} /> {/* Static route */}
           <Route path="TeacherMasterForm/:userId" element={<TeacherMasterForm />} /> {/* Dynamic route */}
         </Route>
       </Routes>
