@@ -18,7 +18,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // SQL query to fetch user by email
   const userQuery = `
-    SELECT  email, password, role FROM Users WHERE email = @Email;
+    SELECT email, password, role FROM Users WHERE email = @Email;
   `;
   const userResult = await request.input('Email', email).query(userQuery);
 

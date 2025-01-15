@@ -18,7 +18,6 @@ const validUser = (req, res, next) => {
     // isActive: Joi.boolean().optional()
   });
 
-  console.log('Request Body:', req.body);
   const { error } = schema.validate(req.body);
   if (error) {
     return res.status(400).json({
