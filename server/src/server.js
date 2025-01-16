@@ -12,7 +12,8 @@ import ConnectDB from "./config/db.js";
 // routes paths
 import superadmin from "./routes/superadmin.routes.js";
 import file from "./routes/file.routes.js"
-// import student from "./routes/student.routes.js";
+import student from "./routes/student.routes.js";
+import teacher from "./routes/teacher.routes.js";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -29,7 +30,8 @@ app.use(express.json());
 
 app.use('/api/v1', superadmin);
 app.use('/api/v1', file);
-// app.use('/api/v1', student);
+app.use('/api/v1', student);
+app.use('/api/v1', teacher);
 app.use(GlobalErrorHandler);
 
 
