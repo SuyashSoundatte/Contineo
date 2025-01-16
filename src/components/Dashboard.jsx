@@ -58,6 +58,23 @@ const Dashboard = () => {
         </div>
         <div className="space-y-2">
           <h2 className="text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50">
+            Student
+          </h2>
+          <ul className="ml-4 space-y-2">
+            <Link to="/MainPage/StudentMasterForm">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Student Master Form
+              </li>
+            </Link>
+            <Link to="/MainPage/StudentAllocate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Student Allocate Form
+              </li>
+            </Link>
+          </ul>
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50">
             Teacher
           </h2>
           <ul className="ml-4 space-y-2">
@@ -74,11 +91,6 @@ const Dashboard = () => {
             <Link to="/MainPage/TeacherAllocate">
               <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
                 Teacher Allocate Form
-              </li>
-            </Link>
-            <Link to="/MainPage/StudentAllocate">
-              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
-                Student Allocate Form
               </li>
             </Link>
             <Link to="/MainPage/MentorAllocate">

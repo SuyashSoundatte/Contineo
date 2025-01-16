@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Input, ReactTable } from '../components/component.js';
 
-const TeacherForm = () => {
+const StudentMasterForm = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -71,4 +71,4 @@ const TeacherForm = () => {
   );
 };
 
-export default TeacherForm;
+export default StudentMasterForm;
