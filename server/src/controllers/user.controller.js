@@ -5,6 +5,15 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "../config/asyncHandler.js";
 import poolPromise from "../config/dbConnect.js";
 
+const executeQuery = async (query, params) => {
+  const pool = await poolPromise;
+  const request = pool.request();
+  if (params) {
+    params.forEach((param) => request.input(param.name, param.value));
+  }
+  return request.query(query);
+};
+
 // User login handler
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -105,8 +114,8 @@ const logOutUser = asyncHandler(async (req, res) => {
 
 const getAllMentors = asyncHandler(async (req, res) => {
   const mentorQuery = `
-    select u.fname, u.lname, u.email, u.phone, u.role, u.gender
-    where u.role = 'Mentor';
+    select user_id, fname, lname, email, phone, role, gender from users 
+    where role = 'Mentor';
   `
   const mentorResult = await executeQuery(mentorQuery);
   return res.send(new ApiResponse(200, mentorResult.recordset, "Mentors fetched successfully"));
@@ -114,8 +123,8 @@ const getAllMentors = asyncHandler(async (req, res) => {
 
 const getAllClassTeacher = asyncHandler(async (req, res) => {
   const classTeacherQuery = `
-    select u.fname, u.lname, u.email, u.phone, u.role, u.gender
-    where u.role = 'ClassTeacher';
+    select user_id, fname, lname, email, phone, role, gender from users
+    where role = 'ClassTeacher';
   `
   const classTeacherResult = await executeQuery(classTeacherQuery);
   return res.send(new ApiResponse(200, classTeacherResult.recordset, "Class Teachers fetched successfully"));
