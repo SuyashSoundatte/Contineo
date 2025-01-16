@@ -69,7 +69,7 @@ const StudentMasterForm = () => {
     {
       name: 'Action',
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.user_id}`)}>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => navigate(`/MainPage/StudentForm/${row.user_id}`)}>
           Add Files
         </button>
       ),

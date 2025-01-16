@@ -43,8 +43,7 @@ const StudentForm = () => {
         );
 
         const user = response.data.data;
-        console.log(user)
-        console.log(user.fname)
+        console.log(user);
         setUserData(user);
 
         // Pre-fill form fields with the fetched user data
@@ -55,9 +54,6 @@ const StudentForm = () => {
         setValue("role", user.role);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        if (error.response) {
-          console.error("Response data:", error.response.data);
-        }
       } finally {
         setLoading(false);
       }
@@ -78,8 +74,9 @@ const StudentForm = () => {
   const onSubmit = async (data) => {
     try {
       console.log("Submitting form data:", data);
-      // const response = await axios.get(`http://localhost:3000/api/v1/getStudentId/${user_id}`, data);
-      console.log("Form submission successful:", response.data);
+      // Uncomment and configure the actual API call
+      // const response = await axios.post("API_ENDPOINT", data);
+      console.log("Form submission successful!");
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error submitting form data:", error);
@@ -109,7 +106,7 @@ const StudentForm = () => {
               <Input
                 id="user_id"
                 type="text"
-                value={user_id}
+                defaultValue={userData.user_id}
                 readOnly
                 {...register("user_id")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -122,11 +119,23 @@ const StudentForm = () => {
               <Input
                 id="fname"
                 type="text"
-                defaultValue={fname}
+                defaultValue={userData.fname}
                 {...register("fname", { required: "First Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
               {errors.fname && <span className="text-red-500 text-xs">{errors.fname.message}</span>}
+            </div>
+            <div className="flex flex-col w-1/2">
+              <label htmlFor="mname" className="block text-sm font-medium text-gray-700">
+                Middle Name
+              </label>
+              <Input
+                id="mname"
+                type="text"
+                defaultValue={userData.mname}
+                {...register("mname")}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
             <div className="flex flex-col w-1/2">
               <label htmlFor="lname" className="block text-sm font-medium text-gray-700">
@@ -135,7 +144,7 @@ const StudentForm = () => {
               <Input
                 id="lname"
                 type="text"
-                defaultValue={lname}
+                defaultValue={userData.lname}
                 {...register("lname", { required: "Last Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
