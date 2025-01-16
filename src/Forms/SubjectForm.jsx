@@ -17,7 +17,6 @@ const SubjectForm = () => {
     try {
       // Check if all fields are filled
       if (!data.topic || !data.subtopic || !data.time) {
-        // Show error toast if fields are missing
         toast.error("Please fill all the fields", {
           position: "top-right",
           autoClose: 5000,
