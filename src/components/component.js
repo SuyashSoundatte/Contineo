@@ -8,6 +8,7 @@ import Select from "./Select";
 import StudentAllocate from "./StudentAllocate";
 import SubjectAllocate from "./SubjectAllocate";
 import Table from "./Table";
+import CheckboxComponent from "./CheckboxComponent";
 
 export {
   AddFiles,
@@ -19,5 +20,6 @@ export {
   Select,
   StudentAllocate,
   SubjectAllocate,  
-  Table
+  Table,
+  CheckboxComponent
 }
