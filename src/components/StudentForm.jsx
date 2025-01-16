@@ -21,48 +21,50 @@ const StudentForm = () => {
   } = useForm();
 
   // Fetch user data from the backend
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        console.log("User ID from URL:", user_id);
+ useEffect(() => {
+  const fetchUserData = async () => {
+    try {
+      console.log("User ID from URL:", user_id);
 
-        const token = localStorage.getItem("token");
-        if (!token) {
-          console.error("No token found. Please log in again.");
-          return;
-        }
-        setLoading(true);
-
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/getStudentId/${user_id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const user = response.data.data;
-        console.log(user);
-        setUserData(user);
-
-        // Pre-fill form fields with the fetched user data
-        setValue("user_id", user.user_id);
-        setValue("fname", user.fname);
-        setValue("mname", user.mname);
-        setValue("lname", user.lname);
-        setValue("role", user.role);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setLoading(false);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found. Please log in again.");
+        return;
       }
-    };
+      setLoading(true);
 
-    if (user_id) {
-      fetchUserData();
+      const response = await axios.get(
+        `http://localhost:3000/api/v1/getStudentId/${user_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const user = response.data.data;
+      console.log("Fetched user data:", user);
+      console.log(user.fname);
+      setUserData(user);
+
+      setValue("user_id", user.user_id);
+      setValue("fname", user.fname);
+      setValue("mname", user.mname);
+      setValue("lname", user.lname);
+      setValue("role", user.role);
+
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
     }
-  }, [user_id, setValue]);
+  };
+
+  if (user_id) {
+    fetchUserData();
+  }
+}, [user_id, setValue]);
+
 
   // File change handler
   const handleFileChange = (event) => {
@@ -106,7 +108,7 @@ const StudentForm = () => {
               <Input
                 id="user_id"
                 type="text"
-                defaultValue={userData.user_id}
+                defaultValue={user_id}
                 readOnly
                 {...register("user_id")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -117,9 +119,8 @@ const StudentForm = () => {
                 First Name
               </label>
               <Input
-                id="fname"
                 type="text"
-                defaultValue={userData.fname}
+                defaultValue={userData?.fname}
                 {...register("fname", { required: "First Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -132,7 +133,7 @@ const StudentForm = () => {
               <Input
                 id="mname"
                 type="text"
-                defaultValue={userData.mname}
+                defaultValue={userData?.mname}
                 {...register("mname")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -144,7 +145,7 @@ const StudentForm = () => {
               <Input
                 id="lname"
                 type="text"
-                defaultValue={userData.lname}
+                defaultValue={userData?.lname}
                 {...register("lname", { required: "Last Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />

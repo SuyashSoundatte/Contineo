@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Input, ReactTable} from '../components/component.js';
+import { ButtonComponent, Input, ReactTable} from '../components/component.js';
 
 
 const TeacherAllocate = () => {
@@ -71,48 +71,77 @@ const TeacherAllocate = () => {
     );
   });
 
-  // Table columns definition
-  const teacher_allocate_columns = [
-    {
-      name: 'Teacher ID',
-      selector: (row) => row.user_id,
-      sortable: true,
-    },
-    {
-      name: 'First Name',
-      selector: (row) => row.fname,
-      sortable: true,
-    },
-    {
-      name: 'Last Name',
-      selector: (row) => row.lname,
-      sortable: true,
-    },
-    {
-      name: 'Email',
-      selector: (row) => row.email,
-      sortable: true,
-    },
-    {
-      name: 'Subject',
-      selector: (row) => row.sub,
-      sortable: true,
-    },
-    {
-      name: 'Batch Assigned',
-      selector: (row) => row.batchAssigned,
-      sortable: true,
-    },
-    {
-      name: 'Actions',
-      cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          Button
-        </button>
-      ),
-      ignoreRowClick: true,
-    },
-  ];
+  
+  
+// Table columns definition
+const teacher_allocate_columns = [
+  {
+    name: 'Teacher ID',
+    selector: (row) => row.user_id,
+    sortable: true,
+  },
+  {
+    name: 'First Name',
+    selector: (row) => row.fname,
+    sortable: true,
+  },
+  {
+    name: 'Last Name',
+    selector: (row) => row.email,
+    sortable: true,
+  },
+  {
+    name: 'Email',
+    selector: (row) => row.standard_name,
+    sortable: true,
+  },
+  {
+    name: 'Subject',
+    selector: (row) => row.div,
+    sortable: true,
+  },
+  {
+    name: 'Batch Assigned',
+    selector: (row) => row.subject_name,
+    sortable: true,
+  },
+  {
+    name: 'Actions',
+    cell: (row) => (
+      <ButtonComponent onClick={(row) => AlloteTeacher(row)}>
+        Assign
+      </ButtonComponent>
+    ),
+    ignoreRowClick: true,
+  },
+];
+
+// Allocate teacher subject
+const AlloteTeacher = async (row) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('Token not found. Please log in again.');
+      setLoading(false);
+      return;
+    }
+
+    const response = await axios.post('http://localhost:3000/api/v1/allocateTeacherSubject', {
+      user_id: row.user_id,
+      standard_name: row.standard_name,
+      div: row.div,
+      subject_name: row.subject_name,
+    }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log('Response:', response.data);
+    console.log("Teacher allocated successfully");
+  } catch (err) {
+    console.error('Error allocating teacher subject:', err);
+  }
+};
+
 
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
