@@ -90,21 +90,22 @@ const getAllTeacher = asyncHandler(async (req, res) => {
 });
 
 const getTeacherById = asyncHandler(async (req, res) => {
-  const id = req.params.id;
+  const pool = await poolPromise;
+  const request = pool.request();
 
-  const usersQuery = `
-    SELECT email, fname, lname, role, phone, gender
-    FROM Users
-    WHERE role = 'Teacher' AND user_id = @UserId;
-  `;
+const userId  = req.params.id;
+const parsedId = String(userId); 
 
-  const teacherId = [
-    { name: 'UserId', value: id },
-  ]
 
-  const usersResult = await executeQuery(usersQuery, teacherId);
+const usersQuery = `
+SELECT email, fname, lname, role, phone, gender
+FROM Users
+WHERE role = 'Teacher' AND user_id = @UserId;
+`;
 
-  return res.send(new ApiResponse(200, usersResult.recordset, "Users fetched successfully"));
+  const usersResult = await request.input('UserId', parsedId).query(usersQuery);
+
+  return res.send(new ApiResponse(200, usersResult.recordset, "Teacher fetched successfully"));
 });
 
 export { allocateTeacherSubject, updateTeacherSubject, getAllTeacher, getTeacherById };

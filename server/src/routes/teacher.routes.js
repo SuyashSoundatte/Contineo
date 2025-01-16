@@ -1,7 +1,7 @@
 import { Router } from "express";
 import verifyToken from "../middlewares/auth.middleware.js";
 import authRole from "../middlewares/role.middleware.js";
-import { allocateTeacherSubject, updateTeacherSubject, getAllTeacher } from "../controllers/teacher.controller.js";
+import { allocateTeacherSubject, updateTeacherSubject, getAllTeacher, getTeacherById } from "../controllers/teacher.controller.js";
 import { validTeacherData } from "../middlewares/teacher.middleware.js";
 
 const router = Router();
@@ -12,4 +12,6 @@ const router = Router();
 router.put('/allocateTeacherSubject', verifyToken, authRole("OfficeStaff", "SuperAdmin"), validTeacherData, updateTeacherSubject)
 
 router.get('/getAllTeacher', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getAllTeacher)
+
+router.get('/getTeacherById/:id', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherById)
 export default router
