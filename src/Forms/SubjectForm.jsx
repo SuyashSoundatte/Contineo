@@ -1,25 +1,58 @@
 import React, { useState } from "react";
 import ReactTable from "../components/ReactTable";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useForm } from "react-hook-form";
 
 const SubjectForm = () => {
   const [topic, setTopic] = useState("");
   const [subtopic, setSubTopic] = useState("");
   const [time, setTime] = useState("");
   const [topicTable, setTopicTable] = useState([]);
+  // const [showToast, setShowToast] = useState(false);
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
 
   const handleAddTopic = () => {
-    if (topic && subtopic && time) {
-      setTopicTable([...topicTable, { topic, subtopic, time }]);
+    try {
+      // Check if all fields are filled
+      if (!data.topic || !data.subtopic || !data.time) {
+        // Show error toast if fields are missing
+        toast.error("Please fill all the fields", {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        // console.log("Error: Fields are missing");
+        return; // Exit early to prevent adding incomplete data
+      }
+
+      // Add topic to the table if all fields are filled
+      setTopicTable([...topicTable, { topic: data.topic, subtopic: data.subtopic, time: data.time }]);
       setTopic("");
       setSubTopic("");
       setTime("");
-    } else {
-      alert("Please fill all the fields");
+
+      reset();
+      // Show success toast after adding a topic
+      toast.success("Topic added successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      console.log("Topic added successfully");
+
+    } catch (error) {
+      // Log any unexpected errors
+      // console.error("Error adding topic:", error);
+      toast.error("An error occurred while adding the topic", {
+        position: "top-right",
+        autoClose: 5000,
+      });
     }
   };
 
   const handleEditTopic = (index) => {
     const selectedTopic = topicTable[index];
+    reset(selectedTopic);
     setTopic(selectedTopic.topic);
     setSubTopic(selectedTopic.subtopic);
     setTime(selectedTopic.time);
@@ -61,18 +94,19 @@ const SubjectForm = () => {
 
   return (
     <div className="p-8 max-w-8xl mx-auto font-sans">
-      <h2 className="text-2xl font-bold mb-6">Subject Form</h2>
+    <h2 className="text-2xl font-bold mb-6">Subject Form</h2>
 
-      <div className="mb-6 p-6 border border-gray-300 rounded-lg shadow-sm">
+    <div className="mb-6 p-6 border border-gray-300 rounded-lg shadow-sm">
+      <form onSubmit={handleSubmit(handleAddTopic)}>
         <div>
           <h3 className="text-lg font-bold mb-4 text-left">Add Topic:</h3>
           <input
             type="text"
             placeholder="Enter Topic"
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
+            {...register("topic", { required: "Topic is required" })}
             className="block w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           />
+          {errors.topic && <p className="text-red-500 text-sm">{errors.topic.message}</p>}
         </div>
 
         <div>
@@ -80,10 +114,10 @@ const SubjectForm = () => {
           <input
             type="text"
             placeholder="Enter Subtopic"
-            value={subtopic}
-            onChange={(e) => setSubTopic(e.target.value)}
+            {...register("subtopic", { required: "Subtopic is required" })}
             className="block w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           />
+          {errors.subtopic && <p className="text-red-500 text-sm">{errors.subtopic.message}</p>}
         </div>
 
         <div>
@@ -91,25 +125,30 @@ const SubjectForm = () => {
           <input
             type="text"
             placeholder="Enter Time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
+            {...register("time", { required: "Time is required" })}
             className="block w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           />
+          {errors.time && <p className="text-red-500 text-sm">{errors.time.message}</p>}
         </div>
 
-        <button
-          onClick={handleAddTopic}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none"
-        >
-          Add Topic
-        </button>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-bold mb-4">Topic List:</h3>
-        <ReactTable records={topicTable} loading={false} error={null} columns={columns} />
-      </div>
+        <div>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none"
+          >
+            Add Topic
+          </button>
+        </div>
+      </form>
     </div>
+
+    <div>
+      <h3 className="text-lg font-bold mb-4">Topic List:</h3>
+      <ReactTable records={topicTable} loading={false} error={null} columns={columns} />
+    </div>
+
+    <ToastContainer />
+  </div>
   );
 };
 
