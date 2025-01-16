@@ -163,11 +163,40 @@ const getAllocatedStudent = asyncHandler(async (req, res) => {
     select u.fname, u.lname, u.gender, s.roll_no, s.class_std
     from users u
     join student s on u.user_id = s.user_id
-    where s.div is null
+    where s.div is null 
   `;
  
   const allocatedStudentResult = await request.query(getAllocatedStudentQuery);
   return res.send(new ApiResponse(200, allocatedStudentResult.recordset, "Allocated Students fetched successfully"));
 });
 
-export { createStudent, allocateStudentDiv, updateStudent, getAllStudent, getStudentByStd, getAllocatedStudent };
+const getStudentById = asyncHandler(async (req, res) => {
+  const id  = req.params.id;
+  const studentByIdQuery = `
+    SELECT u.email, u.fname, u.lname, u.role, u.phone AS phone, u.gender, s.roll_no, s.class_std
+    FROM Users u
+    INNER JOIN student s ON u.user_id = s.user_id
+    WHERE u.role = 'Student' AND u.user_id = @UserId;
+  `
+
+  const studentByIdResult = await executeQuery(studentByIdQuery, [{ name: 'UserId', value: id }]);
+
+  return res.send(new ApiResponse(200, studentByIdResult.recordset, "Student fetched successfully"));
+});
+
+const getStudentByDiv = asyncHandler(async (req, res) => {
+  const div = req.params.div;
+
+  const studentByDivQuery = `
+    SELECT u.user_id, u.fname, u.lname, u.email, u.phone 
+    FROM Users u
+    INNER JOIN student s ON u.user_id = s.user_id
+    WHERE u.role = 'Student' AND s.div = @div;
+  `;
+
+  const studentByDivResult = await executeQuery(studentByDivQuery, [{ name: 'div', value: div }]);
+
+  return res.send(new ApiResponse(200, studentByDivResult.recordset, "Student fetched successfully"));
+})
+
+export { createStudent, allocateStudentDiv, updateStudent, getAllStudent, getStudentByStd, getAllocatedStudent, getStudentById, getStudentByDiv };

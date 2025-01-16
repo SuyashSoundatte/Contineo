@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Input, ReactTable } from '../components/component.js';
+import { ButtonComponent, Input, ReactTable } from '../components/component.js';
 
 const StudentMasterForm = () => {
   const [records, setRecords] = useState([]);
@@ -21,7 +21,6 @@ const StudentMasterForm = () => {
         const response = await axios.get('http://localhost:3000/api/v1/getUsers', {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setRecords(response.data.data);
       } catch (err) {
         setError(err.response?.data?.message || 'Error fetching data');
@@ -50,23 +49,26 @@ const StudentMasterForm = () => {
       sortable: true,
     },
     {
-      name: 'Subject',
-      selector: (row) => row.subject,
+      name: 'Standard',
+      selector: (row) => row.standard,
+      sortable: true,
+    },
+    {
+      name: 'Phone',
+      selector: (row) => row.phone,
       sortable: true,
     },
     {
       name: 'Action',
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-green-700">
-          Assign
-        </button>
+        <ButtonComponent>Add Files</ButtonComponent>
       ),
     },
   ];
 
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
-      <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns} />
+      <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns}/>
     </div>
   );
 };

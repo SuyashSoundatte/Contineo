@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
+import ButtonComponent from './ButtonComponent';
 
 function ReactTable({ records, loading, error, customColumns }) {
   const navigate = useNavigate();

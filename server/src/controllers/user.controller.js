@@ -103,4 +103,22 @@ const logOutUser = asyncHandler(async (req, res) => {
   return res.send(new ApiResponse(200, "User logged out successfully"));
 });
 
-export { loginUser, getAllUsers, getUserById, logOutUser };
+const getAllMentors = asyncHandler(async (req, res) => {
+  const mentorQuery = `
+    select u.fname, u.lname, u.email, u.phone, u.role, u.gender
+    where u.role = 'Mentor';
+  `
+  const mentorResult = await executeQuery(mentorQuery);
+  return res.send(new ApiResponse(200, mentorResult.recordset, "Mentors fetched successfully"));
+})
+
+const getAllClassTeacher = asyncHandler(async (req, res) => {
+  const classTeacherQuery = `
+    select u.fname, u.lname, u.email, u.phone, u.role, u.gender
+    where u.role = 'ClassTeacher';
+  `
+  const classTeacherResult = await executeQuery(classTeacherQuery);
+  return res.send(new ApiResponse(200, classTeacherResult.recordset, "Class Teachers fetched successfully"));
+})
+
+export { loginUser, getAllUsers, getUserById, logOutUser, getAllMentors, getAllClassTeacher };

@@ -75,8 +75,6 @@ const updateTeacherSubject = asyncHandler(async(req, res)=>{
 })
 
 const getAllTeacher = asyncHandler(async (req, res) => {
-  const pool = await poolPromise;
-  const request = pool.request();
 
   const usersQuery = `
     SELECT email, fname, lname, role, phone, gender
@@ -84,28 +82,54 @@ const getAllTeacher = asyncHandler(async (req, res) => {
     WHERE role = 'Teacher';
   `;
   
-  const usersResult = await executeQuery(usersQuery, teacherId);
+  const usersResult = await executeQuery(usersQuery);
 
   return res.send(new ApiResponse(200, usersResult.recordset, "Users fetched successfully"));
 });
 
 const getTeacherById = asyncHandler(async (req, res) => {
-  const pool = await poolPromise;
-  const request = pool.request();
+  const userId  = req.params.id;
+  const parsedId = String(userId); 
 
-const userId  = req.params.id;
-const parsedId = String(userId); 
+  const usersQuery = `
+  SELECT email, fname, lname, role, phone, gender
+  FROM Users
+  WHERE role = 'Teacher' AND user_id = @UserId;
+  `;
 
-
-const usersQuery = `
-SELECT email, fname, lname, role, phone, gender
-FROM Users
-WHERE role = 'Teacher' AND user_id = @UserId;
-`;
-
-  const usersResult = await request.input('UserId', parsedId).query(usersQuery);
+  const usersResult = await executeQuery(usersQuery, [{ name: 'UserId', value: parsedId }]);
 
   return res.send(new ApiResponse(200, usersResult.recordset, "Teacher fetched successfully"));
 });
 
-export { allocateTeacherSubject, updateTeacherSubject, getAllTeacher, getTeacherById };
+const getTeacherByStd = asyncHandler(async(req, res)=>{
+  const std = req.params.std; 
+
+  const teacherByDivQuery = `
+    SELECT u.user_id, u.fname, u.lname, u.email, u.phone 
+    FROM Users u
+    JOIN teacher t ON u.user_id = t.user_id
+    WHERE u.role = 'Teacher' AND t.std = @Std;
+  `;
+
+  const teacherByDivResult = await executeQuery(teacherByDivQuery, [{ name: 'Std', value: std }]);
+
+  return res.send(new ApiResponse(200, teacherByDivResult.recordset, "Teacher fetched successfully"));
+})
+
+const getTeacherBySubject = asyncHandler(async(req, res)=>{
+  const subject = req.params.sub; 
+
+  const teacherBySubjectQuery = `
+    SELECT u.user_id, u.fname, u.lname, u.email, u.phone 
+    FROM Users u
+    JOIN teacher t ON u.user_id = t.user_id
+    WHERE u.role = 'Teacher' AND t.subject = @Subject;
+  `;
+
+  const teacherBySubjectResult = await executeQuery(teacherBySubjectQuery, [{ name: 'Subject', value: subject }]);
+
+  return res.send(new ApiResponse(200, teacherBySubjectResult.recordset, "Teacher fetched successfully"));
+})
+
+export { allocateTeacherSubject, updateTeacherSubject, getAllTeacher, getTeacherById, getTeacherByStd, getTeacherBySubject };
