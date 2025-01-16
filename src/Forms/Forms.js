@@ -7,7 +7,7 @@ import TeacherAllocate from './TeacherAllocate'
 import TeacherForm from './TeacherForm'
 import TeacherMasterForm from './TeacherMasterForm'
 import UserCreate from './UserCreate'
-
+import StudentMasterForm from './StudentMasterForm'
 export {
   AllocateTeacher,
   ClassTeacherForm,
@@ -17,5 +17,6 @@ export {
   TeacherAllocate,
   TeacherForm,
   TeacherMasterForm,
-  UserCreate
+  UserCreate,
+  StudentMasterForm
 }
