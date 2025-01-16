@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Input, ReactTable } from '../components/component.js';
+import { useNavigate } from 'react-router-dom';
 
 const TeacherForm = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState('');
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,20 +52,20 @@ const TeacherForm = () => {
       sortable: true,
     },
     {
-      name: 'Subject',
-      selector: (row) => row.subject,
+      name: 'Email',
+      selector: (row) => row.email,
       sortable: true,
     },
     {
       name: 'Action',
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          Assign
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.user_id}`)}>
+          Add Files
         </button>
       ),
     },
   ];
-
+  
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
       <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns} />

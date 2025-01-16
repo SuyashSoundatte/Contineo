@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ButtonComponent, Input, ReactTable } from '../components/component.js';
+import { useNavigate } from 'react-router-dom';
 
 const StudentMasterForm = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState('');
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,7 +20,7 @@ const StudentMasterForm = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/getUsers', {
+        const response = await axios.get('http://localhost:3000/api/v1/getAllStudents', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setRecords(response.data.data);
@@ -61,7 +63,7 @@ const StudentMasterForm = () => {
     {
       name: 'Action',
       cell: (row) => (
-        <ButtonComponent>Add Files</ButtonComponent>
+        <ButtonComponent onClick={() => navigate(`/MainPage/StudentForm/${row.user_id}`)}>Add Files</ButtonComponent>
       ),
     },
   ];

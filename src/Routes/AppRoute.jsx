@@ -11,7 +11,8 @@ import {
   Select,
   StudentAllocate,
   SubjectAllocate,  
-  Table
+  Table,
+  StudentForm
 } from "../components/component.js";
 
 import {
@@ -48,6 +49,7 @@ const AppRoute = () => {
           <Route path="StudentAllocate" element={<StudentAllocate />} /> {/* Static route */}
           <Route path="MentorAllocate" element={<MentorAllocate />} /> {/* Static route */}
           <Route path="SubjectAllocate" element={<SubjectAllocate />} /> {/* Static route */}
+          <Route path="StudentForm/:user_id" element={<StudentForm />} /> {/* Static route */}
           <Route path="TeacherMasterForm/:user_id" element={<TeacherMasterForm />} /> {/* Dynamic route */}
         </Route>
       </Routes>

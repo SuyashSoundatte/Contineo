@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Select from "../components/Select";
-import ButtonComponent from "../components/ButtonComponent";
-import AddFiles from "../components/AddFiles";
-import Input from "../components/Input";
+import Select from "./Select";
+import ButtonComponent from "./ButtonComponent";
+import AddFiles from "./AddFiles";
+import Input from "./Input";
 
-const TeacherMasterForm = () => {
+const StudentForm = () => {
   const { user_id } = useParams(); // Access the userId parameter from the URL
   const [userData, setUserData] = useState(null); // Store fetched user data
   const [loading, setLoading] = useState(false); // State for loading indicator
@@ -34,7 +34,7 @@ const TeacherMasterForm = () => {
         setLoading(true);
 
         const response = await axios.get(
-          `http://localhost:3000/api/v1/getTeacherById/${user_id}`,
+          `http://localhost:3000/api/v1/getStudentId/${user_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -44,6 +44,7 @@ const TeacherMasterForm = () => {
 
         const user = response.data.data;
         console.log(user)
+        console.log(user.fname)
         setUserData(user);
 
         // Pre-fill form fields with the fetched user data
@@ -77,7 +78,7 @@ const TeacherMasterForm = () => {
   const onSubmit = async (data) => {
     try {
       console.log("Submitting form data:", data);
-      // const response = await axios.post("http://your-backend-api-url/users/update", data);
+      // const response = await axios.get(`http://localhost:3000/api/v1/getStudentId/${user_id}`, data);
       console.log("Form submission successful:", response.data);
       alert("Form submitted successfully!");
     } catch (error) {
@@ -160,4 +161,4 @@ const TeacherMasterForm = () => {
   );
 };
 
-export default TeacherMasterForm;
+export default StudentForm;
