@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import ReactTable from "../components/ReactTable";
+import {
+  ReactTable,
+  CheckboxComponent,
+  ButtonComponent,
+  Select,
+} from "../components/component.js";
 import axios from "axios";
 
 const StudentAllocate = () => {
@@ -20,9 +25,12 @@ const StudentAllocate = () => {
       }
 
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/getUsers", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/getUsers",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setRecords(response.data.data || []);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -41,7 +49,22 @@ const StudentAllocate = () => {
 
   const handleStudentSelect = (studentId) => {
     setSelectedStudents((prev) =>
-      prev.includes(studentId) ? prev.filter((id) => id !== studentId) : [...prev, studentId]
+      prev.includes(studentId)
+        ? prev.filter((id) => id !== studentId)
+        : [...prev, studentId]
+    );
+  };
+
+  const handleCheckboxChange = (event, row) => {
+    const { checked } = event.target;
+
+    // Update the selected state of the specific row
+    setRecords((prevRecords) =>
+      prevRecords.map((record) =>
+        record.user_id === row.user_id
+          ? { ...record, selected: checked }
+          : record
+      )
     );
   };
 
@@ -55,63 +78,59 @@ const StudentAllocate = () => {
   // Custom columns for ReactTable
   const teacherColumns = [
     {
-      name: 'User ID',
+      name: "User ID",
       selector: (row) => row.user_id,
       sortable: true,
     },
     {
-      name: 'First Name',
+      name: "First Name",
       selector: (row) => row.fname,
       sortable: true,
     },
     {
-      name: 'Last Name',
+      name: "Last Name",
       selector: (row) => row.lname,
       sortable: true,
     },
     {
-      name: 'Subject',
+      name: "Subject",
       selector: (row) => row.subject,
       sortable: true,
     },
     {
-      name: 'Action',
+      name: "Action",
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-green-700">
-          Assign
-        </button>
+        <CheckboxComponent
+          label='Select'
+          checked={row.selected} // assuming "selected" is part of your row data
+          onChange={(e) => handleCheckboxChange(e, row)} // handle the change event
+          className='ml-2'
+        />
       ),
     },
   ];
 
   return (
-    <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
+    <div className='w-full max-w-8xl mx-auto p-4 space-y-6'>
       {/* Filter Section */}
-      <div className="flex flex-col gap-4 mb-6">
-        <div className="flex gap-4">
-          <select
-            onChange={handleStdChange}
-            value={selectedStd}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="">Select Standard</option>
-            <option value="std1">Standard 1</option>
-            <option value="std2">Standard 2</option>
-            <option value="std3">Standard 3</option>
-          </select>
-
-          <input
-            type="text"
-            placeholder="Enter PNR Number"
-            value={selectedPnr}
-            onChange={handlePnrChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+      <div className='flex flex-col gap-4 mb-6'>
+        <div className='flex gap-4'>
+          <Select
+            label='Standard'
+            options={["standard","Std 11", "Std 12"]}
           />
+          <Select 
+            label='Division'
+            options={["Division", "Division A", "Division B"]}
+          />
+          <div className="flex justify-center items-end">
+            <ButtonComponent>Add</ButtonComponent>
+          </div>
         </div>
       </div>
 
       {/* Student Table with Filtered Data */}
-      <div className="bg-white shadow overflow-hidden rounded-md">
+      <div className='bg-white shadow overflow-hidden rounded-md'>
         <ReactTable
           customColumns={teacherColumns} // Pass custom columns here
           records={filteredRecords}
@@ -119,6 +138,7 @@ const StudentAllocate = () => {
           error={error}
           onStudentSelect={handleStudentSelect}
           selectedStudents={selectedStudents}
+          btnValue={"Add To div"}
         />
       </div>
     </div>

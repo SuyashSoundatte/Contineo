@@ -68,7 +68,7 @@ const StudentMasterForm = () => {
 
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
-      <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns} />
+      <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns}/>
     </div>
   );
 };
