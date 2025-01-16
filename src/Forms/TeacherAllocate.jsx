@@ -22,9 +22,10 @@ const TeacherAllocate = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/getUsers', {
+        const response = await axios.get('http://localhost:3000/api/v1/getAllTeacher', {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log(response.data)
 
         const enrichedData = response.data.data.map((record) => ({
           ...record,
@@ -96,6 +97,11 @@ const TeacherAllocate = () => {
     {
       name: 'Subject',
       selector: (row) => row.sub,
+      sortable: true,
+    },
+    {
+      name: 'Standard',
+      selector: (row) => row.standard,
       sortable: true,
     },
     {

@@ -12,14 +12,10 @@ import {
   StudentAllocate,
   SubjectAllocate,  
   Table,
-<<<<<<< HEAD
   StudentForm,
-  ClassTeacherAllocate
-=======
   ClassTeacherAllocate,
   MentorInchargeAllocate,
   ClassTeacherInchargeAllocate
->>>>>>> 2582df4 (forntend fetch addedd)
 } from "../components/component.js";
 
 import {
