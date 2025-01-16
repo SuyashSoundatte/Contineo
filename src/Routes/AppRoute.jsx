@@ -23,7 +23,8 @@ import {
   TeacherAllocate,
   TeacherForm,
   TeacherMasterForm,
-  UserCreate
+  UserCreate,
+  StudentMasterForm
 } from "../Forms/Forms.js";
 
 const AppRoute = () => {
@@ -40,6 +41,7 @@ const AppRoute = () => {
           <Route path="UserForm" element={<UserCreate />} /> {/* Static route */}
           <Route path="TeacherForm" element={<TeacherForm />} /> {/* Static route */}
           <Route path="TeacherMasterForm" element={<TeacherMasterForm />} /> {/* Static route */}
+          <Route path="StudentMasterForm" element={<StudentMasterForm />}  />
           <Route path="SubjectForm" element={<SubjectForm />} /> {/* Static route */}
           <Route path="StudentCreate" element={<StudentCreate />} /> {/* Static route */}
           <Route path="TeacherAllocate" element={<TeacherAllocate />} /> {/* Static route */}
