@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import ReactTable from '../components/ReactTable';
 import axios from 'axios';
 
-const SubjectAllocate = () => {
+const ClassTeacherInchargeAllocate = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSubject, setSelectedSubject] = useState('');
-  const [selectedTeacherId, setSelectedTeacherId] = useState('');
-  const [selectedTeachers, setSelectedTeachers] = useState([]);
+  const [selectedStd, setSelectedStd] = useState('');
+  const [selectedMentorId, setSelectedMentorId] = useState('');
+  const [selectedMentors, setSelectedMentors] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +20,7 @@ const SubjectAllocate = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/getAllTeacher', {
+        const response = await axios.get('http://localhost:3000/api/v1/getAllClassTeacher', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -41,33 +41,34 @@ const SubjectAllocate = () => {
     console.log("Records updated:", records); // Log records after they are set
   }, [records]);
 
-  const handleSubjectChange = (event) => {
-    setSelectedSubject(event.target.value);
+  const handleStdChange = (event) => {
+    setSelectedStd(event.target.value);
   };
 
-  const handleTeacherIdChange = (event) => {
-    setSelectedTeacherId(event.target.value);
+  const handleMentorIdChange = (event) => {
+    setSelectedMentorId(event.target.value);
   };
 
-  const handleTeacherSelect = (teacherId) => {
-    setSelectedTeachers((prevSelectedTeachers) => {
-      if (prevSelectedTeachers.includes(teacherId)) {
-        return prevSelectedTeachers.filter(id => id !== teacherId);
+  const handleMentorSelect = (mentorId) => {
+    setSelectedMentors((prevSelectedMentors) => {
+      if (prevSelectedMentors.includes(mentorId)) {
+        return prevSelectedMentors.filter(id => id !== mentorId);
       } else {
-        return [...prevSelectedTeachers, teacherId];
+        return [...prevSelectedMentors, mentorId];
       }
     });
   };
 
   const filteredRecords = records.filter(record => {
     return (
-      (selectedSubject ? record.subject === selectedSubject : true) &&
-      (selectedTeacherId ? record.teacherId.includes(selectedTeacherId) : true)
+      (selectedStd ? record.std === selectedStd : true) &&
+      (selectedMentorId ? record.mentorId.includes(selectedMentorId) : true)
     );
   });
-  const subject_allocate_columns = [
+
+  const mentor_allocate_columns = [
     {
-      name: 'User ID',
+      name: 'Mentor ID',
       selector: (row) => row.user_id,
       sortable: true,
     },
@@ -81,7 +82,11 @@ const SubjectAllocate = () => {
       selector: (row) => row.lname,
       sortable: true,
     },
-   
+    {
+      name: 'Role',
+      selector: (row) => row.role,
+      sortable: true,
+    },
     {
       name: 'Subject',
       selector: (row) => row.subject,
@@ -116,7 +121,7 @@ const SubjectAllocate = () => {
       name: 'Action',
       cell: (row) => (
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-          View
+          Select
         </button>
       ),
     },
@@ -128,40 +133,40 @@ const SubjectAllocate = () => {
       <div className="flex flex-col gap-4 mb-6">
         <div className="flex gap-4">
           <select 
-            onChange={handleSubjectChange} 
-            value={selectedSubject} 
+            onChange={handleStdChange} 
+            value={selectedStd} 
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           >
-            <option value="">Select Subject</option>
-            <option value="Math">Math</option>
-            <option value="Science">Science</option>
-            <option value="English">English</option>
+            <option value="">Select Standard</option>
+            <option value="std1">Standard 1</option>
+            <option value="std2">Standard 2</option>
+            <option value="std3">Standard 3</option>
             {/* Add more options as per your data */}
           </select>
 
           <input
             type="text"
-            placeholder="Enter Teacher ID"
-            value={selectedTeacherId}
-            onChange={handleTeacherIdChange}
+            placeholder="Enter Mentor ID"
+            value={selectedMentorId}
+            onChange={handleMentorIdChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
       </div>
 
-      {/* Teacher Table with Filtered Data */}
+      {/* Mentor Table with Filtered Data */}
       <div className="bg-white shadow overflow-hidden rounded-md">
         <ReactTable
-        customColumns={subject_allocate_columns}
+        customColumns={mentor_allocate_columns}
           records={filteredRecords}
           loading={loading}
           error={error}
-          onTeacherSelect={handleTeacherSelect}
-          selectedTeachers={selectedTeachers}
+          onMentorSelect={handleMentorSelect}
+          selectedMentors={selectedMentors}
         />
       </div>
     </div>
   );
 };
 
-export default SubjectAllocate;
+export default ClassTeacherInchargeAllocate;

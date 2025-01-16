@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Select from "../components/Select";
-import ButtonComponent from "../components/ButtonComponent";
-import AddFiles from "../components/AddFiles";
-import Input from "../components/Input";
+import Select from "./Select";
+import ButtonComponent from "./ButtonComponent";
+import AddFiles from "./AddFiles";
+import Input from "./Input";
 
-const TeacherMasterForm = () => {
+const StudentForm = () => {
   const { user_id } = useParams(); // Access the userId parameter from the URL
   const [userData, setUserData] = useState(null); // Store fetched user data
   const [loading, setLoading] = useState(false); // State for loading indicator
@@ -34,7 +34,7 @@ const TeacherMasterForm = () => {
         setLoading(true);
 
         const response = await axios.get(
-          `http://localhost:3000/api/v1/getTeacherById/${user_id}`,
+          `http://localhost:3000/api/v1/getStudentId/${user_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -54,9 +54,6 @@ const TeacherMasterForm = () => {
         setValue("role", user.role);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        if (error.response) {
-          console.error("Response data:", error.response.data);
-        }
       } finally {
         setLoading(false);
       }
@@ -77,8 +74,9 @@ const TeacherMasterForm = () => {
   const onSubmit = async (data) => {
     try {
       console.log("Submitting form data:", data);
-      // const response = await axios.post("http://your-backend-api-url/users/update", data);
-      console.log("Form submission successful:", response?.data);
+      // Uncomment and configure the actual API call
+      // const response = await axios.post("API_ENDPOINT", data);
+      console.log("Form submission successful!");
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error submitting form data:", error);
@@ -108,7 +106,7 @@ const TeacherMasterForm = () => {
               <Input
                 id="user_id"
                 type="text"
-                value={user_id}
+                defaultValue={userData.user_id}
                 readOnly
                 {...register("user_id")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -121,11 +119,23 @@ const TeacherMasterForm = () => {
               <Input
                 id="fname"
                 type="text"
-                defaultValue={userData?.fname} // Corrected defaultValue
+                defaultValue={userData.fname}
                 {...register("fname", { required: "First Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
               {errors.fname && <span className="text-red-500 text-xs">{errors.fname.message}</span>}
+            </div>
+            <div className="flex flex-col w-1/2">
+              <label htmlFor="mname" className="block text-sm font-medium text-gray-700">
+                Middle Name
+              </label>
+              <Input
+                id="mname"
+                type="text"
+                defaultValue={userData.mname}
+                {...register("mname")}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
             <div className="flex flex-col w-1/2">
               <label htmlFor="lname" className="block text-sm font-medium text-gray-700">
@@ -134,7 +144,7 @@ const TeacherMasterForm = () => {
               <Input
                 id="lname"
                 type="text"
-                defaultValue={userData?.lname} // Corrected defaultValue
+                defaultValue={userData.lname}
                 {...register("lname", { required: "Last Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -160,4 +170,4 @@ const TeacherMasterForm = () => {
   );
 };
 
-export default TeacherMasterForm;
+export default StudentForm;

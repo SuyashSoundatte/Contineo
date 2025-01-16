@@ -20,7 +20,7 @@ const ClassTeacherAllocate = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/getUsers', {
+        const response = await axios.get('http://localhost:3000/api/v1/getAllClassTeacher', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
