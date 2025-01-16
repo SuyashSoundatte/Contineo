@@ -43,7 +43,7 @@ const TeacherMasterForm = () => {
         );
 
         const user = response.data.data;
-        console.log(user)
+        console.log(user);
         setUserData(user);
 
         // Pre-fill form fields with the fetched user data
@@ -78,7 +78,7 @@ const TeacherMasterForm = () => {
     try {
       console.log("Submitting form data:", data);
       // const response = await axios.post("http://your-backend-api-url/users/update", data);
-      console.log("Form submission successful:", response.data);
+      console.log("Form submission successful:", response?.data);
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error submitting form data:", error);
@@ -121,7 +121,7 @@ const TeacherMasterForm = () => {
               <Input
                 id="fname"
                 type="text"
-                defaultValue={fname}
+                defaultValue={userData?.fname} // Corrected defaultValue
                 {...register("fname", { required: "First Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -134,7 +134,7 @@ const TeacherMasterForm = () => {
               <Input
                 id="lname"
                 type="text"
-                defaultValue={lname}
+                defaultValue={userData?.lname} // Corrected defaultValue
                 {...register("lname", { required: "Last Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />

@@ -9,7 +9,6 @@ import SubjectAllocate from "./SubjectAllocate";
 import Table from "./Table";
 import CheckboxComponent from "./CheckboxComponent";
 import StudentForm from "./StudentForm";  
-
 import ClassTeacherAllocate from "./ClassTeacherAllocate";
 import MentorAllocate from "./MentorAllocate";
 export {
@@ -24,7 +23,6 @@ export {
   SubjectAllocate,  
   Table,
   CheckboxComponent,
-  StudentForm
-  CheckboxComponent,
+  StudentForm,
   ClassTeacherAllocate
 }

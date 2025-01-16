@@ -12,11 +12,8 @@ import {
   StudentAllocate,
   SubjectAllocate,  
   Table,
-<<<<<<< HEAD
-  StudentForm
-=======
+  StudentForm,
   ClassTeacherAllocate
->>>>>>> b9852de1ca052856ac7cd6e6796cf6ecf5b54b7f
 } from "../components/component.js";
 
 import {

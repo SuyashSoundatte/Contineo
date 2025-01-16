@@ -7,7 +7,6 @@ const TeacherForm = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState('');
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -25,6 +24,7 @@ const TeacherForm = () => {
         });
 
         setRecords(response.data.data);
+        console.log(response.data.data);
       } catch (err) {
         setError(err.response?.data?.message || 'Error fetching data');
       } finally {
