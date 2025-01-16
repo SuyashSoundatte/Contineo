@@ -10,7 +10,8 @@ const studentSchema = joi.object({
   address: joi.string().required(),
   roll_no: joi.string().required(),
   gender: joi.string().required(),
-  dob: joi.string().pattern(/^([0-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/).required(), 
+  dob: joi.string().pattern(/^([0-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/).required(),
+  class_std: joi.string().required() 
 })
 
 

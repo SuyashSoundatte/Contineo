@@ -2,7 +2,7 @@ import { Router } from "express";
 import verifyToken from "../middlewares/auth.middleware.js";
 import authRole from "../middlewares/role.middleware.js";
 import { validStudent, validStudentDiv, getStudentId } from "../middlewares/student.middleware.js";
-import { createStudent, allocateStudentDiv, updateStudent, getAllStudent, getStudentByStd, getAllocatedStudent, getStudentById, getStudentByDiv } from "../controllers/student.controller.js";
+import { createStudent, allocateStudentDiv, updateStudent, getAllStudent, getStudentByStd, getAllocatedStudent, getStudentById, getStudentByDiv, assignMultipleStudentsDivStd } from "../controllers/student.controller.js";
 
 const router = Router();
 
@@ -24,5 +24,7 @@ router.get('/getAllocatedStudent', verifyToken, authRole("OfficeStaff", "SuperAd
 router.get('/getStudentByDiv/:div', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getStudentByDiv)
 
 router.get('/getStudentId/:id', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getStudentById)
+
+router.post('/assignMultipleStudentByDivStd', verifyToken, authRole("OfficeStaff", "SuperAdmin"), assignMultipleStudentsDivStd)
 
 export default router
