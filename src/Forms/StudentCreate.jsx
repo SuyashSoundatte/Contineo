@@ -19,15 +19,15 @@ const StudentCreate = () => {
         const [year, month, day] = dateString.split("-");
         return `${day}-${month}-${year}`;
       };
-
+      
       const formattedData = {
         ...data,
-        DOB: formatDate(data.DOB), // Replace DOB with the formatted date
+        dob: formatDate(data.dob), // Replace DOB with the formatted date
       };
       
       const token = localStorage.getItem("token");
       // Send data to the backend
-      const response = await axios.post("http://localhost:3000/api/v1/createUser", formattedData,
+      const response = await axios.post("http://localhost:3000/api/v1/createStudent", formattedData,
         {
           headers: {
             Authorization: `Bearer ${token}` // Include token in the header
@@ -36,12 +36,12 @@ const StudentCreate = () => {
       );
 
       // Log the response or show success feedback
-      console.log("User created successfully:", response.data);
-      alert("User created successfully!");
+      console.log("Student created successfully:", response.data);
+      alert("Student created successfully!");
     } catch (error) {
       // Handle errors
-      console.error("Error creating user:", error.response?.data || error.message);
-      alert("Failed to create user. Please try again.");
+      console.error("Error creating Student:", error.response?.data || error.message);
+      alert("Failed to create student. Please try again.");
     }
   };
 
@@ -117,12 +117,12 @@ const StudentCreate = () => {
                 <Input
                   label="Date of Birth"
                   type="date"
-                  name="DOB"
+                  name="dob"
                   placeholder="Enter Date of Birth"
-                  {...register("DOB", { required: "Date of Birth is required" })}
+                  {...register("dob", { required: "Date of Birth is required" })}
                 />
-                {errors.DOB && (
-                  <p className="text-red-500 text-sm mt-1">{errors.DOB.message}</p>
+                {errors.dob && (
+                  <p className="text-red-500 text-sm mt-1">{errors.dob.message}</p>
                 )}
               </div>
             </div>
@@ -144,12 +144,12 @@ const StudentCreate = () => {
                 <Input
                   label="Roll Number"
                   type="text"
-                  name="rollnumber"
+                  name="roll_no"
                   placeholder="Enter Roll Number"
-                  {...register("rollnumber", { required: "Roll Number is required" })}
+                  {...register("roll_no", { required: "Roll Number is required" })}
                 />
-                {errors.rollnumber && (
-                  <p className="text-red-500 text-sm mt-1">{errors.rollnumber.message}</p>
+                {errors.roll_no && (
+                  <p className="text-red-500 text-sm mt-1">{errors.roll_no.message}</p>
                 )}
               </div>
             </div>
@@ -169,12 +169,12 @@ const StudentCreate = () => {
               </div>
               <div>
                 <Select
-                  label="Role"
-                  options={["Student"]}
-                  {...register("role", { required: "Role is required" })}
+                  label="Standard"
+                  options={["11", "12"]}
+                  {...register("class_std", { required: "Standard is required" })}
                 />
-                {errors.role && (
-                  <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+                {errors.class_std && (
+                  <p className="text-red-500 text-sm mt-1">{errors.class_std.message}</p>
                 )}
               </div>
             </div>

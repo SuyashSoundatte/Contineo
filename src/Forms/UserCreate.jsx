@@ -22,7 +22,7 @@ const UserCreate = () => {
 
       const formattedData = {
         ...data,
-        DOB: formatDate(data.DOB),
+        dob: formatDate(data.dob),
       };
       
       const token = localStorage.getItem("token");
@@ -116,12 +116,12 @@ const UserCreate = () => {
                   <Input
                     label="Date of Birth"
                     type="date"
-                    name="DOB"
+                    name="dob"
                     placeholder="Enter Date of Birth"
-                    {...register("DOB", { required: "Date of Birth is required" })}
+                    {...register("dob", { required: "Date of Birth is required" })}
                   />
-                  {errors.DOB && (
-                    <p className="text-red-500 text-sm mt-1">{errors.DOB.message}</p>
+                  {errors.dob && (
+                    <p className="text-red-500 text-sm mt-1">{errors.dob.message}</p>
                   )}
                 </div>
               </div>

@@ -23,53 +23,66 @@ const createStudent = asyncHandler(async (req, res) => {
     email,
     roll_no,
     phone,
+    class_std
   } = req.body;
 
-  if (!fname || !mname || !lname || !address || !gender || !dob || !email || !roll_no || !phone) {
+  if (!fname || !mname || !lname || !address || !gender || !dob || !email || !roll_no || !phone || !class_std) {
     throw new ApiError(400, "Please provide all the required fields");
   }
 
+  // Check if email already exists
   const checkEmailQuery = "SELECT COUNT(*) AS count FROM Users WHERE email = @Email";
-  const existingEmail = await executeQuery(checkEmailQuery, [{ name: 'Email', value: email }]);
+  const existingEmail = await executeQuery(checkEmailQuery, [{ name: "Email", value: email }]);
 
   if (existingEmail.recordset[0].count > 0) {
     throw new ApiError(400, "Email already in use");
   }
 
+  // Insert the user into the Users table
   const insertUserQuery = `
     INSERT INTO Users (fname, mname, lname, address, gender, dob, email, phone, role, password)
-    VALUES (@Fname, @Mname, @Lname, @Address, @Gender, @dob, @Email, @phone, 'Student', @dob);
+    VALUES (@Fname, @Mname, @Lname, @Address, @Gender, @Dob, @Email, @Phone, 'Student', @Dob);
     SELECT SCOPE_IDENTITY() AS id;
   `;
-
   const userParams = [
-    { name: 'Fname', value: fname },
-    { name: 'Mname', value: mname },
-    { name: 'Lname', value: lname },
-    { name: 'Address', value: address },
-    { name: 'Gender', value: gender },
-    { name: 'dob', value: dob },
-    { name: 'Email', value: email },
-    { name: 'phone', value: phone },
+    { name: "Fname", value: fname },
+    { name: "Mname", value: mname },
+    { name: "Lname", value: lname },
+    { name: "Address", value: address },
+    { name: "Gender", value: gender },
+    { name: "Dob", value: dob },
+    { name: "Email", value: email },
+    { name: "Phone", value: phone },
   ];
 
   const userResult = await executeQuery(insertUserQuery, userParams);
   const userId = userResult.recordset[0].id;
 
-  const insertStudentQuery = `
-    INSERT INTO student (user_id, roll_no)
-    VALUES (@UserId, @RollNo);
+  // Update the student table if a predefined row exists for the roll_no
+  const updateStudentQuery = `
+    UPDATE student
+    SET user_id = @UserId, class_std = @ClassStd
+    WHERE roll_no = @RollNo;
   `;
-
   const studentParams = [
-    { name: 'UserId', value: userId },
-    { name: 'RollNo', value: roll_no },
+    { name: "UserId", value: userId },
+    { name: "RollNo", value: roll_no },
+    { name: "ClassStd", value: class_std },
   ];
+  const updateResult = await executeQuery(updateStudentQuery, studentParams);
 
-  await executeQuery(insertStudentQuery, studentParams);
+  // If no rows were updated, insert a new row into the student table
+  if (updateResult.rowsAffected[0] === 0) {
+    const insertStudentQuery = `
+      INSERT INTO student (user_id, roll_no, class_std)
+      VALUES (@UserId, @RollNo, @ClassStd);
+    `;
+    await executeQuery(insertStudentQuery, studentParams);
+  }
 
   return res.send(new ApiResponse(201, { id: userId, email }, "Student created successfully"));
 });
+
 
 const allocateStudentDiv = asyncHandler(async (req, res) => {
   const { userId, stdId, divId } = req.body;
