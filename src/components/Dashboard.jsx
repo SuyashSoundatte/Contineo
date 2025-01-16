@@ -1,23 +1,23 @@
-import { Button } from "@mui/material";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import ButtonComponent from "./ButtonComponent";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import ButtonComponent from "./ButtonComponent";
 
 const Dashboard = () => {
   const { setIsLoggedIn, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/Login");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate]);
+
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      // Logout logic
       await axios.get("http://localhost:3000/api/v1/logout", {
         headers: {
           "Content-Type": "application/json",
@@ -26,7 +26,6 @@ const Dashboard = () => {
         withCredentials: true,
       });
 
-      // Log out user by setting isLoggedIn to false
       localStorage.removeItem("token");
       setIsLoggedIn(false);
     } catch (err) {
@@ -35,73 +34,77 @@ const Dashboard = () => {
   };
 
   return (
-    <aside className='bg-gray-800 text-white shadow-md fixed h-screen py-8 px-1'>
-      <div className='py-4 px-6'>
-        <h1 className='text-2xl font-semibold text-blue-400'>Dashboard</h1>
+    <aside className="bg-gradient-to-b from-gray-800 to-gray-900 text-white shadow-xl fixed h-screen w-48 md:w-56 lg:w-64 py-6 px-3 overflow-y-auto transition-all duration-300 ease-in-out">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-blue-400 tracking-wide">Dashboard</h1>
       </div>
-      <nav className='mt-4'>
-        <ul>
-          <li className='group'>
-            <div className='px-6 py-3 text-gray-400 group-hover:bg-gray-700 group-hover:text-white transition-all rounded-lg '>
-              <span className='text-lg font-medium '>User</span>
-            </div>
-            <ul className='ml-4 text-sm mt-1 space-y-1'>
-              <Link to='/MainPage/UserForm'>
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  User Create Form
-                </li>
-              </Link>
-              <Link to='/MainPage/StudentCreate'>
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  Student Create Form
-                </li>
-              </Link>
-            </ul>
-          </li>
-          <li className='group'>
-            <div className='px-6 py-3 text-gray-400 group-hover:bg-gray-700 group-hover:text-white transition-all rounded-lg '>
-              <span className='text-lg font-medium'>Teacher</span>
-            </div>
-            <ul className='ml-4 text-sm mt-1 space-y-1'>
-              <Link to='/MainPage/TeacherForm'>
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  Teacher Master Form
-                </li>
-              </Link>
-              <Link to='/MainPage/SubjectForm'>
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  Subject Master Form
-                </li>
-              </Link>
-              <Link to='/MainPage/TeacherAllocate'>
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  Teacher Allocate Form
-                </li>
-              </Link>
-              <Link to='/MainPage/StudentAllocate'>
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  Student Allocate Form
-                </li>
-              </Link>
-              <Link to='/MainPage/MentorAllocate'>  
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  Mentor Allocate Form
-                </li>
-              </Link>
-              <Link to='/MainPage/SubjectAllocate'>  
-                <li className='px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg '>
-                  Subject Allocate Form
-                </li>
-              </Link>
-            </ul>
-          </li>
-        </ul>
+      <nav className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50">
+            User
+          </h2>
+          <ul className="ml-4 space-y-2">
+            <Link to="/MainPage/UserForm">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                User Create Form
+              </li>
+            </Link>
+            <Link to="/MainPage/StudentCreate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Student Create Form
+              </li>
+            </Link>
+          </ul>
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50">
+            Teacher
+          </h2>
+          <ul className="ml-4 space-y-2">
+            <Link to="/MainPage/TeacherForm">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Teacher Master Form
+              </li>
+            </Link>
+            <Link to="/MainPage/SubjectForm">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Subject Master Form
+              </li>
+            </Link>
+            <Link to="/MainPage/TeacherAllocate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Teacher Allocate Form
+              </li>
+            </Link>
+            <Link to="/MainPage/StudentAllocate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Student Allocate Form
+              </li>
+            </Link>
+            <Link to="/MainPage/MentorAllocate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Mentor Allocate Form
+              </li>
+            </Link>
+            <Link to="/MainPage/SubjectAllocate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Subject Allocate Form
+              </li>
+            </Link>
+          </ul>
+        </div>
       </nav>
-      <ButtonComponent className='absolute bottom-4 w-3/4 ' onClick={handleLogout}>
-        Log Out
-      </ButtonComponent>
+      <div className="absolute bottom-4 left-3 right-3">
+        <ButtonComponent
+          className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200"
+          onClick={handleLogout}
+        >
+          Log Out
+        </ButtonComponent>
+      </div>
     </aside>
   );
 };
 
 export default Dashboard;
+
