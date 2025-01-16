@@ -108,6 +108,16 @@ const Dashboard = () => {
                 Subject Master Form
               </li>
             </Link>
+            <Link to="/MainPage/MentorInchargeAllocate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Mentor Incharge Form
+              </li>
+            </Link>
+            <Link to="/MainPage/ClassTeacherInchargeAllocate">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Class Teacher Incharge Form
+              </li>
+            </Link>
           </ul>
         </div>
       </nav>

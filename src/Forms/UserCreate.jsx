@@ -169,7 +169,7 @@ const UserCreate = () => {
                 <div>
                   <Select
                     label="Role"
-                    options={["Teacher", "Office Staff"]}
+                    options={["Teacher", "OfficeStaff", "Mentor", "ClassIn", "MentorIn", "ClassTeacher"]}
                     {...register("role", { required: "Role is required" })}
                   />
                   {errors.role && (

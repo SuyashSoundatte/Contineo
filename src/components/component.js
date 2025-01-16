@@ -11,6 +11,9 @@ import CheckboxComponent from "./CheckboxComponent";
 import StudentForm from "./StudentForm";  
 import ClassTeacherAllocate from "./ClassTeacherAllocate";
 import MentorAllocate from "./MentorAllocate";
+import MentorInchargeAllocate from "./MentorInchargeAllocate";
+import ClassTeacherInchargeAllocate from "./ClassTeacherInchargeAllocate.jsx";
+
 export {
   AddFiles,
   ButtonComponent,
@@ -24,5 +27,7 @@ export {
   Table,
   CheckboxComponent,
   StudentForm,
-  ClassTeacherAllocate
+  ClassTeacherAllocate,
+  MentorInchargeAllocate,
+  ClassTeacherInchargeAllocate
 }

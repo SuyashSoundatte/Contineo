@@ -20,7 +20,7 @@ const MentorAllocate = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/getUsers', {
+        const response = await axios.get('http://localhost:3000/api/v1/getAllMentors', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
