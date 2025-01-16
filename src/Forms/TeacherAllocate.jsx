@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import ReactTable from '../components/ReactTable';
 import axios from 'axios';
+import { Input, ReactTable } from '../components/component.js';
 
 const TeacherAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -24,10 +24,10 @@ const TeacherAllocate = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("Fetched Data:", response.data); // Log full response
-        setRecords(response.data.data); // Set records after fetching data
+        console.log("Fetched Data:", response.data);
+        setRecords(response.data.data);
       } catch (err) {
-        console.error("Error fetching data:", err); // Log error for better debugging
+        console.error("Error fetching data:", err);
         setError(err.response?.data?.message || 'Error fetching data');
       } finally {
         setLoading(false);
@@ -38,7 +38,7 @@ const TeacherAllocate = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Records updated:", records); // Log records after they are set
+    console.log("Records updated:", records);
   }, [records]);
 
   const handleStdChange = (event) => {
@@ -67,33 +67,67 @@ const TeacherAllocate = () => {
   });
 
   return (
-    <div className='w-full'>
-      {/* Filter Section */}
-      <div className="filters mb-4">
-        <select onChange={handleStdChange} value={selectedStd} className="mr-4">
-          <option value="">Select Standard</option>
-          <option value="std1">Standard 1</option>
-          <option value="std2">Standard 2</option>
-          <option value="std3">Standard 3</option>
-          {/* Add more options as per your data */}
-        </select>
-        <select onChange={handleSubChange} value={selectedSub} className="mr-4">
-          <option value="">Select Subject</option>
-          <option value="math">Math</option>
-          <option value="science">Science</option>
-          <option value="english">English</option>
-          {/* Add more options as per your data */}
-        </select>
-      </div>
+    <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
+      <form className="space-y-4">
+        {/* Filter Section */}
+        <div className="space-y-2">
+          <label htmlFor="std" className="block text-sm font-medium text-gray-700">
+            Standard
+          </label>
+          <select
+            id="std"
+            onChange={handleStdChange}
+            value={selectedStd}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select Standard</option>
+            <option value="std1">Standard 1</option>
+            <option value="std2">Standard 2</option>
+            <option value="std3">Standard 3</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="sub" className="block text-sm font-medium text-gray-700">
+            Subject
+          </label>
+          <select
+            id="sub"
+            onChange={handleSubChange}
+            value={selectedSub}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select Subject</option>
+            <option value="math">Math</option>
+            <option value="science">Science</option>
+            <option value="english">English</option>
+          </select>
+        </div>
+      </form>
 
-      {/* Teacher Table with Filtered Data */}
-      <ReactTable
-        records={filteredRecords}
-        loading={loading}
-        error={error}
-        onTeacherSelect={handleTeacherSelect}
-        selectedTeachers={selectedTeachers}
-      />
+      {/* Error Handling */}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Error!</strong>
+          <span className="block sm:inline"> {error}</span>
+        </div>
+      )}
+
+      {/* Loading State */}
+      {loading ? (
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-full"></div>
+          <div className="h-4 bg-gray-200 rounded w-full"></div>
+          <div className="h-4 bg-gray-200 rounded w-full"></div>
+        </div>
+      ) : (
+        <ReactTable
+          records={filteredRecords}
+          loading={loading}
+          error={error}
+          onTeacherSelect={handleTeacherSelect}
+          selectedTeachers={selectedTeachers}
+        />
+      )}
     </div>
   );
 };

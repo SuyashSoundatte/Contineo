@@ -67,33 +67,42 @@ const MentorAllocate = () => {
   });
 
   return (
-    <div className='w-full'>
+    <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
       {/* Filter Section */}
-      <div className="filters mb-4">
-        <select onChange={handleStdChange} value={selectedStd} className="mr-4">
-          <option value="">Select Standard</option>
-          <option value="std1">Standard 1</option>
-          <option value="std2">Standard 2</option>
-          <option value="std3">Standard 3</option>
-          {/* Add more options as per your data */}
-        </select>
-        <input
-          type="text"
-          placeholder="Enter Mentor ID"
-          value={selectedMentorId}
-          onChange={handleMentorIdChange}
-          className="mr-4"
-        />
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex gap-4">
+          <select 
+            onChange={handleStdChange} 
+            value={selectedStd} 
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select Standard</option>
+            <option value="std1">Standard 1</option>
+            <option value="std2">Standard 2</option>
+            <option value="std3">Standard 3</option>
+            {/* Add more options as per your data */}
+          </select>
+
+          <input
+            type="text"
+            placeholder="Enter Mentor ID"
+            value={selectedMentorId}
+            onChange={handleMentorIdChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
       </div>
 
       {/* Mentor Table with Filtered Data */}
-      <ReactTable
-        records={filteredRecords}
-        loading={loading}
-        error={error}
-        onMentorSelect={handleMentorSelect}
-        selectedMentors={selectedMentors}
-      />
+      <div className="bg-white shadow overflow-hidden rounded-md">
+        <ReactTable
+          records={filteredRecords}
+          loading={loading}
+          error={error}
+          onMentorSelect={handleMentorSelect}
+          selectedMentors={selectedMentors}
+        />
+      </div>
     </div>
   );
 };

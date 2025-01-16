@@ -67,33 +67,42 @@ const SubjectAllocate = () => {
   });
 
   return (
-    <div className='w-full'>
+    <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
       {/* Filter Section */}
-      <div className="filters mb-4">
-        <select onChange={handleSubjectChange} value={selectedSubject} className="mr-4">
-          <option value="">Select Subject</option>
-          <option value="Math">Math</option>
-          <option value="Science">Science</option>
-          <option value="English">English</option>
-          {/* Add more options as per your data */}
-        </select>
-        <input
-          type="text"
-          placeholder="Enter Teacher ID"
-          value={selectedTeacherId}
-          onChange={handleTeacherIdChange}
-          className="mr-4"
-        />
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex gap-4">
+          <select 
+            onChange={handleSubjectChange} 
+            value={selectedSubject} 
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select Subject</option>
+            <option value="Math">Math</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+            {/* Add more options as per your data */}
+          </select>
+
+          <input
+            type="text"
+            placeholder="Enter Teacher ID"
+            value={selectedTeacherId}
+            onChange={handleTeacherIdChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
       </div>
 
       {/* Teacher Table with Filtered Data */}
-      <ReactTable
-        records={filteredRecords}
-        loading={loading}
-        error={error}
-        onTeacherSelect={handleTeacherSelect}
-        selectedTeachers={selectedTeachers}
-      />
+      <div className="bg-white shadow overflow-hidden rounded-md">
+        <ReactTable
+          records={filteredRecords}
+          loading={loading}
+          error={error}
+          onTeacherSelect={handleTeacherSelect}
+          selectedTeachers={selectedTeachers}
+        />
+      </div>
     </div>
   );
 };
