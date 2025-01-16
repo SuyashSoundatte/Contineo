@@ -23,16 +23,30 @@ const createStudent = asyncHandler(async (req, res) => {
     email,
     roll_no,
     phone,
-    class_std
+    class_std,
   } = req.body;
 
-  if (!fname || !mname || !lname || !address || !gender || !dob || !email || !roll_no || !phone || !class_std) {
+  if (
+    !fname ||
+    !mname ||
+    !lname ||
+    !address ||
+    !gender ||
+    !dob ||
+    !email ||
+    !roll_no ||
+    !phone ||
+    !class_std
+  ) {
     throw new ApiError(400, "Please provide all the required fields");
   }
 
   // Check if email already exists
-  const checkEmailQuery = "SELECT COUNT(*) AS count FROM Users WHERE email = @Email";
-  const existingEmail = await executeQuery(checkEmailQuery, [{ name: "Email", value: email }]);
+  const checkEmailQuery =
+    "SELECT COUNT(*) AS count FROM Users WHERE email = @Email";
+  const existingEmail = await executeQuery(checkEmailQuery, [
+    { name: "Email", value: email },
+  ]);
 
   if (existingEmail.recordset[0].count > 0) {
     throw new ApiError(400, "Email already in use");
@@ -80,23 +94,31 @@ const createStudent = asyncHandler(async (req, res) => {
     await executeQuery(insertStudentQuery, studentParams);
   }
 
-  return res.send(new ApiResponse(201, { id: userId, email }, "Student created successfully"));
+  return res.send(
+    new ApiResponse(201, { id: userId, email }, "Student created successfully")
+  );
 });
-
 
 const allocateStudentDiv = asyncHandler(async (req, res) => {
   const { userId, stdId, divId } = req.body;
 
-  const insertStudentDivQuery = "INSERT INTO student (user_id, class_std, div) VALUES (@UserId, @StdId, @DivId)";
+  const insertStudentDivQuery =
+    "INSERT INTO student (user_id, class_std, div) VALUES (@UserId, @StdId, @DivId)";
   const studentDivParams = [
-    { name: 'UserId', value: userId },
-    { name: 'StdId', value: stdId },
-    { name: 'DivId', value: divId },
+    { name: "UserId", value: userId },
+    { name: "StdId", value: stdId },
+    { name: "DivId", value: divId },
   ];
 
   await executeQuery(insertStudentDivQuery, studentDivParams);
 
-  return res.send(new ApiResponse(201, { id: userId, stdId, divId }, "Student Div allocated successfully"));
+  return res.send(
+    new ApiResponse(
+      201,
+      { id: userId, stdId, divId },
+      "Student Div allocated successfully"
+    )
+  );
 });
 
 const updateStudent = asyncHandler(async (req, res) => {
@@ -108,12 +130,18 @@ const updateStudent = asyncHandler(async (req, res) => {
     WHERE user_id = @UserId;
   `;
   const updateStudentParams = [
-    { name: 'DivId', value: divId },
-    { name: 'UserId', value: userId },
-    { name: 'StdId', value: stdId },
+    { name: "DivId", value: divId },
+    { name: "UserId", value: userId },
+    { name: "StdId", value: stdId },
   ];
   await executeQuery(updateStudentQuery, updateStudentParams);
-  return res.send(new ApiResponse(200, { userId, stdId, divId }, "Student updated successfully"));
+  return res.send(
+    new ApiResponse(
+      200,
+      { userId, stdId, divId },
+      "Student updated successfully"
+    )
+  );
 });
 
 //Get All Students
@@ -127,10 +155,12 @@ const getAllStudent = asyncHandler(async (req, res) => {
     INNER JOIN student s ON u.user_id = s.user_id
     WHERE u.role = 'Student';
   `;
-  
+
   const usersResult = await request.query(usersQuery);
 
-  return res.send(new ApiResponse(200, usersResult.recordset, "Users fetched successfully"));
+  return res.send(
+    new ApiResponse(200, usersResult.recordset, "Users fetched successfully")
+  );
 });
 
 //get student by std
@@ -138,9 +168,8 @@ const getStudentByStd = asyncHandler(async (req, res) => {
   const pool = await poolPromise;
   const request = pool.request();
 
-const class_std  = req.params.id;
-const parsedStd = String(class_std); 
-
+  const class_std = req.params.id;
+  const parsedStd = String(class_std);
 
   const usersQuery = `
     SELECT u.email, u.fname, u.lname, u.role, u.phone AS phone, u.gender, s.roll_no, s.class_std
@@ -149,11 +178,14 @@ const parsedStd = String(class_std);
     WHERE u.role = 'Student' AND s.class_std = @ClassStd;
   `;
 
-  const usersResult = await request.input('ClassStd', parsedStd).query(usersQuery);
+  const usersResult = await request
+    .input("ClassStd", parsedStd)
+    .query(usersQuery);
 
-  return res.send(new ApiResponse(200, usersResult.recordset, "Students fetched successfully"));
+  return res.send(
+    new ApiResponse(200, usersResult.recordset, "Students fetched successfully")
+  );
 });
-
 
 const getAllocatedStudent = asyncHandler(async (req, res) => {
   const pool = await poolPromise;
@@ -165,23 +197,37 @@ const getAllocatedStudent = asyncHandler(async (req, res) => {
     join student s on u.user_id = s.user_id
     where s.div is null 
   `;
- 
+
   const allocatedStudentResult = await request.query(getAllocatedStudentQuery);
-  return res.send(new ApiResponse(200, allocatedStudentResult.recordset, "Allocated Students fetched successfully"));
+  return res.send(
+    new ApiResponse(
+      200,
+      allocatedStudentResult.recordset,
+      "Allocated Students fetched successfully"
+    )
+  );
 });
 
 const getStudentById = asyncHandler(async (req, res) => {
-  const id  = req.params.id;
+  const id = req.params.id;
   const studentByIdQuery = `
     SELECT u.email, u.fname, u.lname, u.role, u.phone AS phone, u.gender, s.roll_no, s.class_std
     FROM Users u
     INNER JOIN student s ON u.user_id = s.user_id
     WHERE u.role = 'Student' AND u.user_id = @UserId;
-  `
+  `;
 
-  const studentByIdResult = await executeQuery(studentByIdQuery, [{ name: 'UserId', value: id }]);
+  const studentByIdResult = await executeQuery(studentByIdQuery, [
+    { name: "UserId", value: id },
+  ]);
 
-  return res.send(new ApiResponse(200, studentByIdResult.recordset, "Student fetched successfully"));
+  return res.send(
+    new ApiResponse(
+      200,
+      studentByIdResult.recordset,
+      "Student fetched successfully"
+    )
+  );
 });
 
 const getStudentByDiv = asyncHandler(async (req, res) => {
@@ -194,9 +240,57 @@ const getStudentByDiv = asyncHandler(async (req, res) => {
     WHERE u.role = 'Student' AND s.div = @div;
   `;
 
-  const studentByDivResult = await executeQuery(studentByDivQuery, [{ name: 'div', value: div }]);
+  const studentByDivResult = await executeQuery(studentByDivQuery, [
+    { name: "div", value: div },
+  ]);
 
-  return res.send(new ApiResponse(200, studentByDivResult.recordset, "Student fetched successfully"));
-})
+  return res.send(
+    new ApiResponse(
+      200,
+      studentByDivResult.recordset,
+      "Student fetched successfully"
+    )
+  );
+});
 
-export { createStudent, allocateStudentDiv, updateStudent, getAllStudent, getStudentByStd, getAllocatedStudent, getStudentById, getStudentByDiv };
+const assignMultipleStudentsDivStd = asyncHandler(async (req, res) => {
+  const { studentIds, class_std, div } = req.body;
+
+  if (!studentIds || !class_std || !div) {
+    throw ApiError(400, 'Invalid input. Provide studentIds, class_std, and div.');
+  }
+
+  if (!Array.isArray(studentIds) || !studentIds.every(id => Number.isInteger(id))) {
+    throw new ApiError(400, 'Invalid student IDs provided. Ensure all IDs are integers.');
+  }
+
+  const idList = studentIds.join(',');
+
+  const query = `
+      UPDATE student
+      SET class_std = @class_std, div = @div
+      WHERE user_id IN (${idList})
+  `;
+
+  // Parameters for the query
+  const params = [
+      { name: 'class_std', value: class_std },
+      { name: 'div', value: div },
+  ];
+
+  const response = await executeQuery(query, params);
+
+  return res.send(new ApiResponse(200, response.recordset, "student assigned to multiple div and std"));
+});
+
+export {
+  createStudent,
+  allocateStudentDiv,
+  updateStudent,
+  getAllStudent,
+  getStudentByStd,
+  getAllocatedStudent,
+  getStudentById,
+  getStudentByDiv,
+  assignMultipleStudentsDivStd,
+};

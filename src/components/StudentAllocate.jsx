@@ -98,6 +98,27 @@ const StudentAllocate = () => {
       sortable: true,
     },
     {
+      name: "Batch",
+      selector: (row) => row.batch,
+      sortable: true,
+    },
+    {
+      name: "Class",
+      selector: (row) => row.class,
+      sortable: true,
+    },
+    {
+      name: "Div",
+      selector: (row) => row.div,
+      sortable: true,
+    },
+    {
+      name: "PRN",
+      selector: (row) => row.prn,
+      sortable: true,
+    },
+
+    {
       name: "Action",
       cell: (row) => (
         <CheckboxComponent

@@ -2,7 +2,6 @@ import AddFiles from "./AddFiles";
 import ButtonComponent from "./ButtonComponent";
 import Dashboard from "./Dashboard";
 import Input from "./Input";
-import MentorAllocate from "./MentorAllocate";
 import ReactTable from "./ReactTable";
 import Select from "./Select";
 import StudentAllocate from "./StudentAllocate";
@@ -11,6 +10,8 @@ import Table from "./Table";
 import CheckboxComponent from "./CheckboxComponent";
 import StudentForm from "./StudentForm";  
 
+import ClassTeacherAllocate from "./ClassTeacherAllocate";
+import MentorAllocate from "./MentorAllocate";
 export {
   AddFiles,
   ButtonComponent,
@@ -24,4 +25,6 @@ export {
   Table,
   CheckboxComponent,
   StudentForm
+  CheckboxComponent,
+  ClassTeacherAllocate
 }

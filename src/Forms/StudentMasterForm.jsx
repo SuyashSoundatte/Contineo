@@ -61,6 +61,21 @@ const StudentMasterForm = () => {
       sortable: true,
     },
     {
+      name: 'email',
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: 'Class',
+      selector: (row) => row.class,
+      sortable: true,
+    },
+    {
+      name: 'Div',
+      selector: (row) => row.div,
+      sortable: true,
+    },
+    {
       name: 'Action',
       cell: (row) => (
         <ButtonComponent onClick={() => navigate(`/MainPage/StudentForm/${row.user_id}`)}>Add Files</ButtonComponent>

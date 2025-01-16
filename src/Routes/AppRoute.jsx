@@ -12,13 +12,15 @@ import {
   StudentAllocate,
   SubjectAllocate,  
   Table,
+<<<<<<< HEAD
   StudentForm
+=======
+  ClassTeacherAllocate
+>>>>>>> b9852de1ca052856ac7cd6e6796cf6ecf5b54b7f
 } from "../components/component.js";
 
 import {
   AllocateTeacher,
-  ClassTeacherForm,
-  MentorAllotment,
   StudentCreate,
   SubjectForm,
   TeacherAllocate,
@@ -48,6 +50,7 @@ const AppRoute = () => {
           <Route path="TeacherAllocate" element={<TeacherAllocate />} /> {/* Static route */}
           <Route path="StudentAllocate" element={<StudentAllocate />} /> {/* Static route */}
           <Route path="MentorAllocate" element={<MentorAllocate />} /> {/* Static route */}
+          <Route path="ClassTeacherForm" element={<ClassTeacherAllocate />} /> {/* Static route */}
           <Route path="SubjectAllocate" element={<SubjectAllocate />} /> {/* Static route */}
           <Route path="StudentForm/:user_id" element={<StudentForm />} /> {/* Static route */}
           <Route path="TeacherMasterForm/:user_id" element={<TeacherMasterForm />} /> {/* Dynamic route */}

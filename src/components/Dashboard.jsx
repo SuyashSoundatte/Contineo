@@ -83,14 +83,14 @@ const Dashboard = () => {
                 Teacher Master Form
               </li>
             </Link>
-            <Link to="/MainPage/SubjectForm">
-              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
-                Subject Master Form
-              </li>
-            </Link>
             <Link to="/MainPage/TeacherAllocate">
               <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
                 Teacher Allocate Form
+              </li>
+            </Link>
+            <Link to="/MainPage/ClassTeacherForm">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Class Teacher Allocate
               </li>
             </Link>
             <Link to="/MainPage/MentorAllocate">
@@ -101,6 +101,11 @@ const Dashboard = () => {
             <Link to="/MainPage/SubjectAllocate">
               <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
                 Subject Allocate Form
+              </li>
+            </Link>
+            <Link to="/MainPage/SubjectForm">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Subject Master Form
               </li>
             </Link>
           </ul>
