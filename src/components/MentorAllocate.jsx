@@ -66,6 +66,67 @@ const MentorAllocate = () => {
     );
   });
 
+  const mentor_allocate_columns = [
+    {
+      name: 'Mentor ID',
+      selector: (row) => row.user_id,
+      sortable: true,
+    },
+    {
+      name: 'First Name',
+      selector: (row) => row.fname,
+      sortable: true,
+    },
+    {
+      name: 'Last Name',
+      selector: (row) => row.lname,
+      sortable: true,
+    },
+    {
+      name: 'Role',
+      selector: (row) => row.role,
+      sortable: true,
+    },
+    {
+      name: 'Subject',
+      selector: (row) => row.subject,
+      sortable: true,
+    },
+    {
+      name: 'email',
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: 'Phone no',
+      selector: (row) => row.phone,
+      sortable: true,
+    },
+    {
+      name: 'Class ',
+      selector: (row) => row.class,
+      sortable: true,
+    },
+    {
+      name: 'Div ',
+      selector: (row) => row.div,
+      sortable: true,
+    },
+    {
+      name: 'Batch',
+      selector: (row) => row.batch,
+      sortable: true,
+    },
+    {
+      name: 'Action',
+      cell: (row) => (
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+          Select
+        </button>
+      ),
+    },
+  ]
+
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
       {/* Filter Section */}
@@ -96,6 +157,7 @@ const MentorAllocate = () => {
       {/* Mentor Table with Filtered Data */}
       <div className="bg-white shadow overflow-hidden rounded-md">
         <ReactTable
+        customColumns={mentor_allocate_columns}
           records={filteredRecords}
           loading={loading}
           error={error}

@@ -35,7 +35,7 @@ const TeacherForm = () => {
 
   const teacherColumns = [
     {
-      name: 'User ID',
+      name: 'Teacher ID',
       selector: (row) => row.user_id,
       sortable: true,
     },
@@ -52,6 +52,16 @@ const TeacherForm = () => {
     {
       name: 'Subject',
       selector: (row) => row.subject,
+      sortable: true,
+    },
+    {
+      name: 'email',
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: 'Phone no',
+      selector: (row) => row.phone,
       sortable: true,
     },
     {
