@@ -8,7 +8,7 @@ const validUser = (req, res, next) => {
     lname: Joi.string().min(1).max(100).required(),
     address: Joi.string().min(1).max(255).required(),
     gender: Joi.string().valid('Male', 'Female', 'Other').required(),
-    DOB: Joi.string()
+    dob: Joi.string()
       .pattern(/^([0-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/)
       .required(),
     email: Joi.string().email().required(),
