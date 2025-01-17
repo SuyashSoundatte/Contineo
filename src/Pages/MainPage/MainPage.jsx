@@ -52,9 +52,9 @@ const MainPage = () => {
             )}
   
             {renderFormCard(
-              "/MainPage/StudentCreate",
+              "Student Create Form",
               "Add new students to the system with details like name, roll number, and class.",
-              "/StudentCreate"
+              "/MainPage/StudentCreate"
             )}
   
             {renderFormCard(

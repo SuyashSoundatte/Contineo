@@ -84,7 +84,7 @@ const TeacherForm = () => {
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
       <div>
         <ButtonComponent
-          onClick={() => navigate('/MainPage/ViewComponent')}
+          onClick={() => navigate('/MainPage/UserForm')}
         >Add New Teacher</ButtonComponent>
       </div>
       <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns} />
