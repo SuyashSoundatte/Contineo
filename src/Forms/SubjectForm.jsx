@@ -118,18 +118,6 @@ const SubjectForm = () => {
           />
           {errors.subtopic && <p className="text-red-500 text-sm">{errors.subtopic.message}</p>}
         </div>
-
-        <div>
-          <h3 className="text-lg font-bold mb-4 text-left">Time to Complete Subtopic:</h3>
-          <input
-            type="text"
-            placeholder="Enter Time"
-            {...register("time", { required: "Time is required" })}
-            className="block w-full p-2 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-          />
-          {errors.time && <p className="text-red-500 text-sm">{errors.time.message}</p>}
-        </div>
-
         <div>
           <button
             type="submit"
