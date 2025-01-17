@@ -48,29 +48,12 @@ const Dashboard = () => {
           <ul className='ml-4 space-y-2'>
             <Link to='/MainPage/TeacherForm'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
-                Teacher Master Form
+                Staff Registration
               </li>
             </Link>
             <Link to='/MainPage/StudentMasterForm'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
-                Student Master Form
-              </li>
-            </Link>
-          </ul>
-        </div>
-        <div className='space-y-2'>
-          <h2 className='text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50'>
-            Master Forms
-          </h2>
-          <ul className='ml-4 space-y-2'>
-            <Link to='/MainPage/TeacherForm'>
-              <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
-                Teacher Master Form
-              </li>
-            </Link>
-            <Link to='/MainPage/StudentMasterForm'>
-              <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
-                Student Master Form
+                Student Registration
               </li>
             </Link>
           </ul>
@@ -80,11 +63,6 @@ const Dashboard = () => {
             Teacher
           </h2>
           <ul className='ml-4 space-y-2'>
-            <Link to='/MainPage/TeacherForm'>
-              <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
-                Teacher Master Form
-              </li>
-            </Link>
             <Link to='/MainPage/TeacherAllocate'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
                 Teacher Allocate Form

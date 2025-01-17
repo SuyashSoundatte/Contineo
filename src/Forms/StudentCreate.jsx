@@ -1,8 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import Input from "../components/Input";
-import Select from "../components/Select";
-import ButtonComponent from "../components/ButtonComponent";
+import {Input , Select, ButtonComponent, AddFiles} from "../components/component.js";
 import axios from "axios"; // Install this if you haven't: npm install axios
 
 const StudentCreate = () => {
@@ -11,6 +9,11 @@ const StudentCreate = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    console.log("Selected file:", selectedFile);
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -176,6 +179,14 @@ const StudentCreate = () => {
                 {errors.class_std && (
                   <p className="text-red-500 text-sm mt-1">{errors.class_std.message}</p>
                 )}
+              </div>
+            </div>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div>
+                <h2 className='text-lg font-medium text-gray-700'>
+                  Add Documents
+                </h2>
+                <AddFiles onFileChange={handleFileChange} />
               </div>
             </div>
   
