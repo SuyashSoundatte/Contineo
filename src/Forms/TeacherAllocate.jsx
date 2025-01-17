@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select } from '../components/component.js'
+import { Input, ReactTable, Select, ButtonComponent } from '../components/component.js'
 
 const TeacherAllocate = () => {
   const [records, setRecords] = useState([]);
