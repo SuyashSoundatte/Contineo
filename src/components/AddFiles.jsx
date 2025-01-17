@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import ButtonComponent from './ButtonComponent';
-import Input from './Input';
-import axios from 'axios';
-import js from '@eslint/js';
+import React, { useState } from "react";
+import ButtonComponent from "./ButtonComponent";
+import Input from "./Input";
+import axios from "axios";
+import js from "@eslint/js";
+import Select from "./Select";
 
 const AddFiles = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [fileName, setFileName] = useState('');
+  const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -34,7 +35,7 @@ const AddFiles = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!file || !fileName || !teacherId) {
+    if (!file || !fileName || !user_id) {
       alert("All fields are required!");
       return;
     }
@@ -43,57 +44,59 @@ const AddFiles = () => {
       // Create a FormData object
       const formData = new FormData();
       const jsonData = JSON.stringify({ fileName, teacherId }); // Convert the JSON data to a string
-      console.log(formData, jsonData)
+      console.log(formData, jsonData);
 
       formData.append("jsonData", jsonData); // Add JSON data as a string
       formData.append("file", file); // Add the file
 
       // Send data using axios
-      const response = await axios.post("http://localhost:3000/api/v1/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Ensure the request is treated as multipart
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure the request is treated as multipart
+          },
+        }
+      );
 
       console.log("Response:", response.data);
       alert("File uploaded successfully!");
     } catch (error) {
-      console.error("Error uploading file:", error.response?.data || error.message);
+      console.error(
+        "Error uploading file:",
+        error.response?.data || error.message
+      );
       alert("Error uploading file. Please try again.");
     }
   };
 
   return (
     <>
-      <ButtonComponent onClick={handleClick} type="button">
+      <ButtonComponent onClick={handleClick} type='button'>
         Add Files
       </ButtonComponent>
       {isMenuOpen && (
-        <div className="flex flex-col gap-4 mt-4">
-          <div className="flex justify-center items-center gap-4">
+        <div className='flex flex-col gap-4 mt-4'>
+          <div className='relative flex justify-center items-center gap-4'>
+            <Select label='Document Name' options={[,"Male", "Female"]} />
             <Input
-              type="text"
-              name="fileName"
-              placeholder="Enter File Name"
-              value={fileName}
-              onChange={handleFileNameChange}
-            />
-            <Input
-              type="file"
-              name="file"
-              placeholder=""
+              label = 'Document Name'
+              type='file'
+              name='file'
+              placeholder=''
               onChange={handleFileChange}
             />
-            <ButtonComponent type="button" onClick={handleSubmit}>
+            <ButtonComponent className="absolute bottom-1 -right-24" onClick={handleClose}>
               Add
             </ButtonComponent>
           </div>
           {/* Display uploaded files */}
-          <div className="mt-4">
-            <h3 className="font-bold">Uploaded Files:</h3>
-            <ul className="list-disc list-inside">
+          <div className='mt-4'>
+            <h3 className='font-bold'>Uploaded Files:</h3>
+            <ul className='list-disc list-inside'>
               {uploadedFiles.map((file, index) => (
-                <li key={index} className="flex justify-between items-center">
+                <li key={index} className='flex justify-between items-center'>
                   {file.name} ({file.file.name})
                   <button
                     onClick={() =>
@@ -101,7 +104,7 @@ const AddFiles = () => {
                         prev.filter((_, i) => i !== index)
                       )
                     }
-                    className="text-red-500 hover:underline ml-2"
+                    className='text-red-500 hover:underline ml-2'
                   >
                     Delete
                   </button>
