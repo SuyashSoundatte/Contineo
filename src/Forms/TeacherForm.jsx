@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ButtonComponent, Input, ReactTable } from '../components/component.js';
 import { useNavigate } from 'react-router-dom';
+// import View from '../components/ViewComponent.jsx';
+import ViewComponent from '../components/ViewComponent.jsx';
 
 const TeacherForm = () => {
   const [records, setRecords] = useState([]);
@@ -69,9 +71,11 @@ const TeacherForm = () => {
     {
       name: 'Action',
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => navigate(`/MainPage/TeacherMasterForm/${row.user_id}`)}>
-          View
-        </button>
+        
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => navigate(`/MainPage/ViewComponent/${row.user_id}`)}>
+          view
+            </button> 
+          
       ),
     },
   ];
@@ -80,7 +84,7 @@ const TeacherForm = () => {
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
       <div>
         <ButtonComponent
-          onClick={() => navigate('/MainPage/UserForm')}
+          onClick={() => navigate('/MainPage/ViewComponent')}
         >Add New Teacher</ButtonComponent>
       </div>
       <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns} />
