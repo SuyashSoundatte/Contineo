@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  ReactTable,
-  CheckboxComponent,
-  ButtonComponent,
-  Select,
-} from "../components/component.js";
 import axios from "axios";
+import { Input, ReactTable, Select } from "../components/component.js";
 
 const StudentAllocate = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedStd, setSelectedStd] = useState("");
-  const [selectedPnr, setSelectedPnr] = useState("");
-  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [selectedDiv, setSelectedDiv] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +25,13 @@ const StudentAllocate = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setRecords(response.data.data || []);
+
+        const enrichedData = response.data.data.map((record) => ({
+          ...record,
+          selected: false,
+        }));
+
+        setRecords(enrichedData);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err.response?.data?.message || "Error fetching data");
@@ -44,19 +44,10 @@ const StudentAllocate = () => {
   }, []);
 
   const handleStdChange = (event) => setSelectedStd(event.target.value);
+  const handleDivChange = (event) => setSelectedDiv(event.target.value);
 
-  const handlePnrChange = (event) => setSelectedPnr(event.target.value);
-
-  const handleStudentSelect = (studentId) => {
-    setSelectedStudents((prev) =>
-      prev.includes(studentId)
-        ? prev.filter((id) => id !== studentId)
-        : [...prev, studentId]
-    );
-  };
-
-  const handleCheckboxChange = (event, row) => {
-    const { checked } = event.target;
+  const handleCheckboxChange = (e, row) => {
+    const { checked } = e.target;
 
     setRecords((prevRecords) =>
       prevRecords.map((record) =>
@@ -69,103 +60,147 @@ const StudentAllocate = () => {
 
   const filteredRecords = records.filter((record) => {
     return (
-      (!selectedStd || record.std === selectedStd) &&
-      (!selectedPnr || record.pnrNumber.includes(selectedPnr))
+      (selectedStd ? record.standard === selectedStd : true) &&
+      (selectedDiv ? record.division === selectedDiv : true)
     );
   });
 
-  const teacherColumns = [
+  const teacher_allocate_columns = [
     {
-      name: "User ID",
+      name: "Teacher ID",
       selector: (row) => row.user_id,
       sortable: true,
     },
     {
-      name: "First Name",
-      selector: (row) => row.fname,
+      name: "Name",
+      selector: (row) => `${row.fname} ${row.lname}`,
       sortable: true,
     },
     {
-      name: "Last Name",
-      selector: (row) => row.lname,
+      name: "Email",
+      selector: (row) => row.email,
       sortable: true,
     },
     {
       name: "Subject",
-      selector: (row) => row.subject || "null",
+      selector: (row) => row.sub,
       sortable: true,
     },
     {
-      name: "Batch",
-      selector: (row) => row.batch,
+      name: "Standard",
+      selector: (row) => row.standard,
       sortable: true,
     },
     {
-      name: "Class",
-      selector: (row) => row.class,
+      name: "Batch Assigned",
+      selector: (row) => row.batchAssigned,
       sortable: true,
     },
     {
-      name: "Div",
-      selector: (row) => row.div,
-      sortable: true,
-    },
-    {
-      name: "PRN",
-      selector: (row) => row.prn,
-      sortable: true,
-    },
-    {
-      name: "Action",
+      name: "Actions",
       cell: (row) => (
-        <CheckboxComponent
-          label='Select'
-          checked={row.selected}
-          onChange={(e) => handleCheckboxChange(e, row)}
-          className='ml-2'
-        />
+        <button className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out'>
+          Allocate
+        </button>
       ),
+      ignoreRowClick: true,
     },
   ];
 
   return (
-    <div className='w-full max-w-7xl mx-auto px-4 py-8 space-y-8'>
-      <h2 className='text-2xl font-semibold text-gray-800 mb-6'>Student Allocation</h2>
-      
-      {/* Filter Section */}
-      <div className='bg-white shadow-md rounded-lg p-6'>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-          <Select
-            label='Standard'
-            options={["standard","Std 11", "Std 12"]}
-            className='w-full'
-          />
-          <Select 
-            label='Division'
-            options={["Division", "Division A", "Division B"]}
-            className='w-full'
-          />
-          <div className="flex items-end">
-            <ButtonComponent className='w-full md:w-auto px-6 py-2.5'>Add</ButtonComponent>
-          </div>
-        </div>
-      </div>
+    <div className='min-h-screen py-12 px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-7xl mx-auto'>
+        <h1 className='text-3xl font-bold text-gray-900 mb-8'>
+          Student Allocation
+        </h1>
 
-      {/* Student Table with Filtered Data */}
-      <div className='bg-white shadow-md rounded-lg overflow-hidden'>
-        <ReactTable
-          customColumns={teacherColumns}
-          records={filteredRecords}
-          loading={loading}
-          error={error}
-          onStudentSelect={handleStudentSelect}
-          selectedStudents={selectedStudents}
-          btnValue={"Add To div"}
-        />
+        <div className='  rounded-lg p-6 mb-8'>
+          <form className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+            <div>
+              <label
+                htmlFor='standard'
+                className='block text-sm font-medium text-gray-700 mb-1'
+              >
+                Standard
+              </label>
+              <select
+                id='standard'
+                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
+                value={selectedStd}
+                onChange={handleStdChange}
+              >
+                <option value=''>All Standards</option>
+                <option value='Standard 11'>Standard 11</option>
+                <option value='Standard 12'>Standard 12</option>
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor='division'
+                className='block text-sm font-medium text-gray-700 mb-1'
+              >
+                Division
+              </label>
+              <select
+                id='division'
+                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
+                value={selectedDiv}
+                onChange={handleDivChange}
+              >
+                <option value=''>All Divisions</option>
+                <option value='Division A'>Division A</option>
+                <option value='Division B'>Division B</option>
+              </select>
+            </div>
+          </form>
+
+          {error && (
+            <div
+              className='bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6'
+              role='alert'
+            >
+              <p className='font-bold'>Error</p>
+              <p>{error}</p>
+            </div>
+          )}
+
+          {loading ? (
+            <div className='flex items-center justify-center h-64'>
+              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600'></div>
+            </div>
+          ) : (
+            <>
+              <div className='mb-8'>
+                <h2 className='text-2xl font-semibold text-gray-800 mb-4'>
+                  Unallocated Student
+                </h2>
+                <div className='overflow-x-auto'>
+                  <ReactTable
+                    customColumns={teacher_allocate_columns}
+                    records={filteredRecords.filter((r) => !r.batchAssigned)}
+                    onRowClick={(row) => console.log("Row clicked:", row)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <h2 className='text-2xl font-semibold text-gray-800 mb-4'>
+                  Allocated Student
+                </h2>
+                <div className='overflow-x-auto'>
+                  <ReactTable
+                    customColumns={teacher_allocate_columns}
+                    records={filteredRecords.filter((r) => r.batchAssigned)}
+                    onRowClick={(row) => console.log("Row clicked:", row)}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
 export default StudentAllocate;
-
