@@ -6,6 +6,7 @@ import TeacherForm from './TeacherForm'
 import TeacherMasterForm from './TeacherMasterForm'
 import UserCreate from './UserCreate'
 import StudentMasterForm from './StudentMasterForm'
+import Attendance from './Attendance'
 export {
   AllocateTeacher,
   StudentCreate,
@@ -14,5 +15,6 @@ export {
   TeacherForm,
   TeacherMasterForm,
   UserCreate,
-  StudentMasterForm
+  StudentMasterForm,
+  Attendance
 }
