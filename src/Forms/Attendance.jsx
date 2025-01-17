@@ -63,12 +63,11 @@ export default function Attendance() {
       (selectedDivision ? student.division === selectedDivision : true)
   );
 
-  // Define columns for the react-table
   const columns = useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "name", // accessor is the key in data
+        accessor: "name",
       },
       {
         Header: "Roll No",
@@ -81,27 +80,27 @@ export default function Attendance() {
           const { id, present } = row.original;
           return (
             <div className="flex items-center gap-4">
-              <label className="flex cursor-pointer items-center gap-2">
+              <label className="flex cursor-pointer items-center">
                 <input
                   type="radio"
                   name={`attendance-${id}`}
                   checked={present === true}
                   onChange={() => handleAttendanceChange(id, true)}
-                  className="peer hidden"
+                  className="peer sr-only"
                 />
-                <div className="flex items-center gap-1 rounded-full border border-[#1a56db] px-3 py-1 text-sm text-[#1a56db] transition-colors hover:bg-[#1a56db] hover:text-white peer-checked:bg-[#1a56db] peer-checked:text-white">
+                <div className="rounded-full px-3 py-1 text-sm font-medium transition-colors peer-checked:bg-green-500 peer-checked:text-white hover:bg-green-100 border border-green-500 text-green-500">
                   Present
                 </div>
               </label>
-              <label className="flex cursor-pointer items-center gap-2">
+              <label className="flex cursor-pointer items-center">
                 <input
                   type="radio"
                   name={`attendance-${id}`}
                   checked={present === false}
                   onChange={() => handleAttendanceChange(id, false)}
-                  className="peer hidden"
+                  className="peer sr-only"
                 />
-                <div className="flex items-center gap-1 rounded-full border border-[#1a56db] px-3 py-1 text-sm text-[#1a56db] transition-colors hover:bg-[#1a56db] hover:text-white peer-checked:bg-[#1a56db] peer-checked:text-white">
+                <div className="rounded-full px-3 py-1 text-sm font-medium transition-colors peer-checked:bg-red-500 peer-checked:text-white hover:bg-red-100 border border-red-500 text-red-500">
                   Absent
                 </div>
               </label>
@@ -113,46 +112,43 @@ export default function Attendance() {
     [students]
   );
 
-  // Use the useTable hook to get table props and rows
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data: filteredStudents,
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="mx-auto max-w-4xl shadow-lg">
-        <div className="flex justify-between items-center p-4 border-b">
-          <div>
-            <h1 className="text-xl font-semibold">Attendance Sheet</h1>
-            <div className="flex items-center space-x-4">
-              <span>{currentDate}</span>
-              <span>•</span>
-              <span>{currentDay}</span>
-            </div>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="mx-auto max-w-8xl bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white">
+          <h1 className="text-3xl font-bold">Attendance Sheet</h1>
+          <div className="flex items-center space-x-4 mt-2">
+            <span className="text-lg">{currentDate}</span>
+            <span>•</span>
+            <span className="text-lg">{currentDay}</span>
           </div>
         </div>
         <div className="p-6">
-          <div className="flex gap-4 mb-4">
+          <div className="flex flex-wrap gap-4 mb-6">
             <button
               onClick={markAllPresent}
-              className="border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-500 hover:text-white"
+              className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
             >
               Mark All Present
             </button>
             <button
               onClick={markAllAbsent}
-              className="border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-500 hover:text-white"
+              className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
             >
               Mark All Absent
             </button>
           </div>
 
-          <div className="flex gap-4 mb-4">
+          <div className="flex flex-wrap gap-4 mb-6">
             <select
               value={selectedStandard}
               onChange={handleStandardChange}
-              className="border p-2 rounded"
+              className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Select Standard</option>
               <option value="10">Standard 10</option>
@@ -161,7 +157,7 @@ export default function Attendance() {
             <select
               value={selectedDivision}
               onChange={handleDivisionChange}
-              className="border p-2 rounded"
+              className="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Select Division</option>
               <option value="A">Division A</option>
@@ -169,15 +165,14 @@ export default function Attendance() {
             </select>
           </div>
 
-          {/* Render React Table */}
-          <div className="rounded-lg border">
+          <div className="overflow-x-auto">
             <table className="w-full" {...getTableProps()}>
-              <thead className="bg-gray-50">
+              <thead>
                 {headerGroups.map((headerGroup) => (
                   <tr {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
                       <th
-                        className="px-6 py-3 text-left text-sm font-semibold text-gray-600"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                         {...column.getHeaderProps()}
                       >
                         {column.render("Header")}
@@ -186,7 +181,7 @@ export default function Attendance() {
                   </tr>
                 ))}
               </thead>
-              <tbody className="divide-y" {...getTableBodyProps()}>
+              <tbody className="bg-white divide-y divide-gray-200" {...getTableBodyProps()}>
                 {rows.map((row) => {
                   prepareRow(row);
                   return (
@@ -194,7 +189,7 @@ export default function Attendance() {
                       {row.cells.map((cell) => {
                         return (
                           <td
-                            className="px-6 py-4"
+                            className="px-6 py-4 whitespace-nowrap"
                             {...cell.getCellProps()}
                           >
                             {cell.render("Cell")}
@@ -208,10 +203,10 @@ export default function Attendance() {
             </table>
           </div>
 
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end mt-6">
             <button
               onClick={submitAttendance}
-              className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-700"
+              className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
               Submit Attendance
             </button>
@@ -221,3 +216,4 @@ export default function Attendance() {
     </div>
   );
 }
+

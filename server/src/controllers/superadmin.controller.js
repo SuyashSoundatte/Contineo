@@ -4,9 +4,8 @@ import ApiError from "../config/ApiError.js";
 import ApiResponse from "../config/ApiResponse.js";
 import { hashPassword } from "../config/hashPass.js";
 
-// SQL Server query helper functions
 const executeQuery = async (query, params) => {
-  const pool = await poolPromise; // Await the pool connection
+  const pool = await poolPromise;
   const request = pool.request();
   if (params) {
     params.forEach((param) => request.input(param.name, param.value));
