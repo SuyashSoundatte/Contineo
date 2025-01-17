@@ -58,7 +58,6 @@ const StudentAllocate = () => {
   const handleCheckboxChange = (event, row) => {
     const { checked } = event.target;
 
-    // Update the selected state of the specific row
     setRecords((prevRecords) =>
       prevRecords.map((record) =>
         record.user_id === row.user_id
@@ -116,14 +115,13 @@ const StudentAllocate = () => {
       selector: (row) => row.prn,
       sortable: true,
     },
-
     {
       name: "Action",
       cell: (row) => (
         <CheckboxComponent
           label='Select'
-          checked={row.selected} // assuming "selected" is part of your row data
-          onChange={(e) => handleCheckboxChange(e, row)} // handle the change event
+          checked={row.selected}
+          onChange={(e) => handleCheckboxChange(e, row)}
           className='ml-2'
         />
       ),
@@ -131,28 +129,32 @@ const StudentAllocate = () => {
   ];
 
   return (
-    <div className='w-full max-w-8xl mx-auto p-4 space-y-6'>
+    <div className='w-full max-w-7xl mx-auto px-4 py-8 space-y-8'>
+      <h2 className='text-2xl font-semibold text-gray-800 mb-6'>Student Allocation</h2>
+      
       {/* Filter Section */}
-      <div className='flex flex-col gap-4 mb-6'>
-        <div className='flex gap-4'>
+      <div className='bg-white shadow-md rounded-lg p-6'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           <Select
             label='Standard'
             options={["standard","Std 11", "Std 12"]}
+            className='w-full'
           />
           <Select 
             label='Division'
             options={["Division", "Division A", "Division B"]}
+            className='w-full'
           />
-          <div className="flex justify-center items-end">
-            <ButtonComponent>Add</ButtonComponent>
+          <div className="flex items-end">
+            <ButtonComponent className='w-full md:w-auto px-6 py-2.5'>Add</ButtonComponent>
           </div>
         </div>
       </div>
 
       {/* Student Table with Filtered Data */}
-      <div className='bg-white shadow overflow-hidden rounded-md'>
+      <div className='bg-white shadow-md rounded-lg overflow-hidden'>
         <ReactTable
-          customColumns={teacherColumns} // Pass custom columns here
+          customColumns={teacherColumns}
           records={filteredRecords}
           loading={loading}
           error={error}
@@ -166,3 +168,4 @@ const StudentAllocate = () => {
 };
 
 export default StudentAllocate;
+

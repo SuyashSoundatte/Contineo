@@ -230,6 +230,15 @@ const UserCreate = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               <div>
                 <h2 className='text-lg font-medium text-gray-700'>
+                  Add Subject
+                </h2>
+                <AddFiles onFileChange={handleFileChange} />
+              </div>
+            </div>
+
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+              <div>
+                <h2 className='text-lg font-medium text-gray-700'>
                   Add Documents
                 </h2>
                 <AddFiles onFileChange={handleFileChange} />
