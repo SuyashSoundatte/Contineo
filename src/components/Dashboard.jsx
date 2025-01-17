@@ -83,35 +83,30 @@ const Dashboard = () => {
                 Mentor Allocate Form
               </li>
             </Link>
-            <Link to='/MainPage/SubjectAllocate'>
+            {/* <Link to='/MainPage/SubjectAllocate'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
                 Subject Allocate Form
               </li>
-            </Link>
+            </Link> */}
             <Link to='/MainPage/SubjectForm'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
                 Subject Master Form
               </li>
             </Link>
-            <Link to='/MainPage/MentorInchargeAllocate'>
+            {/* <Link to='/MainPage/MentorInchargeAllocate'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
                 Mentor Incharge Form
               </li>
-            </Link>
-            <Link to='/MainPage/ClassTeacherInchargeAllocate'>
+            </Link> */}
+            {/* <Link to='/MainPage/ClassTeacherInchargeAllocate'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
                 Class Teacher Incharge Form
               </li>
-            </Link>
-            <Link to="/MainPage/Attendance">
-              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
-                Attendance Form
-              </li>
-            </Link>
+            </Link> */}
           </ul>
         </div>
       </nav>
-      <div className='relative bottom-0 left-0'>
+      <div className='absolute w-full bottom-4 left-0 p-4'>
         <ButtonComponent
           className='w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200'
           onClick={handleLogout}
