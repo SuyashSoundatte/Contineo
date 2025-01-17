@@ -118,6 +118,11 @@ const Dashboard = () => {
                 Class Teacher Incharge Form
               </li>
             </Link>
+            <Link to="/MainPage/Attendance">
+              <li className="px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200">
+                Attendance Form
+              </li>
+            </Link>
           </ul>
         </div>
       </nav>
