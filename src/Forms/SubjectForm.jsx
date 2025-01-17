@@ -5,6 +5,7 @@
   import { useForm } from "react-hook-form";
   import ButtonComponent from "../components/ButtonComponent";
   import Input from "../components/Input";
+import Select from "../components/Select";
 
   const SubjectForm = () => {
     const [topic, setTopic] = useState("");
@@ -95,8 +96,20 @@
 
     return (
       <div className="p-8 max-w-8xl mx-auto font-sans">
+     <div  className="font-bold w-[50%] px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+      <Select
+          label='Select Subject'
+          options={[
+            "Select",
+            "Physics",
+            "Chemistry",
+            "Maths",
+          ]}
+        />
+        
+     </div>
       <h2 className="text-2xl font-bold mb-6">Subject Form</h2>
-
+        
       <div className="mb-6 p-6 border border-gray-300 rounded-lg shadow-sm">
         <form onSubmit={handleSubmit(handleAddTopic)}>
           <div>
