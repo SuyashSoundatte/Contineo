@@ -13,6 +13,7 @@ import ClassTeacherAllocate from "./ClassTeacherAllocate";
 import MentorAllocate from "./MentorAllocate";
 import MentorInchargeAllocate from "./MentorInchargeAllocate";
 import ClassTeacherInchargeAllocate from "./ClassTeacherInchargeAllocate.jsx";
+import ViewComponent from "./ViewComponent.jsx";
 
 export {
   AddFiles,
@@ -29,5 +30,6 @@ export {
   StudentForm,
   ClassTeacherAllocate,
   MentorInchargeAllocate,
-  ClassTeacherInchargeAllocate
+  ClassTeacherInchargeAllocate,
+  ViewComponent
 }

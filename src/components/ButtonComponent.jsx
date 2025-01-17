@@ -13,7 +13,7 @@ export default function ButtonComponent({
   return (
     <button
       type={type}
-      className={`w-full ${bgColor} ${textColor} ${padding} ${borderRadius} ${className}`}
+      className={`w-fit ${bgColor} ${textColor} ${padding} ${borderRadius} ${className}`}
       {...props}
     >
       {children}

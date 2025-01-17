@@ -52,7 +52,7 @@ const MainPage = () => {
             )}
   
             {renderFormCard(
-              "Student Create Form",
+              "/MainPage/StudentCreate",
               "Add new students to the system with details like name, roll number, and class.",
               "/StudentCreate"
             )}
@@ -60,49 +60,49 @@ const MainPage = () => {
             {renderFormCard(
               "Student Master Form",
               "View and manage the list of all students in the system, including their details.",
-              "/StudentMasterForm"
+              "/MainPage/StudentMasterForm"
             )}
   
             {renderFormCard(
               "Student Allocation Form",
               "Allocate students to different classes or groups based on specific criteria.",
-              "/StudentAllocate"
+              "/MainPage/StudentAllocate"
             )}
   
             {renderFormCard(
               "Teacher Master Form",
               "View and manage all teachers in the system, including their roles and classes assigned.",
-              "/TeacherForm"
+              "/MainPage/TeacherForm"
             )}
   
             {renderFormCard(
               "Teacher Allocation Form",
               "Allocate teachers to different classes and subjects as per the timetable.",
-              "/TeacherAllocate"
+              "/MainPage/TeacherAllocate"
             )}
   
             {renderFormCard(
               "Class Teacher Allocation Form",
               "Allocate teachers as class teachers to specific classes for overall student management.",
-              "/ClassTeacherForm"
+              "/MainPage/ClassTeacherForm"
             )}
   
             {renderFormCard(
               "Subject Allocation Form",
               "Allocate subjects to teachers for specific classes based on their expertise.",
-              "/SubjectAllocate"
+              "/MainPage/SubjectAllocate"
             )}
   
             {renderFormCard(
               "Mentor Allocate Form",
               "Allocate mentors to guide students in specific subjects.",
-              "/MentorAllocate"
+              "/MainPage/MentorInchargeAllocate"
             )}
   
             {renderFormCard(
               "Subject Master Form",
               "Manage subjects available in the system and assign them to teachers.",
-              "/SubjectForm"
+              "/MainPage/SubjectForm"
             )}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Input, ReactTable } from '../components/component.js';
+import { Input, ReactTable,ButtonComponent } from '../components/component.js';
 import { useNavigate } from 'react-router-dom';
 
 const StudentMasterForm = () => {
@@ -70,7 +70,7 @@ const StudentMasterForm = () => {
       name: 'Action',
       cell: (row) => (
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => navigate(`/MainPage/StudentForm/${row.user_id}`)}>
-          Add Files
+          View Student
         </button>
       ),
     },
@@ -78,6 +78,11 @@ const StudentMasterForm = () => {
   
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
+      <div>
+        <ButtonComponent 
+          onClick={() => navigate('/MainPage/StudentCreate')}
+        >Add New Student</ButtonComponent>
+      </div>
       <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns} />
     </div>
   );
