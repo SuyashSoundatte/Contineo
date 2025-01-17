@@ -77,9 +77,9 @@ const updateTeacherSubject = asyncHandler(async(req, res)=>{
 const getAllTeacher = asyncHandler(async (req, res) => {
 
   const usersQuery = `
-    SELECT user_id, email, fname, lname, role, phone, gender
-    FROM Users
-    WHERE role = 'Teacher';
+    SELECT u.user_id, u.email, u.fname, u.lname, u.role, u.phone, u.gender
+    FROM Users u
+    WHERE u.role = 'Teacher';
   `;
   
   const usersResult = await executeQuery(usersQuery);
