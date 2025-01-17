@@ -26,7 +26,7 @@ const StudentAllocate = () => {
 
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/getUsers",
+          "http://localhost:3000/api/v1/getAllStudents",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -75,7 +75,6 @@ const StudentAllocate = () => {
     );
   });
 
-  // Custom columns for ReactTable
   const teacherColumns = [
     {
       name: "User ID",
@@ -94,7 +93,7 @@ const StudentAllocate = () => {
     },
     {
       name: "Subject",
-      selector: (row) => row.subject,
+      selector: (row) => row.subject || "null",
       sortable: true,
     },
     {
