@@ -56,7 +56,9 @@ const AppRoute = () => {
           <Route path="ClassTeacherForm" element={<ClassTeacherAllocate />} /> {/* Static route */}
           <Route path="SubjectAllocate" element={<SubjectAllocate />} /> {/* Static route */}
           <Route path="StudentForm/:user_id" element={<StudentForm />} /> {/* Static route */}
+          <Route path="AddFiles" element={<AddFiles />} /> {/* Static route */}
           <Route path="Attendance" element={<Attendance />} /> {/* Static route */}
+          <Route path="ViewComponent/:user_id" element={<ViewComponent />} />
           <Route path="TeacherMasterForm/:user_id" element={<TeacherMasterForm />} /> {/* Dynamic route */}
         </Route>
       </Routes>

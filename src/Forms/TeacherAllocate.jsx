@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { ButtonComponent, Input, ReactTable} from '../components/component.js';
-
-=======
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select } from '../components/component.js'
->>>>>>> ee28e42f9879bce870043bdb4562b4694ba54b0d
+import { Input, ReactTable, Select, ButtonComponent } from '../components/component.js'
 
 const TeacherAllocate = () => {
   const [records, setRecords] = useState([]);
