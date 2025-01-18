@@ -5,7 +5,6 @@ import  {
   AddFiles,
   AddSubjects,
   TeacherAllocate,
-  Attendance,
   ButtonComponent,
   CheckboxComponent,
   ClassTeacherAllocate,
@@ -22,7 +21,8 @@ import  {
   Table,
   TeacherForm,
   TeacherMasterForm,
-  ViewComponent
+  ViewComponent,
+  AttendanceForm
 } from '../components/component.js';
 
 import {
@@ -53,7 +53,7 @@ const AppRoute = () => {
           <Route path="ClassTeacherForm" element={<ClassTeacherAllocate />} /> {/* Static route */}
           <Route path="StudentForm/:user_id" element={<StudentForm />} /> {/* Static route */}
           <Route path="AddFiles" element={<AddFiles />} /> {/* Static route */}
-          <Route path="Attendance" element={<Attendance />} /> {/* Static route */}
+          <Route path="AttendanceForm" element={<AttendanceForm />} /> {/* Static route */}
           <Route path="ViewComponent/:user_id" element={<ViewComponent />} />
           <Route path="TeacherMasterForm/:user_id" element={<TeacherMasterForm />} /> {/* Dynamic route */}
         </Route>

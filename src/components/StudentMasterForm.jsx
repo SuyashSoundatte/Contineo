@@ -19,7 +19,7 @@ const StudentMasterForm = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/getAllStudents', {
+        const response = await axios.get('http://192.168.0.140:3000/api/v1/getAllStudents', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -35,29 +35,19 @@ const StudentMasterForm = () => {
     fetchData();
   }, []);
 
-  const teacherColumns = [
+  const studentColumns = [
     {
-      name: 'Teacher ID',
-      selector: (row) => row.user_id,
+      name: 'Roll',
+      selector: (row) => row.roll_no,
       sortable: true,
     },
     {
-      name: 'First Name',
-      selector: (row) => row.fname,
-      sortable: true,
-    },
-    {
-      name: 'Last Name',
-      selector: (row) => row.lname,
+      name: 'Name',
+      selector: (row) => row.fname + ' ' + row.lname,
       sortable: true,
     },
     {
       name: 'Email',
-      selector: (row) => row.email,
-      sortable: true,
-    },
-    {
-      name: 'email',
       selector: (row) => row.email,
       sortable: true,
     },
@@ -67,11 +57,16 @@ const StudentMasterForm = () => {
       sortable: true,
     },
     {
+      name: 'Std',
+      selector: (row) => row.std,
+      sortable: true,
+    },
+    {
       name: 'Action',
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" onClick={() => navigate(`/MainPage/StudentForm/${row.user_id}`)}>
+        <ButtonComponent className="" onClick={() => navigate(`/MainPage/StudentForm/${row.user_id}`)}>
           View Student
-        </button>
+        </ButtonComponent>
       ),
     },
   ];
@@ -83,7 +78,7 @@ const StudentMasterForm = () => {
           onClick={() => navigate('/MainPage/StudentCreate')}
         >Add New Student</ButtonComponent>
       </div>
-      <ReactTable records={records} loading={loading} error={error} customColumns={teacherColumns} />
+      <ReactTable records={records} loading={loading} error={error} customColumns={studentColumns} />
     </div>
   );
 };

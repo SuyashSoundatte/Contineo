@@ -10,11 +10,19 @@ export default function ButtonComponent({
   className = "",
   ...props
 }) {
+  // Filter out non-DOM props to avoid passing them to the button element
+  const filteredProps = Object.keys(props).reduce((acc, key) => {
+    if (key !== "bgColor" && key !== "textColor" && key !== "padding" && key !== "borderRadius") {
+      acc[key] = props[key];
+    }
+    return acc;
+  }, {});
+
   return (
     <button
       type={type}
       className={`w-fit ${bgColor} ${textColor} ${padding} ${borderRadius} ${className}`}
-      {...props}
+      {...filteredProps} // Only forward valid props to the button element
     >
       {children}
     </button>

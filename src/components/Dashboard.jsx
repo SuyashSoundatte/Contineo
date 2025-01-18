@@ -18,7 +18,7 @@ const Dashboard = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      await axios.get("http://localhost:3000/api/v1/logout", {
+      await axios.get("http://192.168.0.140:3000/api/v1/logout", {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -103,11 +103,16 @@ const Dashboard = () => {
                 Class Teacher Incharge Form
               </li>
             </Link> */}
-            <Link to='/MainPage/Attendance'>
+            <Link to='/MainPage/AttendanceForm'>
               <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
                 Attendace Form
               </li>
             </Link>
+            {/* <Link to='/MainPage/Attendance'>
+              <li className='px-3 py-2 text-gray-300 hover:bg-blue-600 hover:text-white rounded-md transition-all duration-200'>
+                Attendace
+              </li>
+            </Link> */}
           </ul>
         </div>
       </nav>

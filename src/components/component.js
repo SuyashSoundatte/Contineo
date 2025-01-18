@@ -1,7 +1,6 @@
 import AddFiles from './AddFiles'
 import AddSubjects from './AddSubjects'
 import TeacherAllocate from './TeacherAllocate'
-import Attendance from './Attendance'
 import ButtonComponent from './ButtonComponent'
 import CheckboxComponent from './CheckboxComponent'
 import ClassTeacherAllocate from './ClassTeacherAllocate'
@@ -19,12 +18,12 @@ import Table from './Table'
 import TeacherForm from './TeacherForm'
 import TeacherMasterForm from './TeacherMasterForm'
 import ViewComponent from './ViewComponent'
+import AttendanceForm from './AttendaceForm'
 
 export {
   AddFiles,
   AddSubjects,
   TeacherAllocate,
-  Attendance,
   ButtonComponent,
   CheckboxComponent,
   ClassTeacherAllocate,
@@ -41,5 +40,6 @@ export {
   Table,
   TeacherForm,
   TeacherMasterForm,
-  ViewComponent
+  ViewComponent,
+  AttendanceForm
 }

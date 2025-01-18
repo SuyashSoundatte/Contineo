@@ -21,7 +21,7 @@ const TeacherAllocate = () => {
 
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/getAllTeacher",
+          "http://192.168.0.140:3000/api/v1/getAllTeacher",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -70,7 +70,7 @@ const TeacherAllocate = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3000/api/v1/allocateTeacher",
+        "http://192.168.0.140:3000/api/v1/allocateTeacher",
         {
           teacherId: selectedTeacher.user_id,
           standard: selectedStd,

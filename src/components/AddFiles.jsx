@@ -80,7 +80,7 @@ const AddFiles = () => {
       {isMenuOpen && (
         <div className='flex flex-col gap-4 mt-4'>
           <div className='relative flex justify-center items-center gap-4'>
-            <Select label='Document Name' options={[,"Male", "Female"]} />
+            <Select label='Document Name' options={["document Name","LC", "Cast Certificate"]} />
             <Input
               label = 'Document Name'
               type='file'
