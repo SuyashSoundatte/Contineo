@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ReactTable } from "../components/component.js";
+import { ReactTable, Select, ButtonComponent } from "../components/component.js";
 
 const ClassTeacherAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -122,12 +122,12 @@ const ClassTeacherAllocate = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <button
+        <ButtonComponent
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
           onClick={() => allocateTeacher(row.user_id)}
         >
           Allocate
-        </button>
+        </ButtonComponent>
       ),
       ignoreRowClick: true,
     },
@@ -141,7 +141,7 @@ const ClassTeacherAllocate = () => {
         <div className="rounded-lg p-6 mb-8">
           <form className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label htmlFor="standard" className="block text-sm font-medium text-gray-700 mb-1">
+              {/* <label htmlFor="standard" className="block text-sm font-medium text-gray-700 mb-1">
                 Standard
               </label>
               <select
@@ -153,10 +153,14 @@ const ClassTeacherAllocate = () => {
                 <option value="">Select Standard</option>
                 <option value="Standard 11">Standard 11</option>
                 <option value="Standard 12">Standard 12</option>
-              </select>
+              </select> */}
+              <Select 
+                label='Standard'
+                options={["Select Standard", "Standard 11", "Standard 12"]}
+              />
             </div>
             <div>
-              <label htmlFor="division" className="block text-sm font-medium text-gray-700 mb-1">
+              {/* <label htmlFor="division" className="block text-sm font-medium text-gray-700 mb-1">
                 Division
               </label>
               <select
@@ -168,7 +172,11 @@ const ClassTeacherAllocate = () => {
                 <option value="">Select Division</option>
                 <option value="Division A">Division A</option>
                 <option value="Division B">Division B</option>
-              </select>
+              </select> */}
+              <Select 
+                label='Division'
+                options={["Select Division", "Division A", "Division B"]}
+              />
             </div>
           </form>
 

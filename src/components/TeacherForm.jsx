@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ButtonComponent, Input, ReactTable } from '../components/component.js';
 import { useNavigate } from 'react-router-dom';
-// import View from '../components/ViewComponent.jsx';
-import ViewComponent from '../components/ViewComponent.jsx';
+import { ButtonComponent, ReactTable } from './component.js';
 
 const TeacherForm = () => {
   const [records, setRecords] = useState([]);

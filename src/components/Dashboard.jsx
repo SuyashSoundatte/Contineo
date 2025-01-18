@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import ButtonComponent from "./ButtonComponent";
+import { ButtonComponent } from "./component.js";
 
 const Dashboard = () => {
   const { setIsLoggedIn, isLoggedIn } = useAuth();

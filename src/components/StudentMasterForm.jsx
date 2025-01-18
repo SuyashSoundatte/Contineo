@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Input, ReactTable,ButtonComponent } from '../components/component.js';
+import { Input, ReactTable,ButtonComponent } from './component.js';
 import { useNavigate } from 'react-router-dom';
 
 const StudentMasterForm = () => {

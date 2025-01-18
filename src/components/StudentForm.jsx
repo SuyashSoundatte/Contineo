@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Select from "./Select";
-import ButtonComponent from "./ButtonComponent";
-import AddFiles from "./AddFiles";
-import Input from "./Input";
+import {
+  Input,
+  Select,
+  ButtonComponent,
+  AddFiles,
+} from './component.js';
 
 const StudentForm = () => {
   const { user_id } = useParams(); // Access the userId parameter from the URL

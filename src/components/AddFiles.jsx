@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import ButtonComponent from "./ButtonComponent";
-import Input from "./Input";
 import axios from "axios";
-import js from "@eslint/js";
-import Select from "./Select";
+import {
+  ButtonComponent,
+  Input,
+  Select,
+} from "./component.js";
 
 const AddFiles = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -98,7 +99,7 @@ const AddFiles = () => {
               {uploadedFiles.map((file, index) => (
                 <li key={index} className='flex justify-between items-center'>
                   {file.name} ({file.file.name})
-                  <button
+                  <ButtonComponent
                     onClick={() =>
                       setUploadedFiles((prev) =>
                         prev.filter((_, i) => i !== index)
@@ -107,7 +108,7 @@ const AddFiles = () => {
                     className='text-red-500 hover:underline ml-2'
                   >
                     Delete
-                  </button>
+                  </ButtonComponent>
                 </li>
               ))}
             </ul>

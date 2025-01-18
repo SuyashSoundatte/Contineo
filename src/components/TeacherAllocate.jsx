@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Input,
-  ReactTable,
-  Select,
-  ButtonComponent,
-  Modal
-} from "../components/component.js";
+import { Input, ReactTable, Select, ButtonComponent, Modal } from "../components/component.js";
 const TeacherAllocate = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -141,12 +135,12 @@ const TeacherAllocate = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <button
+        <ButtonComponent
           onClick={() => openModal(row)}
           className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out'
         >
           Allocate
-        </button>
+        </ButtonComponent>
       ),
       ignoreRowClick: true,
     },
@@ -169,59 +163,31 @@ const TeacherAllocate = () => {
         <div className='rounded-lg p-6 mb-8'>
           <form className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
             <div>
-              <label
-                htmlFor='standard'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Standard
-              </label>
-              <select
-                id='standard'
-                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
-                value={selectedStd}
+              <Select 
+                label = 'Standard'
+                id = "standard"
+                options={["Select Standard", "Standard 11", "Standard 12"]}
                 onChange={handleStdChange}
-              >
-                <option value=''>Select Standard</option>
-                <option value='Standard 11'>Standard 11</option>
-                <option value='Standard 12'>Standard 12</option>
-              </select>
+                value={selectedStd}
+              />
             </div>
             <div>
-              <label
-                htmlFor='division'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Division
-              </label>
-              <select
-                id='division'
-                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
-                value={selectedDiv}
+              <Select 
+                label = 'division'
+                id = "division"
+                options={["Select Division", "Division A", "Division B"]}
                 onChange={handleDivChange}
-              >
-                <option value=''>Select Division</option>
-                <option value='Division A'>Division A</option>
-                <option value='Division B'>Division B</option>
-              </select>
+                value={selectedDiv}
+              />
             </div>
             <div>
-              <label
-                htmlFor='subject'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Subject
-              </label>
-              <select
-                id='subject'
-                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
-                value={selectedSubject}
+              <Select 
+                label = 'Subject'
+                id = "subject"
+                options={["Select Subject", "Math", "Physics", "Chemistry"]}
                 onChange={handleSubjectChange}
-              >
-                <option value=''>Select Subject</option>
-                <option value='Math'>Math</option>
-                <option value='Physics'>Physics</option>
-                <option value='Chemistry'>Chemistry</option>
-              </select>
+                value={selectedSubject}
+              />
             </div>
           </form>
 

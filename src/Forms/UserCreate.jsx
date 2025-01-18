@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Input,
   Select,
   ButtonComponent,
+  AddSubjects,
   AddFiles,
 } from "../components/component.js";
-import axios from "axios";
-import AddSubjects from "../components/AddSubjects.jsx";
 
 const UserCreate = () => {
   const {

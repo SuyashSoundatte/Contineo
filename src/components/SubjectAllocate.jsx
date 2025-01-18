@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ReactTable from '../components/ReactTable';
 import axios from 'axios';
+import { Input, ReactTable,ButtonComponent, Select, } from './component.js';
+import { useNavigate } from 'react-router-dom';
 
 const SubjectAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -115,9 +116,9 @@ const SubjectAllocate = () => {
     {
       name: 'Action',
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+        <ButtonComponent className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
           View
-        </button>
+        </ButtonComponent>
       ),
     },
   ]
@@ -127,17 +128,12 @@ const SubjectAllocate = () => {
       {/* Filter Section */}
       <div className="flex flex-col gap-4 mb-6">
         <div className="flex gap-4">
-          <select 
-            onChange={handleSubjectChange} 
-            value={selectedSubject} 
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="">Select Subject</option>
-            <option value="Math">Math</option>
-            <option value="Science">Science</option>
-            <option value="English">English</option>
-            {/* Add more options as per your data */}
-          </select>
+          <Select 
+            label = 'Select Subject'
+            options={["Select Subject", "Math", "Science", "English"]}
+            onChange={handleSubjectChange}
+            value={selectedSubject}
+          />
 
           <input
             type="text"
@@ -145,6 +141,13 @@ const SubjectAllocate = () => {
             value={selectedTeacherId}
             onChange={handleTeacherIdChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          <Input 
+            label = 'Teacher ID'
+            type="text"
+            placeholder="Enter Teacher ID"
+            value={selectedTeacherId}
+            onChange={handleTeacherIdChange}
           />
         </div>
       </div>

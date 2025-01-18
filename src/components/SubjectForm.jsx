@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import ReactTable from "../components/ReactTable";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useForm } from "react-hook-form";
-import ButtonComponent from "../components/ButtonComponent";
-import Input from "../components/Input";
-import Select from "../components/Select";
+import { Input, Select , ReactTable, ButtonComponent} from "./component.js";
 
 const SubjectForm = () => {
   const [selectedSubject, setSelectedSubject] = useState("");

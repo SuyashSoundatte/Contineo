@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import ButtonComponent from "./ButtonComponent";
-import Input from "./Input";
-import Select from "./Select";
+import { ButtonComponent, Input, Select } from "./component.js";
 
 const AddSubjects = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

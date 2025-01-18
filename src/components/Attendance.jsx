@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useTable } from "react-table";
-import ButtonComponent from "../components/ButtonComponent";
-import Select from "../components/Select";
-import Input from "../components/Input";
+import { ButtonComponent, Input, Select } from "./component.js";
 
 export default function Attendance() {
   const predefinedData = {

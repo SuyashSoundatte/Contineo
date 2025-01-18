@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select } from "../components/component.js";
+import { Input, ReactTable, Select, ButtonComponent } from "./component.js";
 
 const StudentAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -113,12 +113,12 @@ const StudentAllocate = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <button
+        <ButtonComponent
           onClick={() => handleAllocate(row)}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
         >
           Allocate
-        </button>
+        </ButtonComponent>
       ),
       ignoreRowClick: true,
     },
@@ -132,40 +132,20 @@ const StudentAllocate = () => {
         <div className="rounded-lg p-6 mb-8">
           <form className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label
-                htmlFor="standard"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Standard
-              </label>
-              <select
-                id="standard"
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                value={selectedStd}
+              <Select 
                 onChange={handleStdChange}
-              >
-                <option value="">All Standards</option>
-                <option value="Standard 11">Standard 11</option>
-                <option value="Standard 12">Standard 12</option>
-              </select>
+                value={selectedStd}
+                label='Standard'
+                options={["Select Standard", "Standard 11", "Standard 12"]}
+              />
             </div>
             <div>
-              <label
-                htmlFor="division"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Division
-              </label>
-              <select
-                id="division"
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                value={selectedDiv}
+              <Select 
                 onChange={handleDivChange}
-              >
-                <option value="">Select Division</option>
-                <option value="Division A">Division A</option>
-                <option value="Division B">Division B</option>
-              </select>
+                label='Division'
+                value={selectedDiv}
+                options={["Select Division", "Division A", "Division B"]}
+              />
             </div>
           </form>
 
