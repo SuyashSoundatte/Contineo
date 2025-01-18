@@ -58,10 +58,24 @@ const StudentAllocate = () => {
     );
   };
 
+  const handleAllocate = (row) => {
+    if (!selectedDiv) {
+      setError("Please select a division to allocate the student.");
+      return;
+    }
+
+    setRecords((prevRecords) =>
+      prevRecords.map((record) =>
+        record.user_id === row.user_id
+          ? { ...record, batchAssigned: selectedDiv }
+          : record
+      )
+    );
+  };
+
   const filteredRecords = records.filter((record) => {
     return (
-      (selectedStd ? record.standard === selectedStd : true) &&
-      (selectedDiv ? record.division === selectedDiv : true)
+      (selectedStd ? record.standard === selectedStd : true)
     );
   });
 
@@ -93,13 +107,16 @@ const StudentAllocate = () => {
     },
     {
       name: "Batch Assigned",
-      selector: (row) => row.batchAssigned,
+      selector: (row) => row.batchAssigned || "Not allocated",
       sortable: true,
     },
     {
       name: "Actions",
       cell: (row) => (
-        <button className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out'>
+        <button
+          onClick={() => handleAllocate(row)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+        >
           Allocate
         </button>
       ),
@@ -108,73 +125,71 @@ const StudentAllocate = () => {
   ];
 
   return (
-    <div className='min-h-screen py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-7xl mx-auto'>
-        <h1 className='text-3xl font-bold text-gray-900 mb-8'>
-          Student Allocation
-        </h1>
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Student Allocation</h1>
 
-        <div className='  rounded-lg p-6 mb-8'>
-          <form className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
+        <div className="rounded-lg p-6 mb-8">
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label
-                htmlFor='standard'
-                className='block text-sm font-medium text-gray-700 mb-1'
+                htmlFor="standard"
+                className="block text-sm font-medium text-gray-700 mb-1"
               >
                 Standard
               </label>
               <select
-                id='standard'
-                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
+                id="standard"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 value={selectedStd}
                 onChange={handleStdChange}
               >
-                <option value=''>All Standards</option>
-                <option value='Standard 11'>Standard 11</option>
-                <option value='Standard 12'>Standard 12</option>
+                <option value="">All Standards</option>
+                <option value="Standard 11">Standard 11</option>
+                <option value="Standard 12">Standard 12</option>
               </select>
             </div>
             <div>
               <label
-                htmlFor='division'
-                className='block text-sm font-medium text-gray-700 mb-1'
+                htmlFor="division"
+                className="block text-sm font-medium text-gray-700 mb-1"
               >
                 Division
               </label>
               <select
-                id='division'
-                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
+                id="division"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                 value={selectedDiv}
                 onChange={handleDivChange}
               >
-                <option value=''>All Divisions</option>
-                <option value='Division A'>Division A</option>
-                <option value='Division B'>Division B</option>
+                <option value="">Select Division</option>
+                <option value="Division A">Division A</option>
+                <option value="Division B">Division B</option>
               </select>
             </div>
           </form>
 
           {error && (
             <div
-              className='bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6'
-              role='alert'
+              className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6"
+              role="alert"
             >
-              <p className='font-bold'>Error</p>
+              <p className="font-bold">Error</p>
               <p>{error}</p>
             </div>
           )}
 
           {loading ? (
-            <div className='flex items-center justify-center h-64'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600'></div>
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
           ) : (
             <>
-              <div className='mb-8'>
-                <h2 className='text-2xl font-semibold text-gray-800 mb-4'>
+              <div className="mb-8">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                   Unallocated Student
                 </h2>
-                <div className='overflow-x-auto'>
+                <div className="overflow-x-auto">
                   <ReactTable
                     customColumns={teacher_allocate_columns}
                     records={filteredRecords.filter((r) => !r.batchAssigned)}
@@ -184,10 +199,10 @@ const StudentAllocate = () => {
               </div>
 
               <div>
-                <h2 className='text-2xl font-semibold text-gray-800 mb-4'>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
                   Allocated Student
                 </h2>
-                <div className='overflow-x-auto'>
+                <div className="overflow-x-auto">
                   <ReactTable
                     customColumns={teacher_allocate_columns}
                     records={filteredRecords.filter((r) => r.batchAssigned)}

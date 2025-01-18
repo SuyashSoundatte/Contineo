@@ -14,6 +14,7 @@ import MentorAllocate from "./MentorAllocate";
 import MentorInchargeAllocate from "./MentorInchargeAllocate";
 import ClassTeacherInchargeAllocate from "./ClassTeacherInchargeAllocate.jsx";
 import ViewComponent from "./ViewComponent.jsx";
+import Modal from "./Modal.jsx";
 
 export {
   AddFiles,
@@ -31,5 +32,6 @@ export {
   ClassTeacherAllocate,
   MentorInchargeAllocate,
   ClassTeacherInchargeAllocate,
-  ViewComponent
+  ViewComponent,
+  Modal
 }

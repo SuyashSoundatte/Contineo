@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select } from '../components/component.js'
+import { ReactTable } from "../components/component.js";
 
 const ClassTeacherAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -46,24 +46,47 @@ const ClassTeacherAllocate = () => {
   const handleStdChange = (event) => setSelectedStd(event.target.value);
   const handleDivChange = (event) => setSelectedDiv(event.target.value);
 
-  const handleCheckboxChange = (e, row) => {
-    const { checked } = e.target;
+  // Allocate teacher to the selected standard and division
+  const allocateTeacher = async (teacherId) => {
+    if (!selectedStd || !selectedDiv) {
+      alert("Please select both Standard and Division to allocate a teacher.");
+      return;
+    }
 
-    setRecords((prevRecords) =>
-      prevRecords.map((record) =>
-        record.user_id === row.user_id
-          ? { ...record, selected: checked }
-          : record
-      )
-    );
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Token not found. Please log in again.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/v1/allocateTeacher/${teacherId}`,
+        {
+          standard: selectedStd,
+          division: selectedDiv,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.data.success) {
+        // Update records to reflect allocation
+        setRecords((prevRecords) =>
+          prevRecords.map((record) =>
+            record.user_id === teacherId
+              ? { ...record, batchAssigned: `${selectedStd} - ${selectedDiv}` }
+              : record
+          )
+        );
+        alert("Teacher allocated successfully.");
+      }
+    } catch (err) {
+      console.error("Error allocating teacher:", err);
+      setError(err.response?.data?.message || "Error allocating teacher.");
+    }
   };
-
-  const filteredRecords = records.filter((record) => {
-    return (
-      (selectedStd ? record.standard === selectedStd : true) &&
-      (selectedDiv ? record.division === selectedDiv : true)
-    );
-  });
 
   const teacher_allocate_columns = [
     {
@@ -99,7 +122,10 @@ const ClassTeacherAllocate = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out">
+        <button
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+          onClick={() => allocateTeacher(row.user_id)}
+        >
           Allocate
         </button>
       ),
@@ -111,8 +137,8 @@ const ClassTeacherAllocate = () => {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Class Teacher Allocation</h1>
-        
-        <div className="  rounded-lg p-6 mb-8">
+
+        <div className="rounded-lg p-6 mb-8">
           <form className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label htmlFor="standard" className="block text-sm font-medium text-gray-700 mb-1">
@@ -124,7 +150,7 @@ const ClassTeacherAllocate = () => {
                 value={selectedStd}
                 onChange={handleStdChange}
               >
-                <option value="">All Standards</option>
+                <option value="">Select Standard</option>
                 <option value="Standard 11">Standard 11</option>
                 <option value="Standard 12">Standard 12</option>
               </select>
@@ -139,7 +165,7 @@ const ClassTeacherAllocate = () => {
                 value={selectedDiv}
                 onChange={handleDivChange}
               >
-                <option value="">All Divisions</option>
+                <option value="">Select Division</option>
                 <option value="Division A">Division A</option>
                 <option value="Division B">Division B</option>
               </select>
@@ -164,7 +190,7 @@ const ClassTeacherAllocate = () => {
                 <div className="overflow-x-auto">
                   <ReactTable
                     customColumns={teacher_allocate_columns}
-                    records={filteredRecords.filter((r) => !r.batchAssigned)}
+                    records={records.filter((r) => !r.batchAssigned)}
                     onRowClick={(row) => console.log("Row clicked:", row)}
                   />
                 </div>
@@ -175,7 +201,7 @@ const ClassTeacherAllocate = () => {
                 <div className="overflow-x-auto">
                   <ReactTable
                     customColumns={teacher_allocate_columns}
-                    records={filteredRecords.filter((r) => r.batchAssigned)}
+                    records={records.filter((r) => r.batchAssigned)}
                     onRowClick={(row) => console.log("Row clicked:", row)}
                   />
                 </div>
@@ -189,4 +215,3 @@ const ClassTeacherAllocate = () => {
 };
 
 export default ClassTeacherAllocate;
-
