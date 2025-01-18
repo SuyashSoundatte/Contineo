@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Input,
   Select,
   ButtonComponent,
+  AddSubjects,
   AddFiles,
 } from "../components/component.js";
-import axios from "axios";
 
 const UserCreate = () => {
   const {
@@ -15,10 +15,19 @@ const UserCreate = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [selectedRole, setSelectedRole] = useState("");
+
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
+  };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     console.log("Selected file:", selectedFile);
+  };
+  const handleSubjectChange = (event) => {
+    const selectedSubject = event.target.files[0];
+    console.log("Selected Subject:", selectedSubject);
   };
 
   const onSubmit = async (data) => {
@@ -210,6 +219,7 @@ const UserCreate = () => {
                 <Select
                   label='Role'
                   options={[
+                    "Role",
                     "Teacher",
                     "OfficeStaff",
                     "Mentor",
@@ -218,6 +228,7 @@ const UserCreate = () => {
                     "ClassTeacher",
                   ]}
                   {...register("role", { required: "Role is required" })}
+                  onChange={handleRoleChange}
                 />
                 {errors.role && (
                   <p className='text-red-500 text-sm mt-1'>
@@ -227,14 +238,16 @@ const UserCreate = () => {
               </div>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              <div>
-                <h2 className='text-lg font-medium text-gray-700'>
-                  Add Subject
-                </h2>
-                <AddFiles onFileChange={handleFileChange} />
+            {selectedRole === "Teacher" && (
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                <div>
+                  <h2 className='text-lg font-medium text-gray-700'>
+                    Add Subject
+                  </h2>
+                  <AddSubjects onSubjectChange={handleSubjectChange} />
+                </div>
               </div>
-            </div>
+            )}
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
               <div>

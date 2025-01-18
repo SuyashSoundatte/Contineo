@@ -1,7 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import {Input , Select, ButtonComponent, AddFiles} from "../components/component.js";
-import axios from "axios"; // Install this if you haven't: npm install axios
+import axios from "axios"; 
+import {
+  Input, 
+  Select,
+  ButtonComponent,
+  AddFiles,
+} from "../components/component.js";
 
 const StudentCreate = () => {
   const {
