@@ -12,124 +12,326 @@ const executeQuery = async (query, params) => {
   return request.query(query);
 };
 
-const allocateTeacherSubject = asyncHandler(async(req, res)=>{
-  const { userId, subject, std, div } = req.body;
+const allocateTeacherSubject = asyncHandler(async (req, res) => {
+  const { teacherId, subject, std, div } = req.body;
 
-  if(!subject || !std || !div){
+  if (!subject || !std || !div) {
     throw new ApiError("Missing required fields", 400);
   }
 
-  const checkSubjectQuery = "SELECT COUNT(*) AS count FROM subjects WHERE subject = @Subject";
-  const existingSubject = await executeQuery(checkSubjectQuery, [{ name: 'Subject', value: subject }]);
-
-  if(existingSubject.recordset[0].count > 0){
-    throw new ApiError("Subject already in use", 400);
-  }
-
-  const checkStdQuery = "SELECT COUNT(*) AS count FROM student WHERE class_std = @Std";
-  const existingStd = await executeQuery(checkStdQuery, [{ name: 'Std', value: std }]);
-
-  if(existingStd.recordset[0].count > 0){
-    throw new ApiError("Std already in use", 400);
-  }
-
-  const checkDivQuery = "SELECT COUNT(*) AS count FROM div WHERE div = @Div";
-  const existingDiv = await executeQuery(checkDivQuery, [{ name: 'Div', value: div }]);
-
-  if(existingDiv.recordset[0].count > 0){
-    throw new ApiError("Div already in use", 400);
-  }
-
   const insertTeacherSubjectQuery = `
-    INSERT INTO teacher_subject (subject, class_std, div)
-    VALUES (@Subject, @Std, @Div);
+    INSERT INTO Teacher_Allocates (teacher_id, subjects, std, div)
+    VALUES (@TeacherId, @Subject, @Std, @Div);
   `;
 
   const teacherSubjectParams = [
-    { name: 'Subject', value: subject },
-    { name: 'Std', value: std },
-    { name: 'Div', value: div },
+    { name: "TeacherId", value: teacherId }, 
+    { name: "Subject", value: subject },
+    { name: "Std", value: std },
+    { name: "Div", value: div },
   ];
 
   await executeQuery(insertTeacherSubjectQuery, teacherSubjectParams);
 
-  return res.send(new ApiResponse(201, { subject, std, div }, "Teacher Subject allocated successfully"));
-})
+  return res.send(
+    new ApiResponse(
+      201,
+      { subject, std, div },
+      "Teacher Subject allocated successfully"
+    )
+  );
+});
 
-const updateTeacherSubject = asyncHandler(async(req, res)=>{
-  const { userId, subject, std, div } = req.body;
+const updateTeacherSubject = asyncHandler(async (req, res) => {
+  const { teacherId, subject, std, div } = req.body;
 
-  if(!userId || !subject || !std || !div){
+  if (!teacherId || !subject || !std || !div) {
     throw new ApiError("Missing required fields", 400);
   }
 
-  const updateTeacherSubjectQuery = "UPDATE teacher_assigned SET standard_name = @Std, subject_name = @Subject, div = @Div WHERE user_id = @UserId";  
+  const updateTeacherSubjectQuery =
+    "UPDATE Teacher_Allocates SET std = @Std, subjects = @Subject, div = @Div WHERE teacher_id = @TeacherId";
   const updateTeacherSubjectParams = [
-    { name: 'UserId', value: userId },
-    { name: 'Div', value: div },
-    { name: 'Subject', value: subject },
-    { name: 'Std', value: std },
+    { name: "TeacherId", value: teacherId },
+    { name: "Div", value: div },
+    { name: "Subject", value: subject },
+    { name: "Std", value: std },
   ];
   await executeQuery(updateTeacherSubjectQuery, updateTeacherSubjectParams);
-  return res.send(new ApiResponse(200, {userId, subject, std, div }, "Teacher Subject updated successfully"));
-})
+  return res.send(
+    new ApiResponse(
+      200,
+      { teacherId, subject, std, div },
+      "Teacher Subject updated successfully"
+    )
+  );
+});
 
 const getAllTeacher = asyncHandler(async (req, res) => {
-
   const usersQuery = `
-    SELECT u.user_id, u.email, u.fname, u.lname, u.role, u.phone, u.gender
+    SELECT t.teacher_id, u.email, u.fname, u.lname, u.role, u.phone, u.gender
     FROM Users u
+    join Teachers t on u.user_id = t.user_id
     WHERE u.role = 'Teacher';
   `;
-  
+
   const usersResult = await executeQuery(usersQuery);
 
-  return res.send(new ApiResponse(200, usersResult.recordset, "Users fetched successfully"));
+  return res.send(
+    new ApiResponse(200, usersResult.recordset, "Users fetched successfully")
+  );
 });
 
 const getTeacherById = asyncHandler(async (req, res) => {
-  const userId  = req.params.id;
-  const parsedId = String(userId); 
+  const teacherId = req.params.id;
+  const parsedId = String(teacherId);
 
   const usersQuery = `
-  SELECT user_id, email, fname, lname, role, phone, gender
-  FROM Users
-  WHERE role = 'Teacher' AND user_id = @UserId;
+  SELECT t.teacher_id, u.email, u.fname, u.lname, u.role, u.phone, u.gender
+  FROM Users u
+  join Teachers t on u.user_id = t.user_id
+  WHERE u.role = 'Teacher' AND t.teacher_id = @TeacherId;
   `;
 
-  const usersResult = await executeQuery(usersQuery, [{ name: 'UserId', value: parsedId }]);
+  const usersResult = await executeQuery(usersQuery, [
+    { name: "TeacherId", value: parsedId },
+  ]);
 
-  return res.send(new ApiResponse(200, usersResult.recordset, "Teacher fetched successfully"));
+  return res.send(
+    new ApiResponse(200, usersResult.recordset, "Teacher fetched successfully")
+  );
 });
 
-const getTeacherByStd = asyncHandler(async(req, res)=>{
-  const std = req.params.std; 
+const getTeacherByStd = asyncHandler(async (req, res) => {
+  const std = req.params.std;
 
   const teacherByDivQuery = `
-    SELECT u.user_id, u.fname, u.lname, u.email, u.phone 
+    SELECT t.teacher_id, u.fname, u.lname, u.email, u.phone 
     FROM Users u
-    JOIN teacher t ON u.user_id = t.user_id
+    JOIN Teachers t ON u.user_id = t.user_id
     WHERE u.role = 'Teacher' AND t.std = @Std;
   `;
 
-  const teacherByDivResult = await executeQuery(teacherByDivQuery, [{ name: 'Std', value: std }]);
+  const teacherByDivResult = await executeQuery(teacherByDivQuery, [
+    { name: "Std", value: std },
+  ]);
 
-  return res.send(new ApiResponse(200, teacherByDivResult.recordset, "Teacher fetched successfully"));
-})
+  return res.send(
+    new ApiResponse(
+      200,
+      teacherByDivResult.recordset,
+      "Teacher fetched successfully"
+    )
+  );
+});
 
-const getTeacherBySubject = asyncHandler(async(req, res)=>{
-  const subject = req.params.sub; 
+const getTeacherBySubject = asyncHandler(async (req, res) => {
+  const subject = req.params.sub;
 
   const teacherBySubjectQuery = `
     SELECT u.user_id, u.fname, u.lname, u.email, u.phone 
     FROM Users u
-    JOIN teacher t ON u.user_id = t.user_id
-    WHERE u.role = 'Teacher' AND t.subject = @Subject;
+    JOIN Teachers t ON u.user_id = t.user_id
+    WHERE u.role = 'Teacher' AND t.subjects = @Subject;
   `;
 
-  const teacherBySubjectResult = await executeQuery(teacherBySubjectQuery, [{ name: 'Subject', value: subject }]);
+  const teacherBySubjectResult = await executeQuery(teacherBySubjectQuery, [
+    { name: "Subject", value: subject },
+  ]);
 
-  return res.send(new ApiResponse(200, teacherBySubjectResult.recordset, "Teacher fetched successfully"));
-})
+  return res.send(
+    new ApiResponse(
+      200,
+      teacherBySubjectResult.recordset,
+      "Teacher fetched successfully"
+    )
+  );
+});
 
-export { allocateTeacherSubject, updateTeacherSubject, getAllTeacher, getTeacherById, getTeacherByStd, getTeacherBySubject };
+const createTeacher = asyncHandler(async (req, res) => {
+  const {
+    fname,
+    mname,
+    lname,
+    address,
+    gender,
+    dob,
+    email,
+    password,
+    phone,
+    role,
+    subjects,
+  } = req.body;
+
+  if (
+    !fname ||
+    !lname ||
+    !address ||
+    !gender ||
+    !dob ||
+    !email ||
+    !password ||
+    !phone ||
+    !role ||
+    !subjects
+  ) {
+    throw new ApiError(400, "All fields are required.");
+  }
+
+  if (!Array.isArray(subjects) || subjects.length === 0) {
+    throw new ApiError(400, "Subjects must be a non-empty array.");
+  }
+
+  // Step 1: Insert teacher into Teachers table
+  const teacherInsertQuery = `
+      INSERT INTO Teachers (FirstName, MiddleName, LastName, Address, Gender, DOB, Email, Password, Phone, Role)
+      OUTPUT INSERTED.TeacherID
+      VALUES (@fname, @mname, @lname, @address, @gender, @dob, @password, @phone, @role)
+    `;
+
+  const teacherParams = [
+    { name: "fname", value: fname },
+    { name: "mname", value: mname },
+    { name: "lname", value: lname },
+    { name: "address", value: address },
+    { name: "gender", value: gender },
+    { name: "dob", value: dob },
+    { name: "email", value: email },
+    { name: "password", value: password },
+    { name: "phone", value: phone },
+    { name: "role", value: role },
+  ];
+
+  const teacherResult = await executeQuery(teacherInsertQuery, teacherParams);
+  const teacherID = teacherResult.recordset[0].TeacherID;
+
+  // Step 2: Insert subjects into TeacherSubjects table
+  const subjectInsertQuery = `
+      INSERT INTO TeacherSubjects (TeacherID, Subject)
+      VALUES (@teacherID, @subject)
+    `;
+
+  for (const subject of subjects) {
+    const subjectParams = [
+      { name: "teacherID", value: teacherID },
+      { name: "subject", value: subject },
+    ];
+    await executeQuery(subjectInsertQuery, subjectParams);
+  }
+
+  // Step 3: Send response
+  res.send(
+    new ApiResponse(
+      201,
+      teacherID,
+      "Teacher and subjects created successfully."
+    )
+  );
+});
+
+
+const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
+  const { userId, std, div } = req.body;
+
+  if (!userId || !std || !div) {
+    return next(new ApiError(400, 'Invalid request data'));
+  }
+
+  try {
+    // Check if a mentor is already assigned for the given standard and division
+    const existingAssignment = await executeQuery(
+      'SELECT mentor_id FROM Mentor_Allocates WHERE std = @std AND div = @div',
+      [
+        { name: 'std', value: std },
+        { name: 'div', value: div },
+      ]
+    );
+
+    if (existingAssignment.recordset.length > 0) {
+      throw new ApiError(401, 'A mentor is already assigned to this standard and division');
+    }
+
+    // Check if the user is a mentor
+    const userRoleCheck = await executeQuery(
+      'SELECT role FROM Users WHERE user_id = @user_id',
+      [{ name: 'user_id', value: userId }]
+    );
+
+    if (userRoleCheck.recordset.length === 0 || userRoleCheck.recordset[0].role !== 'Mentor') {
+      throw new ApiError(403, 'The user is not a mentor');
+    }
+
+    // Assign the mentor to the standard and division
+    await executeQuery(
+      'INSERT INTO Mentor_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)',
+      [
+        { name: 'user_id', value: userId },
+        { name: 'std', value: std },
+        { name: 'div', value: div },
+      ]
+    );
+
+    res.status(200).send(new ApiResponse(200, null, 'Mentor assigned successfully'));
+  } catch (error) {
+    next(new ApiError(500, 'An error occurred while assigning the mentor', [], error.stack));
+  }
+});
+
+const assignClassTeacherByStdDiv = asyncHandler(async (req, res, next) => {
+  const { userId, std, div } = req.body;
+
+  if (!userId || !std || !div) {
+    return next(new ApiError(400, 'Invalid request data'));
+  }
+
+  try {
+    // Check if a class teacher is already assigned for the given standard and division
+    const existingAssignment = await executeQuery(
+      'SELECT ct_id FROM ClassTeacher_Allocates WHERE std = @std AND div = @div',
+      [
+        { name: 'std', value: std },
+        { name: 'div', value: div },
+      ]
+    );
+
+    if (existingAssignment.recordset.length > 0) {
+      throw new ApiError(401, 'A class teacher is already assigned to this standard and division');
+    }
+
+    // Check if the user is a class teacher
+    const userRoleCheck = await executeQuery(
+      'SELECT role FROM Users WHERE user_id = @user_id',
+      [{ name: 'user_id', value: userId }]
+    );
+
+    if (userRoleCheck.recordset.length === 0 || userRoleCheck.recordset[0].role !== 'ClassTeacher') {
+      throw new ApiError(403, 'The user is not a class teacher');
+    }
+
+    // Assign the class teacher to the standard and division
+    await executeQuery(
+      'INSERT INTO ClassTeacher_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)',
+      [
+        { name: 'user_id', value: userId },
+        { name: 'std', value: std },
+        { name: 'div', value: div },
+      ]
+    );
+
+    res.status(200).send(new ApiResponse(200, null, 'Class teacher assigned successfully'));
+  } catch (error) {
+    next(new ApiError(500, 'An error occurred while assigning the class teacher', [], error.stack));
+  }
+});
+
+export {
+  createTeacher,
+  allocateTeacherSubject,
+  updateTeacherSubject,
+  getAllTeacher,
+  getTeacherById,
+  getTeacherByStd,
+  getTeacherBySubject,
+  assignClassTeacherByStdDiv,
+  assignMentorByStdDiv,
+};
