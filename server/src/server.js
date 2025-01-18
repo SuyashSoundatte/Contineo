@@ -14,6 +14,8 @@ import superadmin from "./routes/superadmin.routes.js";
 import file from "./routes/file.routes.js"
 import student from "./routes/student.routes.js";
 import teacher from "./routes/teacher.routes.js";
+import classTeacher from "./routes/classTeacher.routes.js";
+import mentor from "./routes/mentor.routes.js"
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -32,6 +34,8 @@ app.use('/api/v1', superadmin);
 app.use('/api/v1', file);
 app.use('/api/v1', student);
 app.use('/api/v1', teacher);
+app.use('/api/v1', mentor);
+app.use('/api/v1', classTeacher);
 app.use(GlobalErrorHandler);
 
 

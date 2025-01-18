@@ -14,14 +14,12 @@ const executeQuery = async (query, params) => {
 };
 
 const createUser = asyncHandler(async (req, res) => {
-  const { fname, mname, lname, address, gender, dob, email, password, phone, role } = req.body;
+  const { fname, mname, lname, address, gender, dob, email, password, phone, role, subject, div, std } = req.body;
 
-  // Validate required fields
   if (!fname || !lname || !email || !password || !phone || !role) {
     throw new ApiError(400, "Please provide all the required fields");
   }
 
-  // Check if email already exists
   const checkEmailQuery = "SELECT COUNT(*) AS count FROM Users WHERE email = @Email";
   const existingEmail = await executeQuery(checkEmailQuery, [{ name: "Email", value: email }]);
 
@@ -29,14 +27,12 @@ const createUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Email already in use");
   }
 
-  // Hash password
   const hashedPassword = await hashPassword(password);
 
-  // Insert into Users table
   const insertUserQuery = `
     INSERT INTO Users (fname, mname, lname, address, gender, dob, email, password, phone, role)
+    OUTPUT INSERTED.user_id
     VALUES (@Fname, @Mname, @Lname, @Address, @Gender, @Dob, @Email, @Password, @Phone, @Role);
-    SELECT SCOPE_IDENTITY() AS id;
   `;
   const userParams = [
     { name: "Fname", value: fname },
@@ -50,10 +46,68 @@ const createUser = asyncHandler(async (req, res) => {
     { name: "Phone", value: phone },
     { name: "Role", value: role },
   ];
-  const userResult = await executeQuery(insertUserQuery, userParams);
-  const userId = userResult.recordset[0].id;
 
-  // Return successful response
+  const userResult = await executeQuery(insertUserQuery, userParams);
+  const userId = userResult.recordset[0].user_id;
+
+  if (role === "Teacher") {
+    const teacherQuery = `
+      INSERT INTO Teachers (user_id, subjects)
+      VALUES (@UserId, @Subject);
+    `;
+
+    const teacherParams = [
+      { name: 'UserId', value: userId },
+      { name: 'Subject', value: subject }
+    ];
+
+    try {
+      const teacherResult = await executeQuery(teacherQuery, teacherParams); 
+    } catch (error) {
+      console.error("Error while inserting teacher:", error);
+      throw new ApiError(500, "Error inserting teacher data.");
+    }
+  }
+
+  if (role === "ClassTeacher"){
+    const ctQuery = `
+      insert into ClassTeacher_Allocates(user_id, std, div) into (@UserId, @Std, @Div);
+    `
+
+    const ctParams = [
+      { name:"UserId", value: userId },
+      { name:"Std", value: div },
+      { name:"Div", value: std }
+    ]
+
+    try {
+      const ctResult = await executeQuery(ctQuery, ctParams);
+    } catch (error) {
+      console.error("Error while inserting teacher:", error);
+      throw new ApiError(500, "Error inserting teacher data.");
+    }
+
+  }
+
+  if (role === "Mentor"){
+    const ctQuery = `
+      insert into Mentor_Allocates (user_id, std, div) into (@UserId, @Std, @Div);
+    `
+
+    const ctParams = [
+      { name:"UserId", value: userId },
+      { name:"Std", value: div },
+      { name:"Div", value: std }
+    ]
+
+    try {
+      const ctResult = await executeQuery(ctQuery, ctParams);
+    } catch (error) {
+      console.error("Error while inserting teacher:", error);
+      throw new ApiError(500, "Error inserting teacher data.");
+    }
+  }
+
   return res.send(new ApiResponse(201, { id: userId, email }, "User created successfully"));
 });
 
