@@ -14,6 +14,7 @@ const validUser = (req, res, next) => {
     email: Joi.string().email().required(),
     password: Joi.string().min(4).required(),
     phone: Joi.string().required(),
+    subject: Joi.string().optional(),
     role: Joi.string().valid('SuperAdmin', 'Teacher', 'OfficeStaff', "Mentor", "ClassTeacher", "ClassIn", "MentorIn").required(),
     // isActive: Joi.boolean().optional()
   });
