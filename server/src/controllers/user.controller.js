@@ -81,7 +81,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 // Get user by ID handler
 const getUserById = asyncHandler(async (req, res) => {
-  const { user_id } = req.params; 
+  const user_id  = req.params.userId; 
 
   const parseduser_id = parseInt(user_id);
   if (isNaN(parseduser_id)) {
