@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import Select from "../components/Select";
-import ButtonComponent from "../components/ButtonComponent";
-import AddFiles from "../components/AddFiles";
-import Input from "../components/Input";
+import { Input, Select, ButtonComponent, AddFiles } from "./component.js";
 
 const TeacherMasterForm = () => {
   const { user_id } = useParams(); // Access the userId parameter from the URL
@@ -102,9 +99,6 @@ const TeacherMasterForm = () => {
         <div className="space-y-4">
           <div className="flex gap-4">
             <div className="flex flex-col w-1/2">
-              <label htmlFor="user_id" className="block text-sm font-medium text-gray-700">
-                User ID
-              </label>
               <Input
                 id="user_id"
                 type="text"
@@ -115,10 +109,8 @@ const TeacherMasterForm = () => {
               />
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="fname" className="block text-sm font-medium text-gray-700">
-                First Name
-              </label>
               <Input
+                label= 'First Name'
                 id="fname"
                 type="text"
                 defaultValue={userData?.fname} // Corrected defaultValue
@@ -128,10 +120,8 @@ const TeacherMasterForm = () => {
               {errors.fname && <span className="text-red-500 text-xs">{errors.fname.message}</span>}
             </div>
             <div className="flex flex-col w-1/2">
-              <label htmlFor="lname" className="block text-sm font-medium text-gray-700">
-                Last Name
-              </label>
               <Input
+                label= 'Last Name'
                 id="lname"
                 type="text"
                 defaultValue={userData?.lname} // Corrected defaultValue

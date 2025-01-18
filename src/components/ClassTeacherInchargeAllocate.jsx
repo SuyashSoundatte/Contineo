@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import ReactTable from '../components/ReactTable';
 import axios from 'axios';
+import {
+  ReactTable,
+  Select,
+  ButtonComponent,
+} from './component.js';
 
 const ClassTeacherInchargeAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -120,9 +124,9 @@ const ClassTeacherInchargeAllocate = () => {
     {
       name: 'Action',
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+        <ButtonComponent className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
           Select
-        </button>
+        </ButtonComponent>
       ),
     },
   ]
@@ -132,24 +136,18 @@ const ClassTeacherInchargeAllocate = () => {
       {/* Filter Section */}
       <div className="flex flex-col gap-4 mb-6">
         <div className="flex gap-4">
-          <select 
+          <Select 
             onChange={handleStdChange} 
             value={selectedStd} 
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="">Select Standard</option>
-            <option value="std1">Standard 1</option>
-            <option value="std2">Standard 2</option>
-            <option value="std3">Standard 3</option>
-            {/* Add more options as per your data */}
-          </select>
-
-          <input
-            type="text"
-            placeholder="Enter Mentor ID"
+            label='Standard'
+            options={["Select Standard", "standar 11", "standard 12"]}
+          />
+          <Input 
+            label='Mentor ID'
+            type='text'
+            placeholder='Enter Mentor ID'
             value={selectedMentorId}
             onChange={handleMentorIdChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
       </div>

@@ -1,35 +1,34 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LandingPage, Login, MainPage } from "../Pages/page.js";
-import {
+import  {
   AddFiles,
+  AddSubjects,
+  TeacherAllocate,
   ButtonComponent,
+  CheckboxComponent,
+  ClassTeacherAllocate,
   Dashboard,
   Input,
   MentorAllocate,
+  Modal,
   ReactTable,
   Select,
   StudentAllocate,
-  SubjectAllocate,  
-  Table,
   StudentForm,
-  ClassTeacherAllocate,
-  MentorInchargeAllocate,
-  ClassTeacherInchargeAllocate,
-  ViewComponent
-} from "../components/component.js";
-
-import {
-  AllocateTeacher,
-  StudentCreate,
+  StudentMasterForm,
   SubjectForm,
-  TeacherAllocate,
+  Table,
   TeacherForm,
   TeacherMasterForm,
+  ViewComponent,
+  AttendanceForm
+} from '../components/component.js';
+
+import {
   UserCreate,
-  StudentMasterForm,
-  Attendance
-} from "../Forms/Forms.js";
+  StudentCreate
+} from '../Forms/Forms.js';
 
 const AppRoute = () => {
   return (
@@ -51,13 +50,10 @@ const AppRoute = () => {
           <Route path="TeacherAllocate" element={<TeacherAllocate />} /> {/* Static route */}
           <Route path="StudentAllocate" element={<StudentAllocate />} /> {/* Static route */}
           <Route path="MentorAllocate" element={<MentorAllocate />} /> {/* Static route */}
-          <Route path="MentorInchargeAllocate" element={<MentorInchargeAllocate />} /> {/* Static route */}
-          <Route path="ClassTeacherInchargeAllocate" element={<ClassTeacherInchargeAllocate />} /> {/* Static route */}
           <Route path="ClassTeacherForm" element={<ClassTeacherAllocate />} /> {/* Static route */}
-          <Route path="SubjectAllocate" element={<SubjectAllocate />} /> {/* Static route */}
           <Route path="StudentForm/:user_id" element={<StudentForm />} /> {/* Static route */}
           <Route path="AddFiles" element={<AddFiles />} /> {/* Static route */}
-          <Route path="Attendance" element={<Attendance />} /> {/* Static route */}
+          <Route path="AttendanceForm" element={<AttendanceForm />} /> {/* Static route */}
           <Route path="ViewComponent/:user_id" element={<ViewComponent />} />
           <Route path="TeacherMasterForm/:user_id" element={<TeacherMasterForm />} /> {/* Dynamic route */}
         </Route>

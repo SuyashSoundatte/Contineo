@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select } from "../components/component.js";
+import {
+  Input,
+  ReactTable,
+  Select,
+  ButtonComponent,
+  CheckboxComponent,
+} from "./component.js";
 
 const StudentAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -8,6 +14,7 @@ const StudentAllocate = () => {
   const [error, setError] = useState(null);
   const [selectedStd, setSelectedStd] = useState("");
   const [selectedDiv, setSelectedDiv] = useState("");
+  const [selectedStudents, setSelectedStudents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +27,7 @@ const StudentAllocate = () => {
 
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/getAllStudents",
+          "http://192.168.0.140:3000/api/v1/getAllStudents",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -56,19 +63,46 @@ const StudentAllocate = () => {
           : record
       )
     );
+
+    if (checked) {
+      setSelectedStudents((prev) => [...prev, row.user_id]);
+    } else {
+      setSelectedStudents((prev) => prev.filter((id) => id !== row.user_id));
+    }
+  };
+
+  const handleAllocate = () => {
+    if (!selectedDiv) {
+      setError("Please select a division to allocate the students.");
+      return;
+    }
+
+    setRecords((prevRecords) =>
+      prevRecords.map((record) =>
+        selectedStudents.includes(record.user_id)
+          ? { ...record, batchAssigned: selectedDiv }
+          : record
+      )
+    );
+
+    // Clear selected students after allocation
+    setSelectedStudents([]);
+  };
+
+  const handleRemove = (row) => {
+    setRecords((prevRecords) =>
+      prevRecords.filter((record) => record.user_id !== row.user_id)
+    );
   };
 
   const filteredRecords = records.filter((record) => {
-    return (
-      (selectedStd ? record.standard === selectedStd : true) &&
-      (selectedDiv ? record.division === selectedDiv : true)
-    );
+    return selectedStd === "All" || record.std === selectedStd;
   });
 
-  const teacher_allocate_columns = [
+  const Student_allocate_columns = [
     {
-      name: "Teacher ID",
-      selector: (row) => row.user_id,
+      name: "Roll",
+      selector: (row) => row.roll_no,
       sortable: true,
     },
     {
@@ -77,31 +111,48 @@ const StudentAllocate = () => {
       sortable: true,
     },
     {
-      name: "Email",
-      selector: (row) => row.email,
-      sortable: true,
-    },
-    {
-      name: "Subject",
-      selector: (row) => row.sub,
-      sortable: true,
-    },
-    {
       name: "Standard",
-      selector: (row) => row.standard,
-      sortable: true,
-    },
-    {
-      name: "Batch Assigned",
-      selector: (row) => row.batchAssigned,
+      selector: (row) => row.std,
       sortable: true,
     },
     {
       name: "Actions",
       cell: (row) => (
-        <button className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out'>
-          Allocate
-        </button>
+        <CheckboxComponent
+          label={`Add to ${selectedDiv}`}
+          checked={row.selected}
+          onChange={(e) => handleCheckboxChange(e, row)}
+        />
+      ),
+      ignoreRowClick: true,
+    },
+  ];
+
+  const Student_unallocate_columns = [
+    {
+      name: "Roll",
+      selector: (row) => row.roll_no,
+      sortable: true,
+    },
+    {
+      name: "Name",
+      selector: (row) => `${row.fname} ${row.lname}`,
+      sortable: true,
+    },
+    {
+      name: "Standard",
+      selector: (row) => row.std,
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <ButtonComponent
+          onClick={() => handleRemove(row)}
+          className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out'
+        >
+          Remove
+        </ButtonComponent>
       ),
       ignoreRowClick: true,
     },
@@ -114,43 +165,23 @@ const StudentAllocate = () => {
           Student Allocation
         </h1>
 
-        <div className='  rounded-lg p-6 mb-8'>
+        <div className='rounded-lg p-6 mb-8'>
           <form className='grid grid-cols-1 md:grid-cols-2 gap-6 mb-6'>
             <div>
-              <label
-                htmlFor='standard'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Standard
-              </label>
-              <select
-                id='standard'
-                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
-                value={selectedStd}
+              <Select
                 onChange={handleStdChange}
-              >
-                <option value=''>All Standards</option>
-                <option value='Standard 11'>Standard 11</option>
-                <option value='Standard 12'>Standard 12</option>
-              </select>
+                value={selectedStd}
+                label='Standard'
+                options={["Select Standard", "All", "10", "11", "12"]}
+              />
             </div>
             <div>
-              <label
-                htmlFor='division'
-                className='block text-sm font-medium text-gray-700 mb-1'
-              >
-                Division
-              </label>
-              <select
-                id='division'
-                className='mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
-                value={selectedDiv}
+              <Select
                 onChange={handleDivChange}
-              >
-                <option value=''>All Divisions</option>
-                <option value='Division A'>Division A</option>
-                <option value='Division B'>Division B</option>
-              </select>
+                label='Division'
+                value={selectedDiv}
+                options={["Select Division", "Division A", "Division B"]}
+              />
             </div>
           </form>
 
@@ -176,11 +207,16 @@ const StudentAllocate = () => {
                 </h2>
                 <div className='overflow-x-auto'>
                   <ReactTable
-                    customColumns={teacher_allocate_columns}
+                    customColumns={Student_allocate_columns}
                     records={filteredRecords.filter((r) => !r.batchAssigned)}
                     onRowClick={(row) => console.log("Row clicked:", row)}
                   />
                 </div>
+              </div>
+              <div className='mt-4 mb-10'>
+                <ButtonComponent onClick={handleAllocate}>
+                  Allocate Selected Students
+                </ButtonComponent>
               </div>
 
               <div>
@@ -189,7 +225,7 @@ const StudentAllocate = () => {
                 </h2>
                 <div className='overflow-x-auto'>
                   <ReactTable
-                    customColumns={teacher_allocate_columns}
+                    customColumns={Student_allocate_columns}
                     records={filteredRecords.filter((r) => r.batchAssigned)}
                     onRowClick={(row) => console.log("Row clicked:", row)}
                   />

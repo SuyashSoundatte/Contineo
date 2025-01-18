@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import ButtonComponent from "./ButtonComponent";
-import Input from "./Input";
-import Select from "./Select";
+import { ButtonComponent, Input, Select } from "./component.js";
 
 const AddSubjects = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,7 +44,7 @@ const AddSubjects = () => {
     setSubjects((prev) => [...prev, newSubject]);
     setSubjectName("");
     setRelatedTopic("");
-    alert("Subject added successfully!");
+    // alert("Subject added successfully!");
   };
 
   return (
@@ -64,12 +62,6 @@ const AddSubjects = () => {
               placeholder='Enter subject name'
               value={subjectName}
               onChange={handleSubjectNameChange}
-            />
-            <Select
-              label='Related Topic'
-              options={["", "Math", "Science", "History", "Language"]}
-              value={relatedTopic}
-              onChange={handleRelatedTopicChange}
             />
           </div>
           <ButtonComponent onClick={handleSubmit} type='submit'>

@@ -1,35 +1,45 @@
-import AddFiles from "./AddFiles";
-import ButtonComponent from "./ButtonComponent";
-import Dashboard from "./Dashboard";
-import Input from "./Input";
-import ReactTable from "./ReactTable";
-import Select from "./Select";
-import StudentAllocate from "./StudentAllocate";
-import SubjectAllocate from "./SubjectAllocate";
-import Table from "./Table";
-import CheckboxComponent from "./CheckboxComponent";
-import StudentForm from "./StudentForm";  
-import ClassTeacherAllocate from "./ClassTeacherAllocate";
-import MentorAllocate from "./MentorAllocate";
-import MentorInchargeAllocate from "./MentorInchargeAllocate";
-import ClassTeacherInchargeAllocate from "./ClassTeacherInchargeAllocate.jsx";
-import ViewComponent from "./ViewComponent.jsx";
+import AddFiles from './AddFiles'
+import AddSubjects from './AddSubjects'
+import TeacherAllocate from './TeacherAllocate'
+import ButtonComponent from './ButtonComponent'
+import CheckboxComponent from './CheckboxComponent'
+import ClassTeacherAllocate from './ClassTeacherAllocate'
+import Dashboard from './Dashboard'
+import Input from './Input'
+import MentorAllocate from './MentorAllocate'
+import Modal from './Modal'
+import ReactTable from './ReactTable'
+import Select from './Select'
+import StudentAllocate from './StudentAllocate'
+import StudentForm from './StudentForm'
+import StudentMasterForm from './StudentMasterForm'
+import SubjectForm from './SubjectForm'
+import Table from './Table'
+import TeacherForm from './TeacherForm'
+import TeacherMasterForm from './TeacherMasterForm'
+import ViewComponent from './ViewComponent'
+import AttendanceForm from './AttendaceForm'
 
 export {
   AddFiles,
+  AddSubjects,
+  TeacherAllocate,
   ButtonComponent,
+  CheckboxComponent,
+  ClassTeacherAllocate,
   Dashboard,
   Input,
   MentorAllocate,
+  Modal,
   ReactTable,
   Select,
   StudentAllocate,
-  SubjectAllocate,  
-  Table,
-  CheckboxComponent,
   StudentForm,
-  ClassTeacherAllocate,
-  MentorInchargeAllocate,
-  ClassTeacherInchargeAllocate,
-  ViewComponent
+  StudentMasterForm,
+  SubjectForm,
+  Table,
+  TeacherForm,
+  TeacherMasterForm,
+  ViewComponent,
+  AttendanceForm
 }

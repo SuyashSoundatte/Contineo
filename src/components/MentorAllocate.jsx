@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select } from '../components/component.js'
+import { Input, ReactTable, Select } from './component.js';
 
 const MentorAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -46,13 +46,11 @@ const MentorAllocate = () => {
   const handleStdChange = (event) => setSelectedStd(event.target.value);
   const handleDivChange = (event) => setSelectedDiv(event.target.value);
 
-  const handleCheckboxChange = (e, row) => {
-    const { checked } = e.target;
-
+  const handleAllocateMentor = (row) => {
     setRecords((prevRecords) =>
       prevRecords.map((record) =>
         record.user_id === row.user_id
-          ? { ...record, selected: checked }
+          ? { ...record, batchAssigned: `${selectedStd} - ${selectedDiv}` }
           : record
       )
     );
@@ -99,9 +97,12 @@ const MentorAllocate = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out">
+        <ButtonComponent
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
+          onClick={() => handleAllocateMentor(row)}
+        >
           Allocate
-        </button>
+        </ButtonComponent>
       ),
       ignoreRowClick: true,
     },
@@ -111,11 +112,11 @@ const MentorAllocate = () => {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Mentor Allocation</h1>
-        
-        <div className="  rounded-lg p-6 mb-8">
+
+        <div className="rounded-lg p-6 mb-8">
           <form className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label htmlFor="standard" className="block text-sm font-medium text-gray-700 mb-1">
+              {/* <label htmlFor="standard" className="block text-sm font-medium text-gray-700 mb-1">
                 Standard
               </label>
               <select
@@ -124,13 +125,19 @@ const MentorAllocate = () => {
                 value={selectedStd}
                 onChange={handleStdChange}
               >
-                <option value="">All Standards</option>
+                <option value="">Select Standard</option>
                 <option value="Standard 11">Standard 11</option>
                 <option value="Standard 12">Standard 12</option>
-              </select>
+              </select> */}
+              <Select 
+                onChange={handleStdChange}
+                label='Standard'
+                value={selectedStd}
+                options={["Select Standard", "Standard 11", "Standard 12"]}
+              />
             </div>
             <div>
-              <label htmlFor="division" className="block text-sm font-medium text-gray-700 mb-1">
+              {/* <label htmlFor="division" className="block text-sm font-medium text-gray-700 mb-1">
                 Division
               </label>
               <select
@@ -139,10 +146,17 @@ const MentorAllocate = () => {
                 value={selectedDiv}
                 onChange={handleDivChange}
               >
-                <option value="">All Divisions</option>
+                <option value="">Select Division</option>
                 <option value="Division A">Division A</option>
                 <option value="Division B">Division B</option>
-              </select>
+              </select> */}
+
+              <Select 
+                onChange={handleDivChange}
+                label='Division'
+                value={selectedDiv}
+                options={["Select Division", "Division A", "Division B"]}
+              />
             </div>
           </form>
 
@@ -189,4 +203,3 @@ const MentorAllocate = () => {
 };
 
 export default MentorAllocate;
-
