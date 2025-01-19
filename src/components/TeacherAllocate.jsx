@@ -45,6 +45,7 @@ const TeacherAllocate = () => {
         }));
 
         setRecords(enrichedData);
+        console.log(enrichedData)
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err.response?.data?.message || "Error fetching data");
@@ -79,7 +80,7 @@ const TeacherAllocate = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
+      await axios.put(
         "http://localhost:3000/api/v1/allocateTeacherSubject",
         {
           teacherId: selectedTeacher.teacher_id,
@@ -129,8 +130,13 @@ const TeacherAllocate = () => {
       sortable: true,
     },
     {
-      name: "Batch Assigned",
-      selector: (row) => row.batchAssigned || "Not Assigned",
+      name: "Subjects",
+      selector: (row) => row.subjects || "NA",
+      sortable: true,
+    },
+    {
+      name: "Standard",
+      selector: (row) => row.std || "NA",
       sortable: true,
     },
     {
@@ -146,6 +152,18 @@ const TeacherAllocate = () => {
       ignoreRowClick: true,
     },
   ];
+
+  const filteredRecords = records.filter((record) => {
+    // Ensure that subjects is not null or undefined and only then check if it includes the selected subject
+    const subjects = record.subjects || ''; // Default to an empty string if subjects is null or undefined
+  
+    return (
+      selectedSubject === "All" ||
+      selectedSubject === "" ||
+      subjects.includes(selectedSubject)
+    );
+  });
+  
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -178,6 +196,15 @@ const TeacherAllocate = () => {
           <form className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div>
               <Select
+                label="Subject"
+                id="subject"
+                options={SUBJECT_OPTIONS}
+                onChange={handleSubjectChange}
+                value={selectedSubject}
+              />
+            </div>
+            <div>
+              <Select
                 label="Standard"
                 id="standard"
                 options={STANDARD_OPTIONS}
@@ -192,15 +219,6 @@ const TeacherAllocate = () => {
                 options={DIVISION_OPTIONS}
                 onChange={handleDivChange}
                 value={selectedDiv}
-              />
-            </div>
-            <div>
-              <Select
-                label="Subject"
-                id="subject"
-                options={SUBJECT_OPTIONS}
-                onChange={handleSubjectChange}
-                value={selectedSubject}
               />
             </div>
           </form>
@@ -228,7 +246,7 @@ const TeacherAllocate = () => {
               <div className="overflow-x-auto mb-8">
                 <ReactTable
                   customColumns={teacher_allocate_columns}
-                  records={unallocatedTeachers}
+                  records={filteredRecords.filter((r) => !r.std)}
                 />
               </div>
 
@@ -236,7 +254,7 @@ const TeacherAllocate = () => {
               <div className="overflow-x-auto">
                 <ReactTable
                   customColumns={teacher_allocate_columns}
-                  records={allocatedTeachers}
+                  records={filteredRecords.filter((r) => r.std)}
                 />
               </div>
             </>
