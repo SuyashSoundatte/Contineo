@@ -122,8 +122,10 @@ const logOutUser = asyncHandler(async (req, res) => {
 
 const getAllMentors = asyncHandler(async (req, res) => {
   const mentorQuery = `
-    select user_id, fname, lname, email, phone, role, gender from users 
-    where role = 'Mentor';
+    SELECT u.user_id, u.email, u.fname, u.lname, u.role, u.phone, u.gender, MA.std, MA.div, MA.mentor_id
+      FROM Users u
+      LEFT JOIN Mentor_Allocates MA ON u.user_id = MA.user_id
+      WHERE u.role = 'Mentor';
   `;
   const mentorResult = await executeQuery(mentorQuery);
   return res.send(
@@ -134,8 +136,9 @@ const getAllMentors = asyncHandler(async (req, res) => {
 const getAllClassTeacher = asyncHandler(async (req, res) => {
   const classTeacherQuery = `
     select u.user_id, u.fname, u.lname, u.email, u.phone, u.role, u.gender, ct.std, ct.div
-    from users u 
-    join ClassTeacher_Allocates ct on u.user_id = ct.user_id`;
+    from users u
+    LEFT JOIN ClassTeacher_Allocates ct ON u.user_id = ct.user_id
+    where u.role = 'ClassTeacher'`;
   const classTeacherResult = await executeQuery(classTeacherQuery);
   return res.send(
     new ApiResponse(
