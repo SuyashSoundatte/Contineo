@@ -64,7 +64,7 @@ const StudentMasterForm = () => {
     {
       name: 'Action',
       cell: (row) => (
-        <ButtonComponent className="" onClick={() => navigate(`/MainPage/StudentForm/${row.user_id}`)}>
+        <ButtonComponent className="" onClick={() => navigate(`/MainPage/ViewComponent/${row.user_id}`)}>
           View Student
         </ButtonComponent>
       ),
