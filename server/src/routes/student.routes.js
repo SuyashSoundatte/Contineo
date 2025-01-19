@@ -2,7 +2,7 @@ import { Router } from "express";
 import verifyToken from "../middlewares/auth.middleware.js";
 import authRole from "../middlewares/role.middleware.js";
 import { validStudent, validStudentDiv, getStudentId } from "../middlewares/student.middleware.js";
-import { createStudent, allocateStudentDiv, updateStudent, getAllStudent, getStudentByStd, getAllocatedStudent, getStudentById, getStudentByDiv, assignStudentsToDivision } from "../controllers/student.controller.js";
+import { createStudent, allocateStudentDiv, updateStudent, getAllStudent, getStudentByStd, getAllocatedStudent, getStudentById, getStudentByDiv, assignStudentsToDivision, getStudentByDivStd } from "../controllers/student.controller.js";
 
 const router = Router();
 
@@ -21,6 +21,8 @@ router.get('/getStudentsByStd/:id', verifyToken, authRole("OfficeStaff", "SuperA
 router.get('/getUnAllocatedStudent', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getAllocatedStudent)
 
 router.get('/getStudentByDiv/:div', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getStudentByDiv)
+
+router.get('/getstudentByDivStd/:div/:std', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getStudentByDivStd)
 
 router.get('/getStudentId/:id', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getStudentById)
 

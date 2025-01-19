@@ -30,26 +30,21 @@ const UserCreate = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-
-      // Function to format date
       const formatDate = (dateString) => {
         const [year, month, day] = dateString.split("-");
         return `${day}-${month}-${year}`;
       };
-
-      // Prepare the formatted data to be sent to the backend
+  
       const formattedData = {
         ...data,
         dob: formatDate(data.dob),
-        subjects: addedSubjects.map((sub) => ({ name: sub.name })), // Corrected to use addedSubjects
+        subjects: addedSubjects.map((sub) => ({ name: sub.name })), // Ensure `name` is valid
       };
-      console.log(formattedData);
-
-      // Get the auth token from localStorage
+  
+      console.log("Formatted Data:", formattedData); // Debugging
+  
       const token = localStorage.getItem("token");
-      
-      // Send the data to the backend via POST request
+  
       const response = await axios.post(
         "http://localhost:3000/api/v1/createUser",
         formattedData,
@@ -59,20 +54,15 @@ const UserCreate = () => {
           },
         }
       );
-
-      // Handle successful user creation
-      console.log("User created successfully:", response.data);
+  
       alert("User created successfully!");
-      setCreatedUserId(response.data.data.id); // Set the created user ID
+      setCreatedUserId(response.data.data.id);
     } catch (error) {
-      // Handle errors
-      console.error(
-        "Error creating user:",
-        error.response?.data || error.message
-      );
+      console.error("Error creating user:", error.response?.data || error.message);
       alert("Failed to create user. Please try again.");
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10 px-6 sm:px-8 lg:px-12">
