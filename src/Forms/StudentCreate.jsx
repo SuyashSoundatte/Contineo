@@ -9,7 +9,7 @@ import {
 } from "../components/component.js";
 import DocumentUploadForm from "../components/DocumentUploadForm";
 
-const UserCreate = () => {
+const StudentCreate = () => {
   const [createdUserId, setCreatedUserId] = useState(null);
   const {
     register,
@@ -177,7 +177,7 @@ const UserCreate = () => {
                 className="w-full px-4 py-2 text-base"
               />
               <Select
-                label="Role"
+                label="Standard"
                 options={[
                   "Role",
                   "Teacher",
@@ -212,15 +212,6 @@ const UserCreate = () => {
                 </p>
               )}
             </div>
-
-            {selectedRole === "Teacher" && (
-              <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-700 mb-3">
-                  Add Subject
-                </h2>
-                <AddSubjects onSubjectChange={handleSubjectChange} />
-              </div>
-            )}
 
             <div className="flex justify-end mt-8">
               <ButtonComponent
@@ -267,4 +258,4 @@ const UserCreate = () => {
   );
 };
 
-export default UserCreate;
+export default StudentCreate;

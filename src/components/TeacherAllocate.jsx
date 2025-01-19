@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Input, ReactTable, Select, ButtonComponent, Modal } from "../components/component.js";
+
 const TeacherAllocate = () => {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,6 +11,7 @@ const TeacherAllocate = () => {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
@@ -48,8 +50,8 @@ const TeacherAllocate = () => {
   const handleDivChange = (event) => setSelectedDiv(event.target.value);
   const handleSubjectChange = (event) => setSelectedSubject(event.target.value);
 
-  const openModal = () => {
-    setSelectedTeacher(selectedTeacher);
+  const openModal = (teacher) => {
+    setSelectedTeacher(teacher);
     setModalOpen(true);
   };
 
@@ -60,9 +62,7 @@ const TeacherAllocate = () => {
 
   const confirmAllocation = async () => {
     if (!selectedStd || !selectedDiv) {
-      alert(
-        "Please Select both standard and division before allocating teacher"
-      );
+      alert("Please Select both standard and division before allocating teacher");
       closeModal();
       return;
     }
@@ -70,9 +70,9 @@ const TeacherAllocate = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3000/api/v1/allocateTeacher",
+        "http://localhost:3000/api/v1/allocateTeacherSubject",
         {
-          teacherId: selectedTeacher.user_id,
+          teacherId: selectedTeacher.teacher_id,
           standard: selectedStd,
           division: selectedDiv,
         },
@@ -83,28 +83,27 @@ const TeacherAllocate = () => {
         }
       );
 
-      alert("Teacher allocated Successfully !");
+      alert("Teacher allocated Successfully!");
     } catch (err) {
       console.log("Error Allocating Teacher", err);
-      alert(err.response?.data?.message || "Error allocating teacher .")
+      alert(err.response?.data?.message || "Error allocating teacher.");
     } finally {
       closeModal();
     }
   };
 
-  const unallocatedTeachers = records.filter(
-    (teacher) => !teacher.batchAssigned
-  );
-  const filteredUnallocatedTeachers = selectedSubject
-    ? unallocatedTeachers.filter((teacher) => teacher.sub === selectedSubject)
-    : unallocatedTeachers;
+  const unallocatedTeachers = records.filter((teacher) => !teacher.batchAssigned);
+  const filteredUnallocatedTeachers =
+    selectedSubject && selectedSubject !== "All"
+      ? unallocatedTeachers.filter((teacher) => teacher.sub === selectedSubject)
+      : unallocatedTeachers;
 
   const allocatedTeachers = records.filter((teacher) => teacher.batchAssigned);
 
   const teacher_allocate_columns = [
     {
       name: "Teacher ID",
-      selector: (row) => row.user_id,
+      selector: (row) => row.teacher_id,
       sortable: true,
     },
     {
@@ -139,7 +138,7 @@ const TeacherAllocate = () => {
           onClick={() => openModal(row)}
           className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out'
         >
-          Allocate
+          Allocate to {selectedDiv}
         </ButtonComponent>
       ),
       ignoreRowClick: true,
@@ -154,18 +153,18 @@ const TeacherAllocate = () => {
         </h1>
 
         <Modal 
-          isOpen = {isModalOpen}
-          onClose= {closeModal}
-          onConfirm= {confirmAllocation}
-          teacher= {selectedTeacher}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={confirmAllocation}
+          teacher={selectedTeacher}
         />
 
         <div className='rounded-lg p-6 mb-8'>
           <form className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
             <div>
               <Select 
-                label = 'Standard'
-                id = "standard"
+                label='Standard'
+                id="standard"
                 options={["Select Standard", "Standard 11", "Standard 12"]}
                 onChange={handleStdChange}
                 value={selectedStd}
@@ -173,18 +172,18 @@ const TeacherAllocate = () => {
             </div>
             <div>
               <Select 
-                label = 'division'
-                id = "division"
-                options={["Select Division", "Division A", "Division B"]}
+                label='Division'
+                id="division"
+                options={["Select Division", "A", "B"]}
                 onChange={handleDivChange}
                 value={selectedDiv}
               />
             </div>
             <div>
               <Select 
-                label = 'Subject'
-                id = "subject"
-                options={["Select Subject", "Math", "Physics", "Chemistry"]}
+                label='Subject'
+                id="subject"
+                options={["Select Subject", "All", "Math", "Physics", "Chemistry"]}
                 onChange={handleSubjectChange}
                 value={selectedSubject}
               />
