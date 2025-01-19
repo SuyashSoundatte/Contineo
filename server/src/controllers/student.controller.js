@@ -293,24 +293,6 @@ const assignStudentsToDivision = asyncHandler(async (req, res) => {
     });
 });
 
-const getStudentByDivStd = asyncHandler(asyncHandler(async(req, res)=>{
-  const std = req.params.std;
-  const div = req.params.div;
-
-  const getstudentByStdDivquery = `
-    select st.stu_id, st.roll_no, s.fname, s.lname
-    from Students st
-    join Users u on st.user_id = u.user_id
-    where st.std = @Std and st.div = @Div
-  ` 
-  const parameters = [
-    {name:"Std", value: std},
-    {name:"Div", value: div}
-  ]
-  const getstudentByStdDivResult = await executeQuery(getstudentByStdDivquery, parameters);
-
-  res.send(new ApiResponse(200, getstudentByStdDivResult.recordset, "data get successfully"))
-}))
 
 export {
   createStudent,
@@ -322,5 +304,4 @@ export {
   getStudentById,
   getStudentByDiv,
   assignStudentsToDivision,
-  getStudentByDivStd
 };
