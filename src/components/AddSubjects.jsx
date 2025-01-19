@@ -26,8 +26,8 @@ const AddSubjects = ({ onSubjectsUpdate }) => {
       return;
     }
 
-    // Only the subject name (no topic)
-    const updatedSubjects = [...subjects, subjectName];
+    // Add the subject as an object with a 'name' property
+    const updatedSubjects = [...subjects, { name: subjectName }];
     setSubjects(updatedSubjects);
     setSubjectName("");
 
@@ -63,7 +63,7 @@ const AddSubjects = ({ onSubjectsUpdate }) => {
             <ul className="list-disc list-inside">
               {subjects.map((subject, index) => (
                 <li key={index} className="flex justify-between items-center">
-                  {subject}
+                  {subject.name}
                   <button
                     onClick={() => {
                       const updatedSubjects = subjects.filter((_, i) => i !== index);
