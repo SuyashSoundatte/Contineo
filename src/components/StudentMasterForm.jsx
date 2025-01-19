@@ -19,7 +19,7 @@ const StudentMasterForm = () => {
       }
 
       try {
-        const response = await axios.get('http://192.168.0.140:3000/api/v1/getAllStudents', {
+        const response = await axios.get('http://localhost:3000/api/v1/getAllStudents', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

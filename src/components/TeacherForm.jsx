@@ -20,7 +20,7 @@ const TeacherForm = () => {
 
       try {
         const response = await axios.get(
-          "http://192.168.0.140:3000/api/v1/getAllTeacher",
+          "http://localhost:3000/api/v1/getAllTeacher",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

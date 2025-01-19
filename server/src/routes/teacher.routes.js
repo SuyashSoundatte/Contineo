@@ -1,9 +1,8 @@
 import { Router } from "express";
 import verifyToken from "../middlewares/auth.middleware.js";
 import authRole from "../middlewares/role.middleware.js";
-import { createTeacher, updateTeacherSubject, getAllTeacher, getTeacherById, getTeacherBySubject, getTeacherByStd, allocateTeacherSubject,assignMentorByStdDiv, assignClassTeacherByStdDiv } from "../controllers/teacher.controller.js";
+import { updateTeacherSubject, getAllTeacher, getTeacherById, getTeacherBySubject, getTeacherByStd, allocateTeacherSubject,assignMentorByStdDiv, assignClassTeacherByStdDiv } from "../controllers/teacher.controller.js";
 import { validateCreateTeacherData } from "../middlewares/teacher.middleware.js";
-import markAttendance from "../controllers/attendace.controller.js"
 
 const router = Router();
 
