@@ -155,7 +155,7 @@ const getAllStudent = asyncHandler(async (req, res) => {
   const request = pool.request();
 
   const usersQuery = `
-    SELECT s.user_id, u.email, u.fname, u.lname, u.role, u.phone AS phone, u.gender, s.roll_no, s.std, s.div
+    SELECT s.user_id, u.email, u.fname, u.lname, u.role, u.phone AS phone, u.gender, s.roll_no, s.std, s.div, s.stu_id
     FROM Users u
     INNER JOIN Students s ON u.user_id = s.user_id
     WHERE u.role = 'Student';
