@@ -1,16 +1,8 @@
 import asyncHandler from "../config/asyncHandler.js";
-import poolPromise from "../config/dbConnect.js";
 import ApiError from "../config/ApiError.js";
+import poolPromise from "../config/dbConnect.js";
 import ApiResponse from "../config/ApiResponse.js";
-
-const executeQuery = async (query, params) => {
-  const pool = await poolPromise;
-  const request = pool.request();
-  if (params) {
-    params.forEach((param) => request.input(param.name, param.value));
-  }
-  return request.query(query);
-};
+import { executeQuery } from '../config/executeQuery.js'
 
 const createStudent = asyncHandler(async (req, res) => {
   const {
@@ -103,13 +95,18 @@ const createStudent = asyncHandler(async (req, res) => {
 
 
 const allocateStudentDiv = asyncHandler(async (req, res) => {
-  const { stuId, divId } = req.body;
+  const { userId, stuId, divId } = req.body;
 
-  const insertStudentDivQuery =`
-    UPDATE student
-    SET div = @DivId
-    WHERE stu_id = @StuId;
-  `
+  if (!stuId || !divId) {
+    throw new ApiError(400, "Please provide both student ID and division ID");
+  }
+
+  const insertStudentDivQuery = `
+    INSERT INTO StudentDivision (stu_id, div_id)
+    VALUES (@StuId, @DivId)
+    WHERE user_id = @UserId;;
+  `;
+
   const studentDivParams = [
     { name: "DivId", value: divId },
     { name: "StuId", value: stuId },
@@ -121,7 +118,7 @@ const allocateStudentDiv = asyncHandler(async (req, res) => {
     new ApiResponse(
       201,
       { id: stuId, divId },
-      "Student Div allocated successfully"
+      "Student Division allocation created successfully"
     )
   );
 });

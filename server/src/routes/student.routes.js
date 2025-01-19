@@ -11,6 +11,7 @@ const router = Router();
 //routes student
 router.post("/createStudent", verifyToken, authRole("SuperAdmin", "OfficeStaff"), validStudent, createStudent)
 
+router.post('/allocateStudentDiv', verifyToken, authRole("OfficeStaff", "SuperAdmin"), validStudentDiv, allocateStudentDiv)
 router.put('/allocateStudentDiv', verifyToken, authRole("OfficeStaff", "SuperAdmin"), validStudentDiv, updateStudent)
 
 router.get('/getAllStudents', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getAllStudent)
