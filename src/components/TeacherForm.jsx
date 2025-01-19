@@ -41,7 +41,7 @@ const TeacherForm = () => {
   const staffColumns = [
     {
       name: "Staff ID",
-      selector: (row) => row.user_id,
+      selector: (row) => row.teacher_id,
       sortable: true,
     },
     {

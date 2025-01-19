@@ -53,7 +53,7 @@ const UserCreate = () => {
 
       console.log("User created successfully:", response.data);
       alert("User created successfully!");
-      setCreatedUserId(response.data.id);
+      setCreatedUserId(response.data.data.id);
     } catch (error) {
       console.error(
         "Error creating user:",
@@ -239,7 +239,7 @@ const UserCreate = () => {
             Document Upload
           </h2>
           {createdUserId ? (
-            <DocumentUploadForm userId={createdUserId} isDisabled={false} />
+            <DocumentUploadForm userId={createdUserId} name={fname + " " + lname} isDisabled={false} />
           ) : (
             <div className='text-center p-6 bg-gray-50 rounded-lg border border-gray-200'>
               <svg
