@@ -9,8 +9,8 @@
     const [students, setStudents] = useState([]);
 
     const classes = [
-      { id: 1, name: 'Class 10' },
-      { id: 2, name: 'Class 9' },
+      { id: 1, name: '11' },
+      { id: 2, name: '9' },
       { id: 3, name: 'Class 8' },
     ];
 
