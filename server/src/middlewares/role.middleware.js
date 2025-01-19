@@ -9,7 +9,6 @@ const authRole = (...allowedRoles) => {
     }
     
     if (!allowedRoles.includes(user.role)) {
-      console.log(user.role)
       return new ApiError(403,"Unauthorized! User role is not allowed.");
     }
     
