@@ -22,6 +22,6 @@ router.get('/getTeacherById/:id', verifyToken, authRole("OfficeStaff", "SuperAdm
 
 router.get('/getTeacherBySubject/:sub', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherBySubject)
 
-router.get('/addSubjectData', verifyToken, authRole("Teacher"), addSubjectData)
+router.post('/addSubjectData', verifyToken, authRole("Teacher", "SuperAdmin"), addSubjectData)
 
 export default router
