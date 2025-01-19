@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select, ButtonComponent, Modal } from "../components/component.js";
+import {
+  Input,
+  ReactTable,
+  Select,
+  ButtonComponent,
+  Modal,
+} from "../components/component.js";
 
 const TeacherAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -11,6 +17,10 @@ const TeacherAllocate = () => {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+
+  const STANDARD_OPTIONS = ["Select Standard", "11", "12"];
+  const DIVISION_OPTIONS = ["Select Division", "A", "B"];
+  const SUBJECT_OPTIONS = ["Select Subject", "All", "Math", "Physics", "Chemistry"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,42 +71,44 @@ const TeacherAllocate = () => {
   };
 
   const confirmAllocation = async () => {
-    if (!selectedStd || !selectedDiv) {
-      alert("Please Select both standard and division before allocating teacher");
+    if (!selectedTeacher || !selectedStd || !selectedDiv) {
+      alert("Please select all required fields before allocation.");
       closeModal();
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:3000/api/v1/allocateTeacherSubject",
         {
           teacherId: selectedTeacher.teacher_id,
-          standard: selectedStd,
-          division: selectedDiv,
+          std: selectedStd,
+          div: selectedDiv,
+          subject: selectedSubject,
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
-
-      alert("Teacher allocated Successfully!");
+      alert("Teacher allocated successfully!");
     } catch (err) {
-      console.log("Error Allocating Teacher", err);
-      alert(err.response?.data?.message || "Error allocating teacher.");
+      console.error("Error Allocating Teacher:", err.response || err);
+      alert(
+        err.response?.data?.message ||
+          "An error occurred while allocating the teacher."
+      );
     } finally {
       closeModal();
     }
   };
 
-  const unallocatedTeachers = records.filter((teacher) => !teacher.batchAssigned);
-  const filteredUnallocatedTeachers =
-    selectedSubject && selectedSubject !== "All"
-      ? unallocatedTeachers.filter((teacher) => teacher.sub === selectedSubject)
-      : unallocatedTeachers;
+  const unallocatedTeachers = records.filter(
+    (teacher) => !teacher.batchAssigned
+  );
 
   const allocatedTeachers = records.filter((teacher) => teacher.batchAssigned);
 
@@ -117,16 +129,6 @@ const TeacherAllocate = () => {
       sortable: true,
     },
     {
-      name: "Subject",
-      selector: (row) => row.sub,
-      sortable: true,
-    },
-    {
-      name: "Standard",
-      selector: (row) => row.standard || "Not Assigned",
-      sortable: true,
-    },
-    {
       name: "Batch Assigned",
       selector: (row) => row.batchAssigned || "Not Assigned",
       sortable: true,
@@ -136,7 +138,7 @@ const TeacherAllocate = () => {
       cell: (row) => (
         <ButtonComponent
           onClick={() => openModal(row)}
-          className='px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out'
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 ease-in-out"
         >
           Allocate to {selectedDiv}
         </ButtonComponent>
@@ -146,44 +148,57 @@ const TeacherAllocate = () => {
   ];
 
   return (
-    <div className='min-h-screen py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='max-w-7xl mx-auto'>
-        <h1 className='text-3xl font-bold text-gray-900 mb-8'>
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
           Teacher Allocation
         </h1>
 
-        <Modal 
+        <Modal
           isOpen={isModalOpen}
           onClose={closeModal}
           onConfirm={confirmAllocation}
-          teacher={selectedTeacher}
-        />
-
-        <div className='rounded-lg p-6 mb-8'>
-          <form className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
+        >
+          {selectedTeacher && (
             <div>
-              <Select 
-                label='Standard'
+              <p>
+                Are you sure you want to allocate{" "}
+                <strong>
+                  {selectedTeacher.fname} {selectedTeacher.lname}
+                </strong>{" "}
+                to Standard <strong>{selectedStd}</strong>, Division{" "}
+                <strong>{selectedDiv}</strong>, Subject{" "}
+                <strong>{selectedSubject}</strong>?
+              </p>
+            </div>
+          )}
+        </Modal>
+
+        <div className="rounded-lg p-6 mb-8">
+          <form className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+              <Select
+                label="Standard"
                 id="standard"
-                options={["Select Standard", "Standard 11", "Standard 12"]}
+                options={STANDARD_OPTIONS}
                 onChange={handleStdChange}
                 value={selectedStd}
               />
             </div>
             <div>
-              <Select 
-                label='Division'
+              <Select
+                label="Division"
                 id="division"
-                options={["Select Division", "A", "B"]}
+                options={DIVISION_OPTIONS}
                 onChange={handleDivChange}
                 value={selectedDiv}
               />
             </div>
             <div>
-              <Select 
-                label='Subject'
+              <Select
+                label="Subject"
                 id="subject"
-                options={["Select Subject", "All", "Math", "Physics", "Chemistry"]}
+                options={SUBJECT_OPTIONS}
                 onChange={handleSubjectChange}
                 value={selectedSubject}
               />
@@ -192,37 +207,36 @@ const TeacherAllocate = () => {
 
           {error && (
             <div
-              className='bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6'
-              role='alert'
+              className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6"
+              role="alert"
             >
-              <p className='font-bold'>Error</p>
+              <p className="font-bold">Error</p>
               <p>{error}</p>
             </div>
           )}
 
           {loading ? (
-            <div className='flex items-center justify-center h-64'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600'></div>
+            <div className="flex flex-col items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <p>Loading teachers...</p>
             </div>
           ) : (
             <>
-              <h2 className='text-xl font-semibold mb-4'>
+              <h2 className="text-xl font-semibold mb-4">
                 Unallocated Teachers
               </h2>
-              <div className='overflow-x-auto mb-8'>
+              <div className="overflow-x-auto mb-8">
                 <ReactTable
                   customColumns={teacher_allocate_columns}
-                  records={filteredUnallocatedTeachers}
-                  onRowClick={(row) => console.log("Row clicked:", row)}
+                  records={unallocatedTeachers}
                 />
               </div>
 
-              <h2 className='text-xl font-semibold mb-4'>Allocated Teachers</h2>
-              <div className='overflow-x-auto'>
+              <h2 className="text-xl font-semibold mb-4">Allocated Teachers</h2>
+              <div className="overflow-x-auto">
                 <ReactTable
                   customColumns={teacher_allocate_columns}
                   records={allocatedTeachers}
-                  onRowClick={(row) => console.log("Row clicked:", row)}
                 />
               </div>
             </>
