@@ -52,7 +52,6 @@ const allocateTeacherSubject = asyncHandler(async (req, res) => {
   }
 });
 
-
 const updateTeacherSubject = asyncHandler(async (req, res) => {
   const { teacherId, subject, std, div } = req.body;
 
@@ -80,10 +79,20 @@ const updateTeacherSubject = asyncHandler(async (req, res) => {
 
 const getAllTeacher = asyncHandler(async (req, res) => {
   const usersQuery = `
-    SELECT t.teacher_id, u.email, u.fname, u.lname, u.role, u.phone, u.gender
-    FROM Users u
-    join Teachers t on u.user_id = t.user_id
-    WHERE u.role = 'Teacher';
+    SELECT t.teacher_id, 
+       u.email, 
+       u.fname, 
+       u.lname, 
+       u.role, 
+       u.phone, 
+       u.gender, 
+       t.subjects, 
+       ta.std, 
+       ta.div
+FROM Users u
+JOIN Teachers t ON u.user_id = t.user_id
+LEFT JOIN Teacher_Allocates ta ON t.teacher_id = ta.teacher_id
+WHERE u.role = 'Teacher';
   `;
 
   const usersResult = await executeQuery(usersQuery);
@@ -241,51 +250,71 @@ const getTeacherBySubject = asyncHandler(async (req, res) => {
 //   );
 // });
 
-
 const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
   const { userId, std, div } = req.body;
 
   if (!userId || !std || !div) {
-    return next(new ApiError(400, 'Invalid request data'));
+    return next(new ApiError(400, "Invalid request data"));
   }
 
   try {
     // Check if a mentor is already assigned for the given standard and division
     const existingAssignment = await executeQuery(
-      'SELECT mentor_id FROM Mentor_Allocates WHERE std = @std AND div = @div',
+      "SELECT mentor_id FROM Mentor_Allocates WHERE std = @std AND div = @div",
       [
-        { name: 'std', value: std },
-        { name: 'div', value: div },
+        { name: "std", value: std },
+        { name: "div", value: div },
       ]
     );
 
     if (existingAssignment.recordset.length > 0) {
-      throw new ApiError(401, 'A mentor is already assigned to this standard and division');
+      throw new ApiError(
+        401,
+        "A mentor is already assigned to this standard and division"
+      );
     }
 
     // Check if the user is a mentor
     const userRoleCheck = await executeQuery(
-      'SELECT role FROM Users WHERE user_id = @user_id',
-      [{ name: 'user_id', value: userId }]
+      "SELECT role FROM Users WHERE user_id = @user_id",
+      [{ name: "user_id", value: userId }]
     );
 
-    if (userRoleCheck.recordset.length === 0 || userRoleCheck.recordset[0].role !== 'Mentor') {
-      throw new ApiError(403, 'The user is not a mentor');
+    if (
+      userRoleCheck.recordset.length === 0 ||
+      userRoleCheck.recordset[0].role !== "Mentor"
+    ) {
+      throw new ApiError(403, "The user is not a mentor");
     }
 
     // Assign the mentor to the standard and division
     const mt_allocates = await executeQuery(
-      'INSERT INTO Mentor_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)',
+      "INSERT INTO Mentor_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)",
       [
-        { name: 'user_id', value: userId },
-        { name: 'std', value: std },
-        { name: 'div', value: div },
+        { name: "user_id", value: userId },
+        { name: "std", value: std },
+        { name: "div", value: div },
       ]
     );
 
-    res.status(200).send(new ApiResponse(200, mt_allocates.recordset, 'Mentor assigned successfully'));
+    res
+      .status(200)
+      .send(
+        new ApiResponse(
+          200,
+          mt_allocates.recordset,
+          "Mentor assigned successfully"
+        )
+      );
   } catch (error) {
-    next(new ApiError(500, 'An error occurred while assigning the mentor', [], error.stack));
+    next(
+      new ApiError(
+        500,
+        "An error occurred while assigning the mentor",
+        [],
+        error.stack
+      )
+    );
   }
 });
 
@@ -293,46 +322,67 @@ const assignClassTeacherByStdDiv = asyncHandler(async (req, res, next) => {
   const { userId, std, div } = req.body;
 
   if (!userId || !std || !div) {
-    return next(new ApiError(400, 'Invalid request data'));
+    return next(new ApiError(400, "Invalid request data"));
   }
 
   try {
     // Check if a class teacher is already assigned for the given standard and division
     const existingAssignment = await executeQuery(
-      'SELECT ct_id FROM ClassTeacher_Allocates WHERE std = @std AND div = @div',
+      "SELECT ct_id FROM ClassTeacher_Allocates WHERE std = @std AND div = @div",
       [
-        { name: 'std', value: std },
-        { name: 'div', value: div },
+        { name: "std", value: std },
+        { name: "div", value: div },
       ]
     );
 
     if (existingAssignment.recordset.length > 0) {
-      throw new ApiError(401, 'A class teacher is already assigned to this standard and division');
+      throw new ApiError(
+        401,
+        "A class teacher is already assigned to this standard and division"
+      );
     }
 
     // Check if the user is a class teacher
     const userRoleCheck = await executeQuery(
-      'SELECT role FROM Users WHERE user_id = @user_id',
-      [{ name: 'user_id', value: userId }]
+      "SELECT role FROM Users WHERE user_id = @user_id",
+      [{ name: "user_id", value: userId }]
     );
 
-    if (userRoleCheck.recordset.length === 0 || userRoleCheck.recordset[0].role !== 'ClassTeacher') {
-      throw new ApiError(403, 'The user is not a class teacher');
+    if (
+      userRoleCheck.recordset.length === 0 ||
+      userRoleCheck.recordset[0].role !== "ClassTeacher"
+    ) {
+      throw new ApiError(403, "The user is not a class teacher");
     }
 
     // Assign the class teacher to the standard and division
     const ct_allocates = await executeQuery(
-      'INSERT INTO ClassTeacher_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)',
+      "INSERT INTO ClassTeacher_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)",
       [
-        { name: 'user_id', value: userId },
-        { name: 'std', value: std },
-        { name: 'div', value: div },
+        { name: "user_id", value: userId },
+        { name: "std", value: std },
+        { name: "div", value: div },
       ]
     );
 
-    res.status(200).send(new ApiResponse(200, ct_allocates.recordset, 'Class teacher assigned successfully'));
+    res
+      .status(200)
+      .send(
+        new ApiResponse(
+          200,
+          ct_allocates.recordset,
+          "Class teacher assigned successfully"
+        )
+      );
   } catch (error) {
-    next(new ApiError(500, 'An error occurred while assigning the class teacher', [], error.stack));
+    next(
+      new ApiError(
+        500,
+        "An error occurred while assigning the class teacher",
+        [],
+        error.stack
+      )
+    );
   }
 });
 
