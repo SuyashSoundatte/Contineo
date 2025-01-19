@@ -15,7 +15,10 @@ const executeQuery = async (query, params) => {
 const allocateTeacherSubject = asyncHandler(async (req, res) => {
   const { teacherId, subject, std, div } = req.body;
 
-  if (!subject || !std || !div) {
+  console.log("Request Body:", req.body);
+
+  if (!teacherId || !subject || !std || !div) {
+    console.log("Validation Error: Missing required fields");
     throw new ApiError("Missing required fields", 400);
   }
 
@@ -25,22 +28,30 @@ const allocateTeacherSubject = asyncHandler(async (req, res) => {
   `;
 
   const teacherSubjectParams = [
-    { name: "TeacherId", value: teacherId }, 
+    { name: "TeacherId", value: teacherId },
     { name: "Subject", value: subject },
     { name: "Std", value: std },
     { name: "Div", value: div },
   ];
 
-  await executeQuery(insertTeacherSubjectQuery, teacherSubjectParams);
+  try {
+    console.log("Executing SQL Query...");
+    await executeQuery(insertTeacherSubjectQuery, teacherSubjectParams);
+    console.log("Query Executed Successfully");
 
-  return res.send(
-    new ApiResponse(
-      201,
-      { subject, std, div },
-      "Teacher Subject allocated successfully"
-    )
-  );
+    return res.send(
+      new ApiResponse(
+        201,
+        { subject, std, div },
+        "Teacher Subject allocated successfully"
+      )
+    );
+  } catch (err) {
+    console.error("Error executing query:", err.message);
+    throw new ApiError("Failed to allocate teacher subject", 500);
+  }
 });
+
 
 const updateTeacherSubject = asyncHandler(async (req, res) => {
   const { teacherId, subject, std, div } = req.body;
