@@ -109,10 +109,10 @@ const StudentAllocate = () => {
   
       // Extract stu_id values and convert them to integers
       const studentIds = selectedRecords.map(record => parseInt(record.stu_id));
-  
+      console.log(studentIds);
       // Make single API call with all student IDs
-      await axios.put(
-        "http://localhost:3000/api/v1/allocateStudentDiv",
+      await axios.post(
+        "http://localhost:3000/api/v1/assignMultipleStudentByDivStd",
         {
           studentIds: studentIds,
           div: selectedDiv

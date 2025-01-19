@@ -124,11 +124,11 @@ const allocateStudentDiv = asyncHandler(async (req, res) => {
 });
 
 const updateStudent = asyncHandler(async (req, res) => {
-  const { userId, stdId, divId } = req.body;
+  const { userId, divId } = req.body;
 
   const updateStudentQuery = `
     UPDATE student 
-    SET div = @DivId, class_std = @StdId 
+    SET div = @DivId
     WHERE user_id = @UserId;
   `;
   const updateStudentParams = [
