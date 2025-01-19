@@ -14,7 +14,7 @@ router.post("/login", validLogin, loginUser);
 router.get("/logout", logOutUser);
 
 
-router.get('/getUsers', verifyToken, authRole("SuperAdmin"), getAllUsers);
+router.get('/getAllUsers', verifyToken, authRole("SuperAdmin"), getAllUsers);
 router.get('/getUserById/:userId', verifyToken, authRole("SuperAdmin"), getUserById);
 
 router.get('/getAllMentors', verifyToken, authRole("SuperAdmin"), getAllMentors);

@@ -32,7 +32,6 @@ const StudentAllocate = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
         const enrichedData = response.data.data.map((record) => ({
           ...record,
           selected: false,
@@ -71,22 +70,64 @@ const StudentAllocate = () => {
     }
   };
 
-  const handleAllocate = () => {
+  const handleAllocate = async () => {
     if (!selectedDiv) {
       setError("Please select a division to allocate the students.");
       return;
     }
-
-    setRecords((prevRecords) =>
-      prevRecords.map((record) =>
-        selectedStudents.includes(record.user_id)
-          ? { ...record, batchAssigned: selectedDiv }
-          : record
-      )
-    );
-
-    // Clear selected students after allocation
-    setSelectedStudents([]);
+  
+    if (selectedStudents.length === 0) {
+      setError("Please select students to allocate.");
+      return;
+    }
+  
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Token not found. Please log in again.");
+      return;
+    }
+  
+    try {
+      // Make batch update requests for each selected student
+      const updatePromises = selectedStudents.map(stuId => {
+        const allocationData = {
+          stuId: stuId.toString(), // Convert to string as per validation
+          divId: selectedDiv
+        };
+  
+        return axios.post(
+          "http://localhost:3000/api/v1/allocateStudentDiv",
+          allocationData,
+          {
+            headers: { 
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+      });
+  
+      // Wait for all updates to complete
+      await Promise.all(updatePromises);
+  
+      // Update the local state
+      setRecords((prevRecords) =>
+        prevRecords.map((record) =>
+          selectedStudents.includes(record.user_id)
+            ? { ...record, div: selectedDiv, selected: false }
+            : record
+        )
+      );
+  
+      // Clear selected students after successful allocation
+      setSelectedStudents([]);
+      setError(null);
+      alert("Students allocated successfully!");
+  
+    } catch (error) {
+      console.error("Error allocating students:", error);
+      setError(error.response?.data?.message || "Error allocating students. Please try again.");
+    }
   };
 
   const handleRemove = (row) => {
@@ -214,7 +255,10 @@ const StudentAllocate = () => {
                 </div>
               </div>
               <div className='mt-4 mb-10'>
-                <ButtonComponent onClick={handleAllocate}>
+                <ButtonComponent 
+                  onClick={handleAllocate}
+                  className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300 ease-in-out'
+                >
                   Allocate Selected Students
                 </ButtonComponent>
               </div>
@@ -225,7 +269,7 @@ const StudentAllocate = () => {
                 </h2>
                 <div className='overflow-x-auto'>
                   <ReactTable
-                    customColumns={Student_allocate_columns}
+                    customColumns={Student_unallocate_columns}
                     records={filteredRecords.filter((r) => r.batchAssigned)}
                     onRowClick={(row) => console.log("Row clicked:", row)}
                   />

@@ -11,6 +11,7 @@ import DocumentUploadForm from "../components/DocumentUploadForm";
 
 const UserCreate = () => {
   const [createdUserId, setCreatedUserId] = useState(null);
+  const [addedSubjects, setAddedSubjects] = useState([]); // Store subjects added by AddSubjects
   const {
     register,
     handleSubmit,
@@ -22,25 +23,33 @@ const UserCreate = () => {
     setSelectedRole(event.target.value);
   };
 
-  const handleSubjectChange = (event) => {
-    const selectedSubject = event.target.files[0];
-    console.log("Selected Subject:", selectedSubject);
+  // Update the added subjects when new subjects are added in AddSubjects
+  const handleSubjectsUpdate = (subjects) => {
+    setAddedSubjects(subjects);
   };
 
   const onSubmit = async (data) => {
     try {
       console.log(data);
+
+      // Function to format date
       const formatDate = (dateString) => {
         const [year, month, day] = dateString.split("-");
         return `${day}-${month}-${year}`;
       };
 
+      // Prepare the formatted data to be sent to the backend
       const formattedData = {
         ...data,
         dob: formatDate(data.dob),
+        subjects: addedSubjects.map((sub) => ({ name: sub.name })), // Corrected to use addedSubjects
       };
+      console.log(formattedData);
 
+      // Get the auth token from localStorage
       const token = localStorage.getItem("token");
+      
+      // Send the data to the backend via POST request
       const response = await axios.post(
         "http://localhost:3000/api/v1/createUser",
         formattedData,
@@ -51,10 +60,12 @@ const UserCreate = () => {
         }
       );
 
+      // Handle successful user creation
       console.log("User created successfully:", response.data);
       alert("User created successfully!");
-      setCreatedUserId(response.data.data.id);
+      setCreatedUserId(response.data.data.id); // Set the created user ID
     } catch (error) {
+      // Handle errors
       console.error(
         "Error creating user:",
         error.response?.data || error.message
@@ -64,120 +75,92 @@ const UserCreate = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10 px-6 sm:px-8 lg:px-12'>
-      <div className='max-w-7xl mx-auto space-y-10'>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10 px-6 sm:px-8 lg:px-12">
+      <div className="max-w-7xl mx-auto space-y-10">
         {/* User Information Form */}
-        <div className='bg-white shadow-lg rounded-xl p-8 border border-gray-200'>
-          <h1 className='text-3xl font-bold text-gray-800 mb-8'>
+        <div className="bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+          <h1 className="text-3xl font-bold text-gray-800 mb-8">
             User Information Form
           </h1>
-          <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
-            <div className='grid grid-cols-3 gap-6'>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-3 gap-6">
               <Input
-                label='First Name'
-                type='text'
-                name='fname'
-                placeholder='First'
+                label="First Name"
+                type="text"
+                name="fname"
+                placeholder="First"
                 {...register("fname", { required: "Required" })}
-                className='w-full px-4 py-2 text-base'
+                className="w-full px-4 py-2 text-base"
               />
               <Input
-                label='Middle Name'
-                type='text'
-                name='mname'
-                placeholder='Middle'
+                label="Middle Name"
+                type="text"
+                name="mname"
+                placeholder="Middle"
                 {...register("mname", { required: "Required" })}
-                className='w-full px-4 py-2 text-base'
+                className="w-full px-4 py-2 text-base"
               />
               <Input
-                label='Last Name'
-                type='text'
-                name='lname'
-                placeholder='Last'
+                label="Last Name"
+                type="text"
+                name="lname"
+                placeholder="Last"
                 {...register("lname", { required: "Required" })}
-                className='w-full px-4 py-2 text-base'
+                className="w-full px-4 py-2 text-base"
               />
             </div>
             {(errors.fname || errors.lname) && (
-              <p className='text-red-500 text-sm mt-1'>
+              <p className="text-red-500 text-sm mt-1">
                 First and last name are required
               </p>
             )}
 
-            <div className='grid grid-cols-2 gap-6'>
-              <div>
-                <Input
-                  label='Email'
-                  type='email'
-                  name='email'
-                  placeholder='Email'
-                  {...register("email", { required: "Required" })}
-                  className='w-full px-4 py-2 text-base'
-                />
-                {errors.email && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Input
-                  label='Phone'
-                  type='tel'
-                  name='phone'
-                  placeholder='Phone'
-                  {...register("phone", { required: "Required" })}
-                  className='w-full px-4 py-2 text-base'
-                />
-                {errors.phone && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    {errors.phone.message}
-                  </p>
-                )}
-              </div>
+            <div className="grid grid-cols-2 gap-6">
+              <Input
+                label="Email"
+                type="email"
+                name="email"
+                placeholder="Email"
+                {...register("email", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
+              <Input
+                label="Phone"
+                type="tel"
+                name="phone"
+                placeholder="Phone"
+                {...register("phone", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
             </div>
 
-            <div className='grid grid-cols-2 gap-6'>
-              <div>
-                <Input
-                  label='Password'
-                  type='password'
-                  name='password'
-                  placeholder='Password'
-                  {...register("password", { required: "Required" })}
-                  className='w-full px-4 py-2 text-base'
-                />
-                {errors.password && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Input
-                  label='Date of Birth'
-                  type='date'
-                  name='dob'
-                  {...register("dob", { required: "Required" })}
-                  className='w-full px-4 py-2 text-base'
-                />
-                {errors.dob && (
-                  <p className='text-red-500 text-sm mt-1'>
-                    {errors.dob.message}
-                  </p>
-                )}
-              </div>
+            <div className="grid grid-cols-2 gap-6">
+              <Input
+                label="Password"
+                type="password"
+                name="password"
+                placeholder="Password"
+                {...register("password", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
+              <Input
+                label="Date of Birth"
+                type="date"
+                name="dob"
+                {...register("dob", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
             </div>
 
-            <div className='grid grid-cols-2 gap-6'>
+            <div className="grid grid-cols-2 gap-6">
               <Select
-                label='Gender'
+                label="Gender"
                 options={["Male", "Female", "Other"]}
                 {...register("gender", { required: "Required" })}
-                className='w-full px-4 py-2 text-base'
+                className="w-full px-4 py-2 text-base"
               />
               <Select
-                label='Role'
+                label="Role"
                 options={[
                   "Role",
                   "Teacher",
@@ -189,43 +172,43 @@ const UserCreate = () => {
                 ]}
                 {...register("role", { required: "Required" })}
                 onChange={handleRoleChange}
-                className='w-full px-4 py-2 text-base'
+                className="w-full px-4 py-2 text-base"
               />
             </div>
             {(errors.gender || errors.role) && (
-              <p className='text-red-500 text-sm mt-1'>
+              <p className="text-red-500 text-sm mt-1">
                 Gender and Role are required
               </p>
             )}
 
-            <div>
-              <Input
-                label='Address'
-                type='text'
-                name='address'
-                placeholder='Enter Address'
-                {...register("address", { required: "Required" })}
-              />
-              {errors.address && (
-                <p className='text-red-500 text-sm mt-1'>
-                  {errors.address.message}
-                </p>
-              )}
-            </div>
+            <Input
+              label="Address"
+              type="text"
+              name="address"
+              placeholder="Enter Address"
+              {...register("address", { required: "Required" })}
+              className="w-full px-4 py-2 text-base"
+            />
+            {errors.address && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.address.message}
+              </p>
+            )}
 
+            {/* Add Subjects Section */}
             {selectedRole === "Teacher" && (
-              <div className='bg-gray-50 p-5 rounded-lg border border-gray-200'>
-                <h2 className='text-lg font-semibold text-gray-700 mb-3'>
+              <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-700 mb-3">
                   Add Subject
                 </h2>
-                <AddSubjects onSubjectChange={handleSubjectChange} />
+                <AddSubjects onSubjectsUpdate={handleSubjectsUpdate} />
               </div>
             )}
 
-            <div className='flex justify-end mt-8'>
+            <div className="flex justify-end mt-8">
               <ButtonComponent
-                type='submit'
-                className='w-full sm:w-auto px-8 py-3 text-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-md'
+                type="submit"
+                className="w-full sm:w-auto px-8 py-3 text-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-md"
               >
                 Create User
               </ButtonComponent>
@@ -239,9 +222,9 @@ const UserCreate = () => {
             Document Upload
           </h2>
           {createdUserId ? (
-            <DocumentUploadForm userId={createdUserId} name={fname + " " + lname} isDisabled={false} />
+            <DocumentUploadForm userId={createdUserId} />
           ) : (
-            <div className='text-center p-6 bg-gray-50 rounded-lg border border-gray-200'>
+            <div className="text-center p-6 bg-gray-50 rounded-lg border border-gray-200">
               <svg
                 className='w-14 h-14 mx-auto mb-4 text-gray-400'
                 fill='none'
