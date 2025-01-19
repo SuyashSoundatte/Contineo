@@ -41,7 +41,7 @@ const markAttendance = asyncHandler(async (req, res, next) => {
         return next(new ApiError(404, `Student with ID ${studentId} not found`));
       }
 
-      await executeQuery(
+      const studentMarkedAttendance = await executeQuery(
         'INSERT INTO StudentAttendance_Marked (stu_id, isPresent, at_id) VALUES (@stu_id, @isPresent, @at_id)',
         [
           { name: 'stu_id', value: studentId },
@@ -49,11 +49,12 @@ const markAttendance = asyncHandler(async (req, res, next) => {
           { name: 'at_id', value: attendanceId },
         ]
       );
+
     }
 
     res
       .status(200)
-      .json(new ApiResponse(200, null, 'Attendance marked successfully'));
+      .json(new ApiResponse(200, studentMarkedAttendance.recordset, 'Attendance marked successfully'));
   } catch (error) {
     next(new ApiError(500, 'An error occurred while marking attendance', [], error.stack));
   }
