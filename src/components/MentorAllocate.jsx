@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Input, ReactTable, Select } from './component.js';
+import { Input, ReactTable, Select, ButtonComponent} from './component.js';
 
 const MentorAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -20,7 +20,7 @@ const MentorAllocate = () => {
 
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/getAllTeacher",
+          "http://localhost:3000/api/v1/getAllMentors",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

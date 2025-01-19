@@ -18,7 +18,7 @@ const Dashboard = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      await axios.get("http://localhost3000/api/v1/logout", {
+      await axios.get("http://localhost:3000/api/v1/logout", {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",

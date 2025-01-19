@@ -114,7 +114,7 @@ const StudentAllocate = () => {
       name: "Standard",
       selector: (row) => row.std,
       sortable: true,
-    },
+    },  
     {
       name: "Actions",
       cell: (row) => (
