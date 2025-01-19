@@ -11,6 +11,7 @@ import DocumentUploadForm from "../components/DocumentUploadForm";
 
 const UserCreate = () => {
   const [createdUserId, setCreatedUserId] = useState(null);
+  const [addedSubjects, setAddedSubjects] = useState([]); // Store subjects added by AddSubjects
   const {
     register,
     handleSubmit,
@@ -22,25 +23,33 @@ const UserCreate = () => {
     setSelectedRole(event.target.value);
   };
 
-  const handleSubjectChange = (event) => {
-    const selectedSubject = event.target.files[0];
-    console.log("Selected Subject:", selectedSubject);
+  // Update the added subjects when new subjects are added in AddSubjects
+  const handleSubjectsUpdate = (subjects) => {
+    setAddedSubjects(subjects);
   };
 
   const onSubmit = async (data) => {
     try {
       console.log(data);
+
+      // Function to format date
       const formatDate = (dateString) => {
         const [year, month, day] = dateString.split("-");
         return `${day}-${month}-${year}`;
       };
 
+      // Prepare the formatted data to be sent to the backend
       const formattedData = {
         ...data,
         dob: formatDate(data.dob),
+        subjects: addedSubjects.map(subject => String(subject)), // Corrected to use addedSubjects
       };
+      console.log(formattedData);
 
+      // Get the auth token from localStorage
       const token = localStorage.getItem("token");
+      
+      // Send the data to the backend via POST request
       const response = await axios.post(
         "http://localhost:3000/api/v1/createUser",
         formattedData,
@@ -51,10 +60,12 @@ const UserCreate = () => {
         }
       );
 
+      // Handle successful user creation
       console.log("User created successfully:", response.data);
       alert("User created successfully!");
-      setCreatedUserId(response.data.id);
+      setCreatedUserId(response.data.data.id); // Set the created user ID
     } catch (error) {
+      // Handle errors
       console.error(
         "Error creating user:",
         error.response?.data || error.message
@@ -105,68 +116,40 @@ const UserCreate = () => {
             )}
 
             <div className="grid grid-cols-2 gap-6">
-              <div>
-                <Input
-                  label="Email"
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  {...register("email", { required: "Required" })}
-                  className="w-full px-4 py-2 text-base"
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Input
-                  label="Phone"
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone"
-                  {...register("phone", { required: "Required" })}
-                  className="w-full px-4 py-2 text-base"
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.phone.message}
-                  </p>
-                )}
-              </div>
+              <Input
+                label="Email"
+                type="email"
+                name="email"
+                placeholder="Email"
+                {...register("email", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
+              <Input
+                label="Phone"
+                type="tel"
+                name="phone"
+                placeholder="Phone"
+                {...register("phone", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-6">
-              <div>
-                <Input
-                  label="Password"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  {...register("password", { required: "Required" })}
-                  className="w-full px-4 py-2 text-base"
-                />
-                {errors.password && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Input
-                  label="Date of Birth"
-                  type="date"
-                  name="dob"
-                  {...register("dob", { required: "Required" })}
-                  className="w-full px-4 py-2 text-base"
-                />
-                {errors.dob && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.dob.message}
-                  </p>
-                )}
-              </div>
+              <Input
+                label="Password"
+                type="password"
+                name="password"
+                placeholder="Password"
+                {...register("password", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
+              <Input
+                label="Date of Birth"
+                type="date"
+                name="dob"
+                {...register("dob", { required: "Required" })}
+                className="w-full px-4 py-2 text-base"
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-6">
@@ -198,28 +181,27 @@ const UserCreate = () => {
               </p>
             )}
 
-            <div>
-              <Input 
-                label = "Address"
-                type = "text"
-                name = "address"
-                placeholder = "Enter Address"
-                {...register("address", { required: "Required" })}
+            <Input
+              label="Address"
+              type="text"
+              name="address"
+              placeholder="Enter Address"
+              {...register("address", { required: "Required" })}
+              className="w-full px-4 py-2 text-base"
+            />
+            {errors.address && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.address.message}
+              </p>
+            )}
 
-              />
-              {errors.address && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.address.message}
-                </p>
-              )}
-            </div>
-
+            {/* Add Subjects Section */}
             {selectedRole === "Teacher" && (
               <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-700 mb-3">
                   Add Subject
                 </h2>
-                <AddSubjects onSubjectChange={handleSubjectChange} />
+                <AddSubjects onSubjectsUpdate={handleSubjectsUpdate} />
               </div>
             )}
 
@@ -240,23 +222,9 @@ const UserCreate = () => {
             Document Upload
           </h2>
           {createdUserId ? (
-            <DocumentUploadForm userId={createdUserId} isDisabled={false} />
+            <DocumentUploadForm userId={createdUserId} />
           ) : (
             <div className="text-center p-6 bg-gray-50 rounded-lg border border-gray-200">
-              <svg
-                className="w-14 h-14 mx-auto mb-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l7.414 7.414A1 1 0 0121 11.586V19a2 2 0 01-2 2z"
-                ></path>
-              </svg>
               <p className="text-lg text-gray-600">
                 Create a user to enable document uploads.
               </p>

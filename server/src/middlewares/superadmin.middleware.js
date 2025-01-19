@@ -4,7 +4,7 @@ import ApiError from "../config/ApiError.js";
 const validUser = (req, res, next) => {
   const schema = Joi.object({
     fname: Joi.string().min(1).max(100).required(),
-    mname: Joi.string().min(1).max(100).required(),
+    mname: Joi.string().min(1).max(100).optional(),
     lname: Joi.string().min(1).max(100).required(),
     address: Joi.string().min(1).max(255).required(),
     gender: Joi.string().valid('Male', 'Female', 'Other').required(),
@@ -14,9 +14,8 @@ const validUser = (req, res, next) => {
     email: Joi.string().email().required(),
     password: Joi.string().min(4).required(),
     phone: Joi.string().required(),
-    subject: Joi.string().optional(),
-    role: Joi.string().valid('SuperAdmin', 'Teacher', 'OfficeStaff', "Mentor", "ClassTeacher", "ClassIn", "MentorIn").required(),
-    // isActive: Joi.boolean().optional()
+    subjects: Joi.array().items(Joi.string()).optional(), // Assuming an array of subjects for Teacher role
+    role: Joi.string().valid('SuperAdmin', 'Teacher', 'OfficeStaff', 'Mentor', 'ClassTeacher', 'ClassTeacherIncharge', 'MentorIncharge').required(),
   });
 
   const { error } = schema.validate(req.body);

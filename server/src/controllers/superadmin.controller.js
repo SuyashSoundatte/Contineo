@@ -4,7 +4,6 @@ import ApiResponse from "../config/ApiResponse.js";
 import { hashPassword } from "../config/hashPass.js";
 import { executeQuery } from "../config/executeQuery.js";
 
-
 const createUser = asyncHandler(async (req, res) => {
   const { 
     fname, 
@@ -17,7 +16,7 @@ const createUser = asyncHandler(async (req, res) => {
     password, 
     phone, 
     role,
-    subject // Only for Teacher role
+    subjects // For Teacher role
   } = req.body;
 
   // Validate required fields
@@ -26,13 +25,13 @@ const createUser = asyncHandler(async (req, res) => {
   }
 
   // Validate role
-  if (role !== 'Teacher' && role !== 'OfficeStaff') {
+  if (!['SuperAdmin', 'Teacher', 'OfficeStaff', 'Mentor', 'ClassTeacher', 'ClassTeacherIncharge', 'MentorIncharge'].includes(role)) {
     throw new ApiError(400, "Invalid role specified");
   }
 
-  // If role is Teacher, subject is required
-  if (role === 'Teacher' && !subject) {
-    throw new ApiError(400, "Subject is required for Teacher role");
+  // If role is Teacher, subjects should be provided
+  if (role === "Teacher" && (!subjects || subjects.length === 0)) {
+    throw new ApiError(400, "At least one subject is required for Teacher role");
   }
 
   // Check if email already exists
@@ -47,7 +46,7 @@ const createUser = asyncHandler(async (req, res) => {
 
   const hashedPassword = await hashPassword(password);
 
-  // Insert user
+  // Insert user into the Users table
   const insertUserQuery = `
     INSERT INTO Users (fname, mname, lname, address, gender, dob, email, password, phone, role)
     OUTPUT INSERTED.user_id
@@ -74,13 +73,16 @@ const createUser = asyncHandler(async (req, res) => {
   if (role === "Teacher") {
     const teacherQuery = `
       INSERT INTO Teachers (user_id, subjects)
-      VALUES (@UserId, @Subject);
+      VALUES (@UserId, @Subjects);
     `;
-
+  
     const teacherParams = [
       { name: 'UserId', value: userId },
-      { name: 'Subject', value: subject }
+      { name: 'Subjects', value: JSON.stringify(subjects) } // Store subjects as JSON string
     ];
+
+    console.log('Teacher Query:', teacherQuery);
+    console.log('Teacher Params:', teacherParams);
 
     await executeQuery(teacherQuery, teacherParams);
   }
