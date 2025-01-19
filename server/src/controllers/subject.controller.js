@@ -1,7 +1,7 @@
-import asyncHandler from '../middlewares/asyncHandler.js';
-import ApiError from '../utils/ApiError.js';
-import ApiResponse from '../utils/ApiResponse.js';
-import { executeQuery } from '../utils/dbQuery.js';
+import asyncHandler from '../config/asyncHandler.js';
+import ApiError from '../config/ApiError.js';
+import ApiResponse from '../config/ApiResponse.js';
+import executeQuery  from '../config/dbConnect.js';
 
 const addSubjectData = asyncHandler(async (req, res, next) => {
   const { subject, topics } = req.body;
