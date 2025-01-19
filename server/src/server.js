@@ -23,7 +23,7 @@ const port = process.env.PORT || 8080;
 // middlewares
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:5175',
     credentials: true,
   })
 );

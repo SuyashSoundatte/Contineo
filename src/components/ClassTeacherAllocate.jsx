@@ -146,7 +146,7 @@ const ClassTeacherAllocate = () => {
             <div>
               <Select
                 label='Standard'
-                options={["Select Standard", "11", "12"]}
+                options={["Select Standard", "11", "12", "13"]}
                 value={selectedStd}
                 onChange={handleStdChange}
               />
