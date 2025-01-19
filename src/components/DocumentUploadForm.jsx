@@ -1,48 +1,36 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { ButtonComponent, Input, Select } from "../components/component.js";
 
-const DocumentUploadForm = ({ userId }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [documentName, setDocumentName] = useState("");
-  const [file, setFile] = useState(null);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+const DocumentUploadForm = ({ userId, name, isDisabled }) => {
+  const [documents, setDocuments] = useState([]);
+  const [fileNames, setFileNames] = useState([]);
+  const [uploadStatus, setUploadStatus] = useState("");
 
-  // Toggle menu visibility
-  const toggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    const selectedFileNames = selectedFiles.map((file) => file.name);
+
+    // Append new files without duplicating existing ones
+    setDocuments((prevDocs) => [...prevDocs, ...selectedFiles]);
+    setFileNames((prevNames) => [...prevNames, ...selectedFileNames]);
   };
 
-  // Handle document name change
-  const handleDocumentNameChange = (e) => {
-    setDocumentName(e.target.value);
-  };
-
-  // Handle file input change
-  const handleFileChange = (e) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  // Handle file upload
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!documentName || !file) {
-      alert("Please select a document type and upload a file!");
+  const handleUpload = async () => {
+    if (!documents.length) {
+      setUploadStatus("Please select at least one document to upload.");
       return;
     }
 
-    try {
-      const formData = new FormData();
-      formData.append("documentName", documentName);
-      formData.append("file", file);
-      formData.append("userId", userId);
+    const formData = new FormData();
+    documents.forEach((file) => {
+      formData.append("documents", file);
+    });
+    formData.append("userId", userId);
 
+    try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3000/api/v1/uploadDocument",
+        "http://localhost:3000/api/v1/uploadDocuments",
         formData,
         {
           headers: {
@@ -52,73 +40,74 @@ const DocumentUploadForm = ({ userId }) => {
         }
       );
 
-      // Add uploaded file to the list
-      setUploadedFiles((prev) => [
-        ...prev,
-        { name: documentName, file: file },
-      ]);
-
-      alert("Document uploaded successfully!");
-      setDocumentName("");
-      setFile(null);
+      setUploadStatus("Documents uploaded successfully!");
+      console.log("Upload response:", response.data);
+      setDocuments([]); // Clear the file list after successful upload
+      setFileNames([]);
     } catch (error) {
-      console.error("Error uploading document:", error.response?.data || error.message);
-      alert("Failed to upload document. Please try again.");
+      console.error("Error uploading documents:", error);
+      setUploadStatus("Failed to upload documents. Please try again.");
     }
   };
 
-  // Handle file deletion
-  const handleDeleteFile = (index) => {
-    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveFile = (index) => {
+    setDocuments((prevDocs) => prevDocs.filter((_, i) => i !== index));
+    setFileNames((prevNames) => prevNames.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="document-upload-form">
-      <ButtonComponent onClick={toggleMenu} type="button">
-        Add Files
-      </ButtonComponent>
+    <div className="space-y-4">
+      {/* Display userId */}
+      <div className="text-sm text-gray-700">
+        <strong>User ID:</strong> {userId}
+        <br />
+        <strong>Name :</strong> {name}
+      </div>
 
-      {isMenuOpen && (
-        <div className="mt-4 space-y-4">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <Select
-              label="Document Type"
-              options={["", "LC", "Cast Certificate"]}
-              value={documentName}
-              onChange={handleDocumentNameChange}
-            />
-            <Input
-              label="Document File"
-              type="file"
-              onChange={handleFileChange}
-            />
-            <ButtonComponent type="submit">Upload Document</ButtonComponent>
-          </form>
+      {/* File Input */}
+      <input
+        type="file"
+        multiple
+        onChange={handleFileChange}
+        disabled={isDisabled}
+        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+      />
 
-          {/* Display uploaded files */}
-          {uploadedFiles.length > 0 && (
-            <div className="uploaded-files mt-4">
-              <h3 className="font-bold">Uploaded Files:</h3>
-              <ul className="list-disc list-inside">
-                {uploadedFiles.map((file, index) => (
-                  <li
-                    key={index}
-                    className="flex justify-between items-center"
-                  >
-                    {file.name} ({file.file.name})
-                    <ButtonComponent
-                      onClick={() => handleDeleteFile(index)}
-                      className="text-red-500 hover:underline ml-2"
-                    >
-                      Delete
-                    </ButtonComponent>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      {/* File List */}
+      {fileNames.length > 0 && (
+        <div className="mt-4">
+          <h3 className="font-bold">Selected Files:</h3>
+          <ul className="list-disc list-inside">
+            {fileNames.map((name, index) => (
+              <li key={index} className="flex justify-between items-center">
+                {name}
+                <button
+                  onClick={() => handleRemoveFile(index)}
+                  className="text-red-500 hover:underline ml-4"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
+
+      {/* Upload Button */}
+      <button
+        onClick={handleUpload}
+        disabled={isDisabled || documents.length === 0}
+        className={`px-6 py-3 text-white font-semibold rounded-lg ${
+          isDisabled || documents.length === 0
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
+      >
+        Upload Documents
+      </button>
+
+      {/* Upload Status */}
+      {uploadStatus && <p className="text-sm text-gray-700">{uploadStatus}</p>}
     </div>
   );
 };
