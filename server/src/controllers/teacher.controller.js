@@ -148,86 +148,87 @@ const getTeacherBySubject = asyncHandler(async (req, res) => {
   );
 });
 
-const createTeacher = asyncHandler(async (req, res) => {
-  const {
-    fname,
-    mname,
-    lname,
-    address,
-    gender,
-    dob,
-    email,
-    password,
-    phone,
-    role,
-    subjects,
-  } = req.body;
+// const createTeacher = asyncHandler(async (req, res) => {
+//   const {
+//     fname,
+//     mname,
+//     lname,
+//     address,
+//     gender,
+//     dob,
+//     email,
+//     password,
+//     phone,
+//     role,
+//     subjects,
+//   } = req.body;
 
-  if (
-    !fname ||
-    !lname ||
-    !address ||
-    !gender ||
-    !dob ||
-    !email ||
-    !password ||
-    !phone ||
-    !role ||
-    !subjects
-  ) {
-    throw new ApiError(400, "All fields are required.");
-  }
+//   if (
+//     !fname ||
+//     !lname ||
+//     !address ||
+//     !gender ||
+//     !dob ||
+//     !email ||
+//     !password ||
+//     !phone ||
+//     !role ||
+//     !subjects
+//   ) {
+//     throw new ApiError(400, "All fields are required.");
+//   }
 
-  if (!Array.isArray(subjects) || subjects.length === 0) {
-    throw new ApiError(400, "Subjects must be a non-empty array.");
-  }
+//   if (!Array.isArray(subjects) || subjects.length === 0) {
+//     throw new ApiError(400, "Subjects must be a non-empty array.");
+//   }
 
-  // Step 1: Insert teacher into Teachers table
-  const teacherInsertQuery = `
-      INSERT INTO Teachers (FirstName, MiddleName, LastName, Address, Gender, DOB, Email, Password, Phone, Role)
-      OUTPUT INSERTED.TeacherID
-      VALUES (@fname, @mname, @lname, @address, @gender, @dob, @password, @phone, @role)
-    `;
+//   // Step 1: Insert teacher into Teachers table
+//   const teacherInsertQuery = `
+//       INSERT INTO Teachers (FirstName, MiddleName, LastName, Address, Gender, DOB, Email, Password, Phone, Role)
+//       OUTPUT INSERTED.TeacherID
+//       VALUES (@fname, @mname, @lname, @address, @gender, @dob, @password, @phone, @role)
+//     `;
 
-  const teacherParams = [
-    { name: "fname", value: fname },
-    { name: "mname", value: mname },
-    { name: "lname", value: lname },
-    { name: "address", value: address },
-    { name: "gender", value: gender },
-    { name: "dob", value: dob },
-    { name: "email", value: email },
-    { name: "password", value: password },
-    { name: "phone", value: phone },
-    { name: "role", value: role },
-  ];
+//   const teacherParams = [
+//     { name: "fname", value: fname },
+//     { name: "mname", value: mname },
+//     { name: "lname", value: lname },
+//     { name: "address", value: address },
+//     { name: "gender", value: gender },
+//     { name: "dob", value: dob },
+//     { name: "email", value: email },
+//     { name: "password", value: password },
+//     { name: "phone", value: phone },
+//     { name: "role", value: role },
+//   ];
 
-  const teacherResult = await executeQuery(teacherInsertQuery, teacherParams);
-  const teacherID = teacherResult.recordset[0].TeacherID;
+//   const teacherResult = await executeQuery(teacherInsertQuery, teacherParams);
+//   const teacherID = teacherResult.recordset[0].TeacherID;
 
-  // Step 2: Insert subjects into TeacherSubjects table
-  const subjectInsertQuery = `
-      INSERT INTO TeacherSubjects (TeacherID, Subject)
-      VALUES (@teacherID, @subject)
-    `;
+//   // Step 2: Insert subjects into TeacherSubjects table
+//   const subjectInsertQuery = `
+//       INSERT INTO Teachers (TeacherID, Subject)
+//       VALUES (@teacherID, @subject)
+//     `;
 
-  for (const subject of subjects) {
-    const subjectParams = [
-      { name: "teacherID", value: teacherID },
-      { name: "subject", value: subject },
-    ];
-    await executeQuery(subjectInsertQuery, subjectParams);
-  }
+//   for (const subject of subjects) {
+//     const subjectParams = [
+//       { name: "teacherID", value: teacherID },
+//       { name: "subject", value: subject },
+//     ];
+//     await executeQuery(subjectInsertQuery, subjectParams);
+//   }
 
-  // Step 3: Send response
-  res.send(
-    new ApiResponse(
-      201,
-      teacherID,
-      "Teacher and subjects created successfully."
-    )
-  );
-});
+//   // Step 3: Send response
+//   res.send(
+//     new ApiResponse(
+//       201,
+//       teacherResult.recordset,
+
+//       "Teacher and subjects created successfully."
+//     )
+//   );
+// });
 
 
 const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
@@ -262,7 +263,7 @@ const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
     }
 
     // Assign the mentor to the standard and division
-    await executeQuery(
+    const mt_allocates = await executeQuery(
       'INSERT INTO Mentor_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)',
       [
         { name: 'user_id', value: userId },
@@ -271,7 +272,7 @@ const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
       ]
     );
 
-    res.status(200).send(new ApiResponse(200, null, 'Mentor assigned successfully'));
+    res.status(200).send(new ApiResponse(200, mt_allocates.recordset, 'Mentor assigned successfully'));
   } catch (error) {
     next(new ApiError(500, 'An error occurred while assigning the mentor', [], error.stack));
   }
@@ -309,7 +310,7 @@ const assignClassTeacherByStdDiv = asyncHandler(async (req, res, next) => {
     }
 
     // Assign the class teacher to the standard and division
-    await executeQuery(
+    const ct_allocates = await executeQuery(
       'INSERT INTO ClassTeacher_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)',
       [
         { name: 'user_id', value: userId },
@@ -318,14 +319,13 @@ const assignClassTeacherByStdDiv = asyncHandler(async (req, res, next) => {
       ]
     );
 
-    res.status(200).send(new ApiResponse(200, null, 'Class teacher assigned successfully'));
+    res.status(200).send(new ApiResponse(200, ct_allocates.recordset, 'Class teacher assigned successfully'));
   } catch (error) {
     next(new ApiError(500, 'An error occurred while assigning the class teacher', [], error.stack));
   }
 });
 
 export {
-  createTeacher,
   allocateTeacherSubject,
   updateTeacherSubject,
   getAllTeacher,
