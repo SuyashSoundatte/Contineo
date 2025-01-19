@@ -3,6 +3,7 @@ import verifyToken from "../middlewares/auth.middleware.js";
 import authRole from "../middlewares/role.middleware.js";
 import { updateTeacherSubject, getAllTeacher, getTeacherById, getTeacherBySubject, getTeacherByStd, allocateTeacherSubject,assignMentorByStdDiv, assignClassTeacherByStdDiv } from "../controllers/teacher.controller.js";
 import { validateCreateTeacherData } from "../middlewares/teacher.middleware.js";
+import addSubjectData from "../controllers/subject.controller.js"
 
 const router = Router();
 
@@ -20,5 +21,7 @@ router.get('/getTeacherById/:id', verifyToken, authRole("OfficeStaff", "SuperAdm
 // router.get('/getTeacherByStd/:std', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherByStd)
 
 router.get('/getTeacherBySubject/:sub', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherBySubject)
+
+router.get('/addSubjectData', verifyToken, authRole("Teacher"), addSubjectData)
 
 export default router
