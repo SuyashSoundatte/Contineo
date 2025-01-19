@@ -8,38 +8,48 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
+    console.log("Selected Files:", selectedFiles); // Check if files are selected
+  
     const selectedFileNames = selectedFiles.map((file) => file.name);
-
-    // Append new files without duplicating existing ones
     setDocuments((prevDocs) => [...prevDocs, ...selectedFiles]);
     setFileNames((prevNames) => [...prevNames, ...selectedFileNames]);
   };
+  
 
   const handleUpload = async () => {
     if (!documents.length) {
       setUploadStatus("Please select at least one document to upload.");
       return;
     }
-
+  
     const formData = new FormData();
+    
+    // Append each file individually
     documents.forEach((file) => {
-      formData.append("documents", file);
+      console.log("Appending file:", file);  // Ensure the file is correct
+      formData.append("documents[]", file); // Use an array notation to handle multiple files
     });
+    
     formData.append("userId", userId);
-
+  
     try {
+      // Check FormData content for debugging purposes
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]);  // Log each entry
+      }
+  
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3000/api/v1/uploadDocuments",
+        "http://localhost:3000/api/v1/upload",
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data",  // Do not manually set Content-Type, Axios will do it
           },
         }
       );
-
+  
       setUploadStatus("Documents uploaded successfully!");
       console.log("Upload response:", response.data);
       setDocuments([]); // Clear the file list after successful upload
@@ -49,7 +59,10 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
       setUploadStatus("Failed to upload documents. Please try again.");
     }
   };
-
+  
+  
+  
+  
   const handleRemoveFile = (index) => {
     setDocuments((prevDocs) => prevDocs.filter((_, i) => i !== index));
     setFileNames((prevNames) => prevNames.filter((_, i) => i !== index));
