@@ -42,8 +42,9 @@ const UserCreate = () => {
       const formattedData = {
         ...data,
         dob: formatDate(data.dob),
-        subjects: addedSubjects.map((sub) => ({ name: sub.name })), // Corrected to use addedSubjects
+        subjects: addedSubjects.filter(sub => sub.name).map((sub) => sub.name),
       };
+      
       console.log(formattedData);
 
       // Get the auth token from localStorage
