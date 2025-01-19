@@ -29,7 +29,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const userQuery = `
     SELECT email, password, role FROM Users WHERE email = @Email;
   `;
-  const userResult = await request.input('Email', email).query(userQuery);
+  const userResult = await request.input("Email", email).query(userQuery);
 
   if (userResult.recordset.length === 0) {
     throw new ApiError(404, "User not found");
@@ -61,7 +61,9 @@ const loginUser = asyncHandler(async (req, res) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
 
-  return res.send(new ApiResponse(200, { user, token }, "User logged in successfully"));
+  return res.send(
+    new ApiResponse(200, { user, token }, "User logged in successfully")
+  );
 });
 
 // Get all users handler
@@ -76,12 +78,14 @@ const getAllUsers = asyncHandler(async (req, res) => {
   `;
   const usersResult = await request.query(usersQuery);
 
-  return res.send(new ApiResponse(200, usersResult.recordset, "Users fetched successfully"));
+  return res.send(
+    new ApiResponse(200, usersResult.recordset, "Users fetched successfully")
+  );
 });
 
 // Get user by ID handler
 const getUserById = asyncHandler(async (req, res) => {
-  const user_id  = req.params.userId; 
+  const user_id = req.params.userId;
 
   const parseduser_id = parseInt(user_id);
   if (isNaN(parseduser_id)) {
@@ -97,13 +101,17 @@ const getUserById = asyncHandler(async (req, res) => {
     FROM Users
     WHERE user_id = @user_id;
   `;
-  const userResult = await request.input('user_id', parseduser_id).query(userQuery);
+  const userResult = await request
+    .input("user_id", parseduser_id)
+    .query(userQuery);
 
   if (userResult.recordset.length === 0) {
     throw new ApiError(404, "User not found");
   }
 
-  return res.send(new ApiResponse(200, userResult.recordset[0], "User found successfully"));
+  return res.send(
+    new ApiResponse(200, userResult.recordset[0], "User found successfully")
+  );
 });
 
 // User logout handler
@@ -116,18 +124,33 @@ const getAllMentors = asyncHandler(async (req, res) => {
   const mentorQuery = `
     select user_id, fname, lname, email, phone, role, gender from users 
     where role = 'Mentor';
-  `
+  `;
   const mentorResult = await executeQuery(mentorQuery);
-  return res.send(new ApiResponse(200, mentorResult.recordset, "Mentors fetched successfully"));
-})
+  return res.send(
+    new ApiResponse(200, mentorResult.recordset, "Mentors fetched successfully")
+  );
+});
 
 const getAllClassTeacher = asyncHandler(async (req, res) => {
   const classTeacherQuery = `
-    select user_id, fname, lname, email, phone, role, gender from users
-    where role = 'ClassTeacher';
-  `
+    select u.user_id, u.fname, u.lname, u.email, u.phone, u.role, u.gender, ct.std, ct.div
+    from users u 
+    join ClassTeacher_Allocates ct on u.user_id = ct.user_id`;
   const classTeacherResult = await executeQuery(classTeacherQuery);
-  return res.send(new ApiResponse(200, classTeacherResult.recordset, "Class Teachers fetched successfully"));
-})
+  return res.send(
+    new ApiResponse(
+      200,
+      classTeacherResult.recordset,
+      "Class Teachers fetched successfully"
+    )
+  );
+});
 
-export { loginUser, getAllUsers, getUserById, logOutUser, getAllMentors, getAllClassTeacher };
+export {
+  loginUser,
+  getAllUsers,
+  getUserById,
+  logOutUser,
+  getAllMentors,
+  getAllClassTeacher,
+};

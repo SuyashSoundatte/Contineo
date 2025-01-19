@@ -1,114 +1,85 @@
 import asyncHandler from '../config/asyncHandler.js';
 import ApiError from '../config/ApiError.js';
 import ApiResponse from '../config/ApiResponse.js';
-import executeQuery  from '../config/dbConnect.js';
+import {executeQuery} from '../config/executeQuery.js';
 
 const addSubjectData = asyncHandler(async (req, res, next) => {
   const { subject, topics } = req.body;
 
-  if (!subject || !topics || !Array.isArray(topics)) {
-    return next(new ApiError(400, 'Invalid request data'));
+  if (!subject?.trim() || !Array.isArray(topics) || topics.length === 0) {
+    throw new ApiError(400, 'Please provide valid subject and topics data');
   }
 
-  try {
-    // Check if the subject already exists
-    const subjectResult = await executeQuery(
-      'SELECT sub_id FROM Subjects WHERE subject = @subject',
-      [{ name: 'subject', value: subject }]
-    );
+  // Get or create subject
+  const subjectResult = await executeQuery(
+    `MERGE INTO Subjects AS target
+     USING (VALUES (@subject)) AS source (subject)
+     ON target.subject = source.subject
+     WHEN NOT MATCHED THEN
+         INSERT (subject) VALUES (@subject)
+     WHEN MATCHED THEN
+         UPDATE SET subject = @subject
+     OUTPUT INSERTED.sub_id;`,
+    [{ name: 'subject', value: subject }]
+  );
 
-    let subjectId;
+  const subjectId = subjectResult.recordset[0].sub_id;
 
-    if (subjectResult.recordset.length > 0) {
-      subjectId = subjectResult.recordset[0].sub_id;
-    } else {
-      // Insert the subject if it doesn't exist
-      const insertSubjectResult = await executeQuery(
-        'INSERT INTO Subjects (subject) OUTPUT INSERTED.sub_id VALUES (@subject)',
-        [{ name: 'subject', value: subject }]
-      );
-      subjectId = insertSubjectResult.recordset[0].sub_id;
+  // Process topics and subtopics
+  for (const topicData of topics) {
+    const { topic: topicTitle, subtopics } = topicData;
+
+    if (!topicTitle?.trim()) {
+      throw new ApiError(400, 'Invalid topic title');
     }
 
-    // Loop through the topics and insert them
-    for (const topic of topics) {
-      const { topic: topicTitle, subtopics } = topic;
+    // Get or create topic
+    const topicResult = await executeQuery(
+      `MERGE INTO Topics AS target
+       USING (VALUES (@sub_id, @title)) AS source (sub_id, title)
+       ON target.sub_id = source.sub_id AND target.title = source.title
+       WHEN NOT MATCHED THEN
+           INSERT (sub_id, title) VALUES (@sub_id, @title)
+       WHEN MATCHED THEN
+           UPDATE SET title = @title
+       OUTPUT INSERTED.topic_id;`,
+      [
+        { name: 'sub_id', value: subjectId },
+        { name: 'title', value: topicTitle }
+      ]
+    );
 
-      // Check if the topic already exists under the subject
-      const topicResult = await executeQuery(
-        'SELECT topic_id FROM Topics WHERE sub_id = @sub_id AND title = @title',
-        [
-          { name: 'sub_id', value: subjectId },
-          { name: 'title', value: topicTitle },
-        ]
-      );
+    const topicId = topicResult.recordset[0].topic_id;
 
-      let topicId;
-
-      if (topicResult.recordset.length > 0) {
-        topicId = topicResult.recordset[0].topic_id;
-      } else {
-        // Insert the topic if it doesn't exist
-        const insertTopicResult = await executeQuery(
-          'INSERT INTO Topics (sub_id, title) OUTPUT INSERTED.topic_id VALUES (@sub_id, @title)',
-          [
-            { name: 'sub_id', value: subjectId },
-            { name: 'title', value: topicTitle },
-          ]
-        );
-        topicId = insertTopicResult.recordset[0].topic_id;
-      }
-
-      // Loop through the subtopics and insert them
-      if (subtopics && Array.isArray(subtopics)) {
-        for (const subtopic of subtopics) {
-          // Check if the subtopic already exists under the subject
-          const subtopicResult = await executeQuery(
-            'SELECT sub_topic_id FROM SubTopics WHERE sub_id = @sub_id AND subtopics = @subtopics',
+    // Process subtopics
+    if (Array.isArray(subtopics) && subtopics.length > 0) {
+      // Handle each subtopic individually
+      for (const subtopic of subtopics) {
+        if (subtopic?.trim()) {
+          await executeQuery(
+            `MERGE INTO SubTopics AS target
+             USING (VALUES (@sub_id, @subtopic)) AS source (sub_id, subtopics)
+             ON target.sub_id = source.sub_id AND target.subtopics = source.subtopics
+             WHEN NOT MATCHED THEN
+                 INSERT (sub_id, subtopics)
+                 VALUES (@sub_id, @subtopic);`,
             [
               { name: 'sub_id', value: subjectId },
-              { name: 'subtopics', value: subtopic },
+              { name: 'subtopic', value: subtopic }
             ]
           );
-
-          if (subtopicResult.recordset.length === 0) {
-            // Insert the subtopic if it doesn't exist
-            await executeQuery(
-              'INSERT INTO SubTopics (sub_id, subtopics) VALUES (@sub_id, @subtopics)',
-              [
-                { name: 'sub_id', value: subjectId },
-                { name: 'subtopics', value: subtopic },
-              ]
-            );
-          }
         }
       }
     }
-
-    res
-      .status(200)
-      .json(new ApiResponse(200, null, 'Data inserted successfully'));
-  } catch (error) {
-    next(new ApiError(500, 'An error occurred while inserting data', [], error.stack));
   }
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      { subject, topicsCount: topics.length },
+      'Data inserted successfully'
+    )
+  );
 });
 
 export default addSubjectData;
-/*
-data is incoming in this format
-
-  "subject": "Physics",
-  "topics": [
-    {
-      "subject": "Physics",
-      "topic": "Mechanics",
-      "subtopics": ["Kinematics", "Dynamics", "Work and Energy"]
-    },
-    {
-      "subject": "Physics",
-      "topic": "Electromagnetism",
-      "subtopics": ["Electric Fields", "Magnetic Fields", "Electromagnetic Waves"]
-    }
-  ]
-}
- */
