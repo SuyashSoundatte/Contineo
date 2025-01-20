@@ -8,9 +8,3 @@ node_modules/*
 *.env
 *.sql
 *.txt
-
-*./uploads
-./uploads/
-./uploads
-./uploads/*
-*./uploads/*
