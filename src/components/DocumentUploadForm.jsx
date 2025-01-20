@@ -1,20 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const DocumentUploadForm = ({ userId, name, isDisabled }) => {
+const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSuccess }) => {
   const [files, setFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [resetDocumentForm, setResetDocumentForm] = useState(false);
+
+  // Handle form reset
+  useEffect(() => {
+    if (resetForm) {
+      setFiles([]);
+      setUploadProgress(0);
+      setIsUploading(false);
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) {
+        fileInput.value = '';
+      }
+    }
+  }, [resetForm]);
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
     
     // Validate file types and sizes
     const validFiles = selectedFiles.filter(file => {
-      // Example validations (adjust as needed)
       const allowedTypes = [
         'image/jpeg', 
         'image/png', 
@@ -40,7 +51,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
     });
 
     setFiles(prevFiles => {
-      // Prevent duplicate files
       const uniqueNewFiles = validFiles.filter(
         newFile => !prevFiles.some(
           existingFile => existingFile.name === newFile.name && existingFile.size === newFile.size
@@ -62,13 +72,9 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
     }
   
     const formData = new FormData();
-    
-    // IMPORTANT: Use the exact field name expected by Multer
-    files.forEach((file, index) => {
-      formData.append("documents", file); // Changed from "file" to "documents"
+    files.forEach((file) => {
+      formData.append("documents", file);
     });
-  
-    // Optionally append userId if needed
     formData.append("userId", userId);
   
     try {
@@ -94,17 +100,22 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
         }
       );
   
-      // Success handling
       toast.success(response.data.message || "Documents uploaded successfully");
       
-      // Reset files
+      // Reset form after successful upload
       setFiles([]);
       setUploadProgress(0);
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) {
+        fileInput.value = '';
+      }
+
+      // Call parent's success handler to trigger complete reset
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
     } catch (error) {
-      // Error handling
-      const errorMessage = error.response?.data?.message || 
-        "Failed to upload documents";
-      
+      const errorMessage = error.response?.data?.message || "Failed to upload documents";
       toast.error(errorMessage);
       console.error("Upload error:", error);
     } finally {
@@ -117,21 +128,14 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
       prevFiles.filter((_, index) => index !== indexToRemove)
     );
   };
-  const handleDocumentUploadReset = () => {
-    setResetDocumentForm(true); // Trigger reset
-    setTimeout(() => setResetDocumentForm(false), 0); // Reset the state after the form refreshes
-  };
-
 
   return (
     <div className="space-y-4">
-      {/* User Information */}
       <div className="text-sm text-gray-700 mb-4">
         <p><strong>User ID:</strong> {userId}</p>
         {name && <p><strong>Name:</strong> {name}</p>}
       </div>
 
-      {/* File Input */}
       <div className="mb-4">
         <input
           type="file"
@@ -148,7 +152,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
         />
       </div>
 
-      {/* Selected Files List */}
       {files.length > 0 && (
         <div className="bg-gray-50 p-4 rounded-lg">
           <h3 className="font-bold mb-2">Selected Files:</h3>
@@ -176,7 +179,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
         </div>
       )}
 
-      {/* Upload Progress */}
       {isUploading && (
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
@@ -189,7 +191,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
         </div>
       )}
 
-      {/* Upload Button */}
       <button
         onClick={handleUpload}
         disabled={isDisabled || files.length === 0 || isUploading}
@@ -202,7 +203,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
         {isUploading ? 'Uploading...' : 'Upload Documents'}
       </button>
 
-      {/* Toast Notifications */}
       <ToastContainer 
         position="top-right"
         autoClose={5000}
