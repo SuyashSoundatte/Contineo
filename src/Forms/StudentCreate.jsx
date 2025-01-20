@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import {
-  Input,
-  Select,
-  ButtonComponent,
-} from "../components/component.js";
+import { Input, Select, ButtonComponent } from "../components/component.js";
 import DocumentUploadForm from "../components/DocumentUploadForm";
 
 const StudentCreate = () => {
   const [createdUserId, setCreatedUserId] = useState(null);
+  const [resetDocumentForm, setResetDocumentForm] = useState(false); // State to reset the DocumentUploadForm
+
   const {
     register,
     handleSubmit,
@@ -18,7 +16,7 @@ const StudentCreate = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
+      console.log("Form data submitted:", data);
 
       const formatDate = (dateString) => {
         const [year, month, day] = dateString.split("-");
@@ -41,16 +39,22 @@ const StudentCreate = () => {
         }
       );
 
-      console.log("User created successfully:", response.data);
-      alert("User created successfully!");
-      setCreatedUserId(response.data.id);
+      console.log("Student created successfully:", response.data);
+      alert("Student created successfully!");
+      setCreatedUserId(response.data.data.id); // Ensure response contains 'id'.
     } catch (error) {
       console.error(
-        "Error creating user:",
+        "Error creating student:",
         error.response?.data || error.message
       );
-      alert("Failed to create user. Please try again.");
+      alert("Failed to create student. Please try again.");
     }
+  };
+
+  // Function to reset the DocumentUploadForm
+  const handleDocumentUploadReset = () => {
+    setResetDocumentForm(true); // Trigger reset
+    setTimeout(() => setResetDocumentForm(false), 0); // Reset the state after the form refreshes
   };
 
   return (
@@ -62,6 +66,7 @@ const StudentCreate = () => {
             Student Information Form
           </h1>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Form Fields */}
             <div className="grid grid-cols-3 gap-6">
               <Input
                 label="First Name"
@@ -94,6 +99,7 @@ const StudentCreate = () => {
               </p>
             )}
 
+            {/* Additional Fields */}
             <div className="grid grid-cols-2 gap-6">
               <Input
                 label="Email"
@@ -171,7 +177,9 @@ const StudentCreate = () => {
               <Select
                 label="Standard"
                 options={["Standard", "11", "12"]}
-                {...register("class_std", { required: "Standard is required" })}
+                {...register("class_std", {
+                  required: "Standard is required",
+                })}
                 className="w-full px-4 py-2 text-base"
               />
             </div>
@@ -212,11 +220,29 @@ const StudentCreate = () => {
             Document Upload
           </h2>
           {createdUserId ? (
-            <DocumentUploadForm userId={createdUserId} isDisabled={false} />
+            <DocumentUploadForm
+              userId={createdUserId}
+              onUploadSuccess={handleDocumentUploadReset}
+              resetForm={resetDocumentForm}
+            />
           ) : (
             <div className="text-center p-6 bg-gray-50 rounded-lg border border-gray-200">
+              <svg
+                className="w-14 h-14 mx-auto mb-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l7.414 7.414A1 1 0 0121 11.586V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
               <p className="text-lg text-gray-600">
-                Create a user to enable document uploads.
+                Create a student to enable document uploads.
               </p>
             </div>
           )}

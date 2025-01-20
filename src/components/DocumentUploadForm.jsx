@@ -7,6 +7,7 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
   const [files, setFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [resetDocumentForm, setResetDocumentForm] = useState(false);
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
@@ -116,6 +117,11 @@ const DocumentUploadForm = ({ userId, name, isDisabled }) => {
       prevFiles.filter((_, index) => index !== indexToRemove)
     );
   };
+  const handleDocumentUploadReset = () => {
+    setResetDocumentForm(true); // Trigger reset
+    setTimeout(() => setResetDocumentForm(false), 0); // Reset the state after the form refreshes
+  };
+
 
   return (
     <div className="space-y-4">

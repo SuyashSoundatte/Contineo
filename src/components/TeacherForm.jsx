@@ -26,8 +26,18 @@ const TeacherForm = () => {
           }
         );
 
-        setRecords(response.data.data);
         console.log(response.data.data);
+
+        const enrichedData = response.data.data
+          .filter((row) => row.role !== "Student") // Exclude users with role 'Student'
+          .map((row) => {
+            return {
+              ...row,
+              role: row.role === "OfficeStaff" ? "Office Staff" : "Teacher", // Map roles
+            };
+          });
+
+        setRecords(enrichedData);
       } catch (err) {
         setError(err.response?.data?.message || "Error fetching data");
       } finally {
@@ -60,9 +70,9 @@ const TeacherForm = () => {
       sortable: true,
     },
     {
-      name : "Role",
-      selector : (row) => row.role, 
-      sortable : true,
+      name: "Role",
+      selector: (row) => row.role,
+      sortable: true,
     },
     {
       name: "Action",
