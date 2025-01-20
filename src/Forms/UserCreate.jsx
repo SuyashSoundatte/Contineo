@@ -167,8 +167,8 @@ const UserCreate = () => {
                   "Teacher",
                   "OfficeStaff",
                   "Mentor",
-                  "ClassIn",
-                  "MentorIn",
+                  "ClassTeacherIncharge",
+                  "MentorIncharge",
                   "ClassTeacher",
                 ]}
                 {...register("role", { required: "Required" })}
