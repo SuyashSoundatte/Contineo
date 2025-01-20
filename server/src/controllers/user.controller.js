@@ -97,7 +97,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
   // SQL query to fetch user by ID
   const userQuery = `
-    SELECT user_id, email, fname, lname, role, phone, gender
+    SELECT user_id, email, fname, mname, address, lname, role, phone, gender
     FROM Users
     WHERE user_id = @user_id;
   `;
