@@ -82,4 +82,14 @@ const addSubjectData = asyncHandler(async (req, res, next) => {
   );
 });
 
-export default addSubjectData;
+const getSubjects = asyncHandler(async(req, res)=>{
+  const getSubjectQuery = `
+    select subject from Subjects
+  `
+
+  const subjectResult = await executeQuery(getSubjectQuery)
+
+  res.send(new ApiResponse(200, subjectResult.recordset, "successfully subject data fetched"));
+})
+
+export  {addSubjectData, getSubjects};
