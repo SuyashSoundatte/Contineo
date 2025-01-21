@@ -111,13 +111,13 @@ const ClassTeacherAllocate = () => {
       sortable: true,
     },
     {
-      name: "Subject",
-      selector: (row) => row.div,
+      name: "Division",
+      selector: (row) => row.div || 'NA',
       sortable: true,
     },
     {
       name: "Standard",
-      selector: (row) => row.std,
+      selector: (row) => row.std || 'NA',
       sortable: true,
     },
     {

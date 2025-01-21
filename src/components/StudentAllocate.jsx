@@ -326,7 +326,7 @@ const StudentAllocate = () => {
                 <div className="overflow-x-auto">
                   <ReactTable
                     customColumns={Student_allocate_columns}
-                    records={filteredRecords.filter((r) => !r.div && r.div == "")}
+                    records={filteredRecords.filter((r) => !r.div)}
                     onRowClick={(row) => console.log("Row clicked:", row)}
                   />
                 </div>
