@@ -82,9 +82,13 @@ const addSubjectData = asyncHandler(async (req, res, next) => {
   );
 });
 
-const getSubjects = asyncHandler(async(req, res)=>{
+const getSyllabus = asyncHandler(async(req, res)=>{
   const getSubjectQuery = `
-    select subject from Subjects
+    select s.sub_id, s.subject, t.title, st.subtopics
+    from Subjects s
+    join Topics t on s.sub_id = t.sub_id
+    left join SubTopics st on s.sub_id = st.sub_id
+    order by s.sub_id asc
   `
 
   const subjectResult = await executeQuery(getSubjectQuery)
@@ -92,4 +96,4 @@ const getSubjects = asyncHandler(async(req, res)=>{
   res.send(new ApiResponse(200, subjectResult.recordset, "successfully subject data fetched"));
 })
 
-export  {addSubjectData, getSubjects};
+export  {addSubjectData, getSyllabus};

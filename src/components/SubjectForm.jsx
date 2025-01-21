@@ -25,13 +25,15 @@ const SubjectForm = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:3000/api/v1/getBySubject', {
+        const response = await axios.get('http://localhost:3000/api/v1/getSyllabus', {
           headers: { 
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
-
+        
+        const syllabus = response.data?.data 
+        console.log(syllabus);
         // Assuming the response contains an array of subjects
         setSubjects(response.data.data.map(subject => subject.subject));
       } catch (error) {
@@ -215,29 +217,28 @@ const SubjectForm = () => {
     }
   };
 
-  // Table columns for added topics
-  const columns = [
+  const Sbcolumns = [
     {
-      name: "Topic",
-      selector: (row) => row.topic,
+      name: "Subject ID",
+      selector: (row) => row.sub_id,
       sortable: true,
     },
     {
-      name: "Subtopics",
-      selector: (row) => row.subtopics.join(", "),
+      name: "Subjects",
+      selector: (row) => row.subject,
       sortable: true,
     },
     {
-      name: "Actions",
-      cell: (row) => (
-        <button 
-          onClick={() => handleRemoveTopic(row)}
-          className="text-red-500 hover:text-red-700"
-        >
-          Remove
-        </button>
-      )
+      name: "Topics",
+      slector: (row)=> row.title,
+      sortable: true
+    },
+    {
+      name:"Sub Topics",
+      selector: (row)=> row.subtopics,
+      sortable: true
     }
+
   ];
 
   return (
@@ -247,14 +248,14 @@ const SubjectForm = () => {
       <div className="mb-8">
         <Select
           label="Select Subject"
-          options={["Select Subject", ...subjects]}
+          options={["Select Subject", "Physics", "Maths", "Biology", "Chemistry"]}
           value={selectedSubject}
           onChange={handleSubjectChange}
           className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
 
-      {selectedSubject && selectedSubject !== "Select Subject" && (
+      
         <div className="mb-8 p-6 bg-white border border-gray-200 rounded-lg shadow-md">
           <h3 className="text-2xl font-bold mb-6 text-gray-700">
             Add Topics for {selectedSubject}
@@ -288,7 +289,6 @@ const SubjectForm = () => {
             </div>
 
             {/* Current Topic's Subtopics */}
-            {currentTopicSubtopics.length > 0 && (
               <div className="mt-4">
                 <h4 className="text-lg font-semibold mb-2">Current Topic Subtopics:</h4>
                 <ul className="list-disc list-inside">
@@ -310,7 +310,7 @@ const SubjectForm = () => {
                   ))}
                 </ul>
               </div>
-            )}
+            
 
             <div className="flex space-x-4">
               <ButtonComponent
@@ -331,14 +331,14 @@ const SubjectForm = () => {
             </div>
 
             {/* Show all added topics */}
-            {topics.length > 0 && (
+            
               <div className="mt-8">
                 <h4 className="text-xl font-semibold mb-4 text-gray-700">Current Topics</h4>
                 <div className="bg-white overflow-hidden shadow-md rounded-lg">
-                  <ReactTable records={topics} columns={columns} />
+                  <ReactTable records={topics} customColumns={Sbcolumns} />
                 </div>
               </div>
-            )}
+            
 
             <ButtonComponent
               type="submit"
@@ -353,7 +353,7 @@ const SubjectForm = () => {
             </ButtonComponent>
           </form>
         </div>
-      )}
+      
 
       <ToastContainer />
     </div>
