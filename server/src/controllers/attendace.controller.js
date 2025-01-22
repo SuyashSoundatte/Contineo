@@ -3,7 +3,6 @@ import ApiError from '../config/ApiError.js';
 import ApiResponse from '../config/ApiResponse.js';
 import { executeQuery } from '../config/executeQuery.js';
 
-// Mark attendance for a class
 const markAttendance = asyncHandler(async (req, res) => {
   const { class: studentClass, division, date, students } = req.body;
 
@@ -16,7 +15,6 @@ const markAttendance = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Invalid date format');
   }
 
-  // Check for existing attendance
   const existingAttendance = await executeQuery(
     'SELECT at_id FROM Attendance WHERE date = @date AND std = @std AND div = @div',
     [
@@ -30,7 +28,6 @@ const markAttendance = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Attendance for this class, division and date already exists');
   }
 
-  // Insert attendance record
   const attendanceResult = await executeQuery(
     'INSERT INTO Attendance (date, std, div) OUTPUT INSERTED.at_id VALUES (@date, @std, @div)',
     [
@@ -42,7 +39,6 @@ const markAttendance = asyncHandler(async (req, res) => {
 
   const attendanceId = attendanceResult.recordset[0].at_id;
 
-  // Insert individual attendance records
   for (const student of students) {
     await executeQuery(
       'INSERT INTO StudentAttendance_Marked (stu_id, isPresent, at_id) VALUES (@stu_id, @isPresent, @at_id)',
@@ -54,7 +50,6 @@ const markAttendance = asyncHandler(async (req, res) => {
     );
   }
 
-  // Get marked attendance details
   const markedAttendance = await executeQuery(`
     SELECT s.roll_no, s.stu_id, sam.isPresent
     FROM StudentAttendance_Marked sam
@@ -79,7 +74,6 @@ const markAttendance = asyncHandler(async (req, res) => {
   );
 });
 
-// Get attendance by date range for a class
 const getAttendanceByDateRange = asyncHandler(async (req, res) => {
   const { class: studentClass, division, startDate, endDate } = req.query;
 
@@ -110,7 +104,6 @@ const getAttendanceByDateRange = asyncHandler(async (req, res) => {
   );
 });
 
-// Get attendance statistics for a student
 const getStudentAttendanceStats = asyncHandler(async (req, res) => {
   const { studentId } = req.params;
   const { startDate, endDate } = req.query;
@@ -145,7 +138,6 @@ const getStudentAttendanceStats = asyncHandler(async (req, res) => {
   );
 });
 
-// Update attendance for a specific date
 const updateAttendance = asyncHandler(async (req, res) => {
   const { attendanceId } = req.params;
   const { students } = req.body;
@@ -167,7 +159,6 @@ const updateAttendance = asyncHandler(async (req, res) => {
     );
   }
 
-  // Get updated attendance records
   const updatedAttendance = await executeQuery(`
     SELECT s.roll_no, s.stu_id, sam.isPresent
     FROM StudentAttendance_Marked sam

@@ -8,9 +8,6 @@ import { createStudent, allocateStudentDiv, getStudentByStdDiv, updateStudent, g
 
 const router = Router();
 
-// router.post('/createStudent', validStudent, createStudent)
-
-//routes student
 router.post("/createStudent", verifyToken, authRole("SuperAdmin", "OfficeStaff"), validStudent, createStudent)
 
 router.post('/allocateStudentDiv', verifyToken, authRole("OfficeStaff", "SuperAdmin"), validStudentDiv, allocateStudentDiv)

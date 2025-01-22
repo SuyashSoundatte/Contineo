@@ -6,10 +6,8 @@ import cors from "cors";
 import bodyParser from "body-parser"
 import GlobalErrorHandler from "./config/errorHandler.js";
 
-// db paths 
 import ConnectDB from "./config/db.js";
 
-// routes paths
 import superadmin from "./routes/superadmin.routes.js";
 import file from "./routes/file.routes.js"
 import student from "./routes/student.routes.js";
@@ -20,7 +18,6 @@ import mentor from "./routes/mentor.routes.js"
 const app = express();
 const port = process.env.PORT || 8080;
 
-// middlewares
 app.use(
   cors({
     origin: 'http://localhost:5173',
