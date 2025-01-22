@@ -1,100 +1,84 @@
-import React, { useContext, useEffect } from "react";
-import Dashboard from "../../components/Dashboard";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import React, { useEffect } from "react"
+import Dashboard from "../../components/Dashboard"
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
 
 const MainPage = () => {
-  const { setIsLoggedIn, isLoggedIn } = useAuth();
-  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+
   useEffect(() => {
-    if (!isLoggedIn) navigate("/login");
-  }, [isLoggedIn]);
-  console.log(isLoggedIn);
+    if (!isLoggedIn) navigate("/login")
+  }, [isLoggedIn, navigate])
 
   const renderFormCard = (title, description, link) => (
-    <div className='bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition duration-300'>
-      <h2 className='text-2xl font-semibold text-indigo-600 mb-3'>{title}</h2>
-      <p className='text-gray-600 mb-4'>{description}</p>
-      <Link
-        to={link}
-        className='inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-200'
-      >
-        Go to {title}
-      </Link>
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+      <div className="p-6">
+        <h2 className="text-2xl font-bold text-indigo-600 mb-3">{title}</h2>
+        <p className="text-gray-600 mb-4">{description}</p>
+      </div>
+      <div className="bg-gray-50 px-6 py-4">
+        <Link
+          to={link}
+          className="inline-block w-full text-center bg-indigo-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-200 ease-in-out"
+        >
+          Go to {title}
+        </Link>
+      </div>
     </div>
-  );
+  )
 
   return (
-    <div className='flex h-screen'>
-      <aside className='w-48 md:w-56 lg:w-64 bg-white shadow-md'>
-        {/* Sidebar content */}
+    <div className="flex h-screen bg-gray-100">
+      <aside className="w-64 bg-white shadow-md">
         <Dashboard />
       </aside>
-      <main className='flex-1 overflow-x-hidden overflow-y-auto bg-gray-100'>
-        {/* Main content */}
+      <main className="flex-1 overflow-x-hidden overflow-y-auto">
         {location.pathname === "/MainPage" ? (
-          <div className='flex flex-col h-screen bg-gray-300 p-6 w-full'>
-            {/* Header */}
-            <header className='mb-6 text-center'>
-              <h1 className='text-4xl font-semibold text-indigo-600'>
-                Academics Management System
-              </h1>
-              <p className='text-lg text-gray-700 mt-2'>
-                Manage Users, Students, Teachers, and More
-              </p>
+          <div className="container mx-auto px-6 py-8">
+            <header className="mb-10 text-center">
+              <h1 className="text-4xl font-bold text-indigo-700 mb-2">Academics Management System</h1>
+              <p className="text-xl text-gray-600">Manage Users, Students, Teachers, and More</p>
             </header>
 
-            {/* Forms Overview */}
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {renderFormCard(
-                "Staff Create Form",
-                "Create new users for the system. This form allows adding users with roles and permissions.",
-                "/MainPage/UserForm"
+                "Staff Create",
+                "Create new users for the system with roles and permissions.",
+                "/MainPage/UserForm",
               )}
-
               {renderFormCard(
-                "Student Create Form",
-                "Add new students to the system with details like name, roll number, and class.",
-                "/MainPage/StudentCreate"
+                "Student Create",
+                "Add new students with details like name, roll number, and class.",
+                "/MainPage/StudentCreate",
               )}
-
               {renderFormCard(
-                "Student Allocation Form",
-                "Allocate students to different classes or groups based on specific criteria.",
-                "/MainPage/StudentAllocate"
+                "Student Allocation",
+                "Allocate students to different classes or groups.",
+                "/MainPage/StudentAllocate",
               )}
-
               {renderFormCard(
-                "Teacher Allocation Form",
-                "Allocate teachers to different classes and subjects as per the timetable.",
-                "/MainPage/TeacherAllocate"
+                "Teacher Allocation",
+                "Allocate teachers to classes and subjects as per timetable.",
+                "/MainPage/TeacherAllocate",
               )}
-
               {renderFormCard(
-                "Class Teacher Allocation Form",
-                "Allocate teachers as class teachers to specific classes for overall student management.",
-                "/MainPage/ClassTeacherForm"
+                "Class Teacher Allocation",
+                "Assign teachers as class teachers for student management.",
+                "/MainPage/ClassTeacherForm",
               )}
-
               {renderFormCard(
-                "Mentor Allocate Form",
+                "Mentor Allocation",
                 "Allocate mentors to guide students in specific subjects.",
-                "/MainPage/MentorAllocate"
+                "/MainPage/MentorAllocate",
               )}
-
               {renderFormCard(
-                "Subject Master Form",
-                "Manage subjects available in the system and assign them to teachers.",
-                "/MainPage/SubjectForm"
+                "Subject Master",
+                "Manage subjects and assign them to teachers.",
+                "/MainPage/SubjectForm",
               )}
-
-              {renderFormCard(
-                "Attendace Form",
-                "Manage subjects available in the system and assign them to teachers.",
-                "/MainPage/AttendanceForm"
-              )}
+              {renderFormCard("Attendance", "Manage and track student attendance.", "/MainPage/AttendanceForm")}
             </div>
           </div>
         ) : (
@@ -102,7 +86,8 @@ const MainPage = () => {
         )}
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default MainPage;
+export default MainPage
+
