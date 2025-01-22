@@ -89,12 +89,16 @@ const TeacherForm = () => {
 
   return (
     <div className='w-full max-w-8xl mx-auto p-4 space-y-6'>
-      <div>
-        <ButtonComponent onClick={() => navigate("/MainPage/UserForm")}>
-          Add New Staff
-        </ButtonComponent>
-      </div>
-      <h1 className='text-2xl font-semibold text-gray-900 mb-8'>Staff List</h1>
+      <div className="flex items-center justify-between mb-8">
+  <h1 className="text-2xl font-semibold text-gray-900">Staff List</h1>
+  <div>
+    <ButtonComponent 
+      className="w-full sm:w-auto px-6 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-md"
+      onClick={() => navigate("/MainPage/UserForm")}>
+      Add New Staff
+    </ButtonComponent>
+  </div>
+</div>
       <ReactTable
         records={records}
         loading={loading}

@@ -129,11 +129,11 @@ const TeacherAllocate = () => {
       selector: (row) => row.email,
       sortable: true,
     },
-    {
-      name: "Subjects",
-      selector: (row) => row.subjects || "NA",
-      sortable: true,
-    },
+    // {
+    //   name: "Subjects",
+    //   selector: (row) => row.subjects || "NA",
+    //   sortable: true,
+    // },
     {
       name: "Standard",
       selector: (row) => row.std || "NA",
