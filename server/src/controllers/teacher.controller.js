@@ -146,9 +146,8 @@ const getTeacherByStd = asyncHandler(async (req, res) => {
 });
 
 const getTeacherByAllocation = asyncHandler(async (req, res) => {
-  const { std, div, subject } = req.body; // Assuming these parameters are sent in the request body.
+  const { std, div, subject } = req.body; 
 
-  // Query to fetch the teacher by allocation with filters
   const getTeacherByAllocationQuery = `
     SELECT 
       u.user_id, 
@@ -171,14 +170,12 @@ const getTeacherByAllocation = asyncHandler(async (req, res) => {
   `;
 
   try {
-    // Execute the query with the provided parameters
     const getTeacherByAllocationResult = await executeQuery(getTeacherByAllocationQuery, [
       { name: "Std", value: std },
       { name: "Div", value: div },
       { name: "Subject", value: subject },
     ]);
 
-    // Send the response
     return res.send(
       new ApiResponse(
         200,
@@ -187,7 +184,6 @@ const getTeacherByAllocation = asyncHandler(async (req, res) => {
       )
     );
   } catch (error) {
-    // Handle errors
     return res.status(500).send(
       new ApiResponse(500, null, "Error fetching teacher by allocation")
     );
@@ -308,7 +304,6 @@ const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    // Check if a mentor is already assigned for the given standard and division
     const existingAssignment = await executeQuery(
       "SELECT mentor_id FROM Mentor_Allocates WHERE std = @std AND div = @div",
       [
@@ -324,7 +319,6 @@ const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
       );
     }
 
-    // Check if the user is a mentor
     const userRoleCheck = await executeQuery(
       "SELECT role FROM Users WHERE user_id = @user_id",
       [{ name: "user_id", value: userId }]
@@ -337,7 +331,6 @@ const assignMentorByStdDiv = asyncHandler(async (req, res, next) => {
       throw new ApiError(403, "The user is not a mentor");
     }
 
-    // Assign the mentor to the standard and division
     const mt_allocates = await executeQuery(
       "INSERT INTO Mentor_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)",
       [
@@ -376,7 +369,6 @@ const assignClassTeacherByStdDiv = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    // Check if a class teacher is already assigned for the given standard and division
     const existingAssignment = await executeQuery(
       "SELECT ct_id FROM ClassTeacher_Allocates WHERE std = @std AND div = @div",
       [
@@ -392,7 +384,6 @@ const assignClassTeacherByStdDiv = asyncHandler(async (req, res, next) => {
       );
     }
 
-    // Check if the user is a class teacher
     const userRoleCheck = await executeQuery(
       "SELECT role FROM Users WHERE user_id = @user_id",
       [{ name: "user_id", value: userId }]
@@ -405,7 +396,6 @@ const assignClassTeacherByStdDiv = asyncHandler(async (req, res, next) => {
       throw new ApiError(403, "The user is not a class teacher");
     }
 
-    // Assign the class teacher to the standard and division
     const ct_allocates = await executeQuery(
       "INSERT INTO ClassTeacher_Allocates (user_id, std, div) VALUES (@user_id, @std, @div)",
       [

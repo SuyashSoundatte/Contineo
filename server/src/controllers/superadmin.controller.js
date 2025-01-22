@@ -16,25 +16,21 @@ const createUser = asyncHandler(async (req, res) => {
     password, 
     phone, 
     role,
-    subjects // For Teacher role
+    subjects
   } = req.body;
 
-  // Validate required fields
   if (!fname || !lname || !email || !password || !phone || !role) {
     throw new ApiError(400, "Please provide all the required fields");
   }
 
-  // Validate role
   if (!['SuperAdmin', 'Teacher', 'OfficeStaff', 'Mentor', 'ClassTeacher', 'ClassTeacherIncharge', 'MentorIncharge'].includes(role)) {
     throw new ApiError(400, "Invalid role specified");
   }
 
-  // If role is Teacher, subjects should be provided
   if (role === "Teacher" && (!subjects || subjects.length === 0)) {
     throw new ApiError(400, "At least one subject is required for Teacher role");
   }
 
-  // Check if email already exists
   const checkEmailQuery = "SELECT COUNT(*) AS count FROM Users WHERE email = @Email";
   const existingEmail = await executeQuery(checkEmailQuery, [
     { name: "Email", value: email }
@@ -46,7 +42,6 @@ const createUser = asyncHandler(async (req, res) => {
 
   const hashedPassword = await hashPassword(password);
 
-  // Insert user into the Users table
   const insertUserQuery = `
     INSERT INTO Users (fname, mname, lname, address, gender, dob, email, password, phone, role)
     OUTPUT INSERTED.user_id
@@ -69,7 +64,6 @@ const createUser = asyncHandler(async (req, res) => {
   const userResult = await executeQuery(insertUserQuery, userParams);
   const userId = userResult.recordset[0].user_id;
 
-  // If role is Teacher, insert into Teachers table
   if (role === "Teacher") {
     const teacherQuery = `
       INSERT INTO Teachers (user_id, subjects)
@@ -78,7 +72,7 @@ const createUser = asyncHandler(async (req, res) => {
   
     const teacherParams = [
       { name: 'UserId', value: userId },
-      { name: 'Subjects', value: JSON.stringify(subjects) } // Store subjects as JSON string
+      { name: 'Subjects', value: JSON.stringify(subjects) }
     ];
 
     console.log('Teacher Query:', teacherQuery);
