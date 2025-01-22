@@ -110,7 +110,7 @@ const UserCreate = () => {
       <div className="max-w-7xl mx-auto space-y-10">
         <div className="bg-white shadow-lg rounded-xl p-8 border border-gray-200">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">
-            User Information Form
+            Staff Information Form
           </h1>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-3 gap-6">
