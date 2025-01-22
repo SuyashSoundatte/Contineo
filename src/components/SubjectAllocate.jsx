@@ -24,11 +24,9 @@ const SubjectAllocate = () => {
         const response = await axios.get('http://localhost:3000/api/v1/getAllTeacher', {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        console.log("Fetched Data:", response.data); // Log full response
-        setRecords(response.data.data); // Set records after fetching data
+        setRecords(response.data.data); 
       } catch (err) {
-        console.error("Error fetching data:", err); // Log error for better debugging
+        console.error("Error fetching data:", err); 
         setError(err.response?.data?.message || 'Error fetching data');
       } finally {
         setLoading(false);
@@ -38,9 +36,6 @@ const SubjectAllocate = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("Records updated:", records); // Log records after they are set
-  }, [records]);
 
   const handleSubjectChange = (event) => {
     setSelectedSubject(event.target.value);
@@ -125,7 +120,6 @@ const SubjectAllocate = () => {
 
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
-      {/* Filter Section */}
       <div className="flex flex-col gap-4 mb-6">
         <div className="flex gap-4">
           <Select 
@@ -151,8 +145,6 @@ const SubjectAllocate = () => {
           />
         </div>
       </div>
-
-      {/* Teacher Table with Filtered Data */}
       <div className="bg-white shadow overflow-hidden rounded-md">
         <ReactTable
         customColumns={subject_allocate_columns}

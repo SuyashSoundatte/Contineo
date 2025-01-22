@@ -25,7 +25,6 @@ const UserCreate = () => {
   } = useForm();
 
   const resetAllForms = () => {
-    // Reset the main form
     reset({
       fname: "",
       mname: "",
@@ -39,18 +38,12 @@ const UserCreate = () => {
       address: ""
     });
     
-    // Reset other states
     setSelectedRole("");
     setAddedSubjects([]);
-    
-    // Reset the document upload form
     setResetDocumentForm(true);
     setTimeout(() => setResetDocumentForm(false), 0);
-    
-    // Reset the createdUserId to hide the document upload form
     setCreatedUserId(null);
 
-    // Scroll to top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -93,8 +86,6 @@ const UserCreate = () => {
 
       toast.success("User created successfully!");
       setCreatedUserId(response.data.data.id);
-      
-      // Scroll to document upload section
       const documentSection = document.querySelector('#document-upload-section');
       if (documentSection) {
         documentSection.scrollIntoView({ behavior: 'smooth' });

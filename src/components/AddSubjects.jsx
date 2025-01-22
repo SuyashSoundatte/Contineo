@@ -25,13 +25,10 @@ const AddSubjects = ({ onSubjectsUpdate }) => {
       alert("Subject name is required!");
       return;
     }
-
-    // Add the subject as an object with a 'name' property
     const updatedSubjects = [...subjects, { name: subjectName }];
     setSubjects(updatedSubjects);
     setSubjectName("");
 
-    // Notify parent about the updated subjects
     onSubjectsUpdate(updatedSubjects);
   };
 

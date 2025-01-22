@@ -8,7 +8,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSucce
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Handle form reset
   useEffect(() => {
     if (resetForm) {
       setFiles([]);
@@ -23,8 +22,7 @@ const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSucce
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
-    
-    // Validate file types and sizes
+
     const validFiles = selectedFiles.filter(file => {
       const allowedTypes = [
         'image/jpeg', 
@@ -35,7 +33,7 @@ const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSucce
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       ];
       
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      const maxSize = 5 * 1024 * 1024; 
       
       if (!allowedTypes.includes(file.type)) {
         toast.error(`Invalid file type for ${file.name}. Allowed types are: JPEG, PNG, GIF, PDF, DOC, DOCX`);
@@ -102,7 +100,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSucce
   
       toast.success(response.data.message || "Documents uploaded successfully");
       
-      // Reset form after successful upload
       setFiles([]);
       setUploadProgress(0);
       const fileInput = document.querySelector('input[type="file"]');
@@ -110,7 +107,6 @@ const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSucce
         fileInput.value = '';
       }
 
-      // Call parent's success handler to trigger complete reset
       if (onUploadSuccess) {
         onUploadSuccess();
       }

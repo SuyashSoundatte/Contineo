@@ -23,7 +23,6 @@ const TeacherAllocate = () => {
   const DIVISION_OPTIONS = ["Select Division", "A", "B"];
   const SUBJECT_OPTIONS = ["Select Subject", "Math", "Physics", "Chemistry"];
 
-  // Fetch all teachers initially
   useEffect(() => {
     const fetchAllTeachers = async () => {
       const token = localStorage.getItem("token");
@@ -58,7 +57,6 @@ const TeacherAllocate = () => {
     fetchAllTeachers();
   }, []);
 
-  // Fetch allocated teachers when all filters are selected
   useEffect(() => {
     const fetchAllocatedTeachers = async () => {
       if (
@@ -151,7 +149,6 @@ const TeacherAllocate = () => {
       );
       alert("Teacher allocated successfully!");
 
-      // Refresh the allocated teachers list
       const updatedRecords = records.map((record) =>
         record.teacher_id === selectedTeacher.teacher_id
           ? {
@@ -173,8 +170,6 @@ const TeacherAllocate = () => {
       closeModal();
     }
   };
-
-  // ... (rest of the imports and code remain the same)
 
   const teacher_allocate_columns = [
     {

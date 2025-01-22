@@ -5,11 +5,10 @@ import axios from "axios";
 import { Input, Select, ButtonComponent, AddFiles } from "./component.js";
 
 const TeacherMasterForm = () => {
-  const { user_id } = useParams(); // Access the userId parameter from the URL
-  const [userData, setUserData] = useState(null); // Store fetched user data
-  const [loading, setLoading] = useState(false); // State for loading indicator
+  const { user_id } = useParams();
+  const [userData, setUserData] = useState(null); 
+  const [loading, setLoading] = useState(false);
 
-  // React Hook Form setup
   const {
     register,
     handleSubmit,
@@ -17,15 +16,12 @@ const TeacherMasterForm = () => {
     setValue,
   } = useForm();
 
-  // Fetch user data from the backend
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        console.log("User ID from URL:", user_id);
 
         const token = localStorage.getItem("token");
         if (!token) {
-          console.error("No token found. Please log in again.");
           return;
         }
         setLoading(true);
@@ -40,10 +36,8 @@ const TeacherMasterForm = () => {
         );
 
         const user = response.data.data;
-        console.log(user);
         setUserData(user);
 
-        // Pre-fill form fields with the fetched user data
         setValue("user_id", user.user_id);
         setValue("fname", user.fname);
         setValue("mname", user.mname);
@@ -64,18 +58,13 @@ const TeacherMasterForm = () => {
     }
   }, [user_id, setValue]);
 
-  // File change handler
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    console.log("Selected file:", selectedFile);
   };
 
   // Form submit handler
   const onSubmit = async (data) => {
     try {
-      console.log("Submitting form data:", data);
-      // const response = await axios.post("http://your-backend-api-url/users/update", data);
-      console.log("Form submission successful:", response?.data);
       alert("Form submitted successfully!");
     } catch (error) {
       console.error("Error submitting form data:", error);
@@ -95,7 +84,6 @@ const TeacherMasterForm = () => {
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
       <h1 className="text-2xl font-bold mb-6">User Information Form</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* ID and Name Fields */}
         <div className="space-y-4">
           <div className="flex gap-4">
             <div className="flex flex-col w-1/2">
@@ -113,7 +101,7 @@ const TeacherMasterForm = () => {
                 label= 'First Name'
                 id="fname"
                 type="text"
-                defaultValue={userData?.fname} // Corrected defaultValue
+                defaultValue={userData?.fname} 
                 {...register("fname", { required: "First Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -124,7 +112,7 @@ const TeacherMasterForm = () => {
                 label= 'Last Name'
                 id="lname"
                 type="text"
-                defaultValue={userData?.lname} // Corrected defaultValue
+                defaultValue={userData?.lname}
                 {...register("lname", { required: "Last Name is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -132,14 +120,10 @@ const TeacherMasterForm = () => {
             </div>
           </div>
         </div>
-
-        {/* Add Documents Section */}
         <div className="space-y-4">
           <h2 className="text-lg font-medium text-gray-700">Add Documents</h2>
           <AddFiles onFileChange={handleFileChange} />
         </div>
-
-        {/* Submit Button */}
         <div className="space-y-4">
           <ButtonComponent type="submit" className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Submit

@@ -1,4 +1,3 @@
-// StudentCreate.js
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -19,7 +18,6 @@ const StudentCreate = () => {
   } = useForm();
 
   const resetAllForms = () => {
-    // Reset the student information form
     reset({
       fname: "",
       mname: "",
@@ -31,17 +29,12 @@ const StudentCreate = () => {
       gender: "Gender",
       class_std: "Standard",
       address: "",
-      // side: ""
     });
     
-    // Reset the document upload form
     setResetDocumentForm(true);
     setTimeout(() => setResetDocumentForm(false), 0);
-    
-    // Reset the createdUserId to hide the document upload form
     setCreatedUserId(null);
 
-    // Scroll to top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -70,8 +63,6 @@ const StudentCreate = () => {
 
       toast.success("Student created successfully!");
       setCreatedUserId(response.data.data.id);
-      
-      // Scroll to document upload section
       const documentSection = document.querySelector('#document-upload-section');
       if (documentSection) {
         documentSection.scrollIntoView({ behavior: 'smooth' });
@@ -208,19 +199,6 @@ const StudentCreate = () => {
                 Gender and Standard are required
               </p>
             )}
-            {/* <Select
-            label= "Side"
-            options = {
-              [
-                "Select Side",
-                "Physics, Chemistry, Biology",
-                "Physics, Chemistry, Biology, Mathematics",
-                "physics,chemistry, Mathematics"
-              ]
-            }
-            >
-
-            </Select> */}
 
             <Input
               label="Address"

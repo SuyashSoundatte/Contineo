@@ -98,7 +98,6 @@ const StudentAllocate = () => {
     }
   
     try {
-      // Get all selected students' stu_id values
       const selectedRecords = records.filter(record => 
         selectedStudents.includes(String(record.user_id))
       );
@@ -107,10 +106,7 @@ const StudentAllocate = () => {
         throw new Error("Selected student records not found");
       }
   
-      // Extract stu_id values and convert them to integers
       const studentIds = selectedRecords.map(record => parseInt(record.stu_id));
-      console.log(studentIds);
-      // Make single API call with all student IDs
       await axios.post(
         "http://localhost:3000/api/v1/assignMultipleStudentByDivStd",
         {
@@ -135,36 +131,7 @@ const StudentAllocate = () => {
       setAllocateLoading(false);
     }
   };
-  
-  // const handleRemove = async (row) => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     setError("Token not found. Please log in again.");
-  //     return;
-  //   }
-  
-  //   try {
-  //     await axios.put(
-  //       "http://localhost:3000/api/v1/allocateStudentDiv",
-  //       {
-  //         studentIds: [parseInt(row.stu_id)],
-  //         div: null
-  //       },
-  //       {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       }
-  //     );
-  
-  //     await fetchData();
-  //     setSuccess("Student successfully removed from division.");
-  //   } catch (err) {
-  //     console.error("Error removing student:", err);
-  //     setError(
-  //       err.response?.data?.message || 
-  //       "Error removing student from division. Please try again."
-  //     );
-  //   }
-  // };
+
 
   const filteredRecords = records.filter((record) => {
     return selectedStd === "All" || selectedStd === "" || record.std === selectedStd;

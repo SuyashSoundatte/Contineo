@@ -11,28 +11,19 @@ const AddFiles = () => {
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-
-  // Toggle menu visibility
   const handleClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
-  // Close the menu
   const handleClose = () => {
     setIsMenuOpen(false);
   };
-
-  // Handle file name input change
   const handleFileNameChange = (e) => {
     setFileName(e.target.value);
   };
-
-  // Handle file input change
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]); // Get the selected file
+    setFile(e.target.files[0]);
   };
 
-  // Add file to the uploadedFiles array
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -42,26 +33,19 @@ const AddFiles = () => {
     }
 
     try {
-      // Create a FormData object
       const formData = new FormData();
-      const jsonData = JSON.stringify({ fileName, teacherId }); // Convert the JSON data to a string
-      console.log(formData, jsonData);
-
-      formData.append("jsonData", jsonData); // Add JSON data as a string
-      formData.append("file", file); // Add the file
-
-      // Send data using axios
+      const jsonData = JSON.stringify({ fileName, teacherId });
+      formData.append("jsonData", jsonData); 
+      formData.append("file", file); 
       const response = await axios.post(
         "http://localhost:3000/api/v1/upload",
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Ensure the request is treated as multipart
+            "Content-Type": "multipart/form-data", 
           },
         }
       );
-
-      console.log("Response:", response.data);
       alert("File uploaded successfully!");
     } catch (error) {
       console.error(
@@ -92,7 +76,6 @@ const AddFiles = () => {
               Add
             </ButtonComponent>
           </div>
-          {/* Display uploaded files */}
           <div className='mt-4'>
             <h3 className='font-bold'>Uploaded Files:</h3>
             <ul className='list-disc list-inside'>

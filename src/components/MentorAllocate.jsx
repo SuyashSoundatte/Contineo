@@ -27,7 +27,6 @@
           );
 
           setRecords(response.data.data);
-          console.log(response.data.data);
         } catch (err) {
           console.error("Error fetching data:", err);
           setError(err.response?.data?.message || "Error fetching data");
@@ -48,7 +47,6 @@
         return;
       }
     
-      // Check if the mentor is already assigned to the selected standard and division
       const mentorAlreadyAssigned = records.some(
         (record) => record.user_id === mentorId && record.std === selectedStd && record.div === selectedDiv
       );
@@ -117,12 +115,12 @@
       },
       {
         name: "Standard",
-        selector: (row) => row.std || "Not Allocated", // More user-friendly than "NA"
+        selector: (row) => row.std || "Not Allocated", 
         sortable: true,
       },
       {
         name: "Division",
-        selector: (row) => row.div || "Not Allocated", // More user-friendly than "NA"
+        selector: (row) => row.div || "Not Allocated",
         sortable: true,
       },
       {

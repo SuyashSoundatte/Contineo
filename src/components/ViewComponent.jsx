@@ -25,19 +25,16 @@ const ViewComponent = () => {
         if (!token) {
           throw new Error("Token not found. Please log in again.")
         }
-
-        // Correcting the template literal for URL
         const response = await axios.get(`http://localhost:3000/api/v1/getUserById/${user_id}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
 
         if (response.data && response.data.data) {
-          setUserData(response.data.data) // Only set data if it exists
+          setUserData(response.data.data) 
         } else {
           throw new Error("User data not found.")
         }
         
-        console.log(response.data.data)
         setLoading(false)
       } catch (error) {
         console.error("Failed to fetch user data:", error)

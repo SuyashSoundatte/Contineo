@@ -1,7 +1,6 @@
 import ReactTable from "../../components/ReactTable";
 
 const OfficeLanding = () => {
-  // Define the button action that will be called when the button is clicked
   const handleButtonClick = (row) => {
     alert(`Button clicked for: ${row.fname} ${row.lname}`);
   };

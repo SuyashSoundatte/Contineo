@@ -24,7 +24,6 @@ const StudentMasterForm = () => {
         });
 
         setRecords(response.data.data);
-        console.log(response.data.data);
       } catch (err) {
         setError(err.response?.data?.message || 'Error fetching data');
       } finally {

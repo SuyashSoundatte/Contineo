@@ -28,10 +28,9 @@ const ClassTeacherInchargeAllocate = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        console.log("Fetched Data:", response.data); // Log full response
-        setRecords(response.data.data); // Set records after fetching data
+        setRecords(response.data.data); 
       } catch (err) {
-        console.error("Error fetching data:", err); // Log error for better debugging
+        console.error("Error fetching data:", err);
         setError(err.response?.data?.message || 'Error fetching data');
       } finally {
         setLoading(false);
@@ -42,7 +41,7 @@ const ClassTeacherInchargeAllocate = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Records updated:", records); // Log records after they are set
+    console.log("Records updated:", records); 
   }, [records]);
 
   const handleStdChange = (event) => {
@@ -133,7 +132,7 @@ const ClassTeacherInchargeAllocate = () => {
 
   return (
     <div className="w-full max-w-8xl mx-auto p-4 space-y-6">
-      {/* Filter Section */}
+
       <div className="flex flex-col gap-4 mb-6">
         <div className="flex gap-4">
           <Select 
@@ -152,7 +151,6 @@ const ClassTeacherInchargeAllocate = () => {
         </div>
       </div>
 
-      {/* Mentor Table with Filtered Data */}
       <div className="bg-white shadow overflow-hidden rounded-md">
         <ReactTable
         customColumns={mentor_allocate_columns}

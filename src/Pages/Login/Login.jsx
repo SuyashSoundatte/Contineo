@@ -54,7 +54,7 @@ const Login = () => {
       <div className="registerForm flex flex-col items-center gap-4">
         <form
           className="bg-zinc-50 px-4 py-4 flex flex-col gap-6"
-          onSubmit={loginHandler} // Correct event handler binding
+          onSubmit={loginHandler} 
         >
           <Input
             label="Email"

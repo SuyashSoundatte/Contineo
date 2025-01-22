@@ -11,7 +11,6 @@ import {
 } from "./component.js";
 
 const SubjectForm = () => {
-  // State for form inputs and data
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [topics, setTopics] = useState([]);
@@ -47,22 +46,19 @@ const SubjectForm = () => {
     },
   ];
 
-  // Reset form inputs
   const resetInputs = () => {
     setCurrentTopic("");
     setCurrentSubtopic("");
     setCurrentTopicSubtopics([]);
   };
 
-  // Handle subject change
   const handleSubjectChange = (event) => {
     const subject = event.target.value;
     setSelectedSubject(subject);
-    setTopics([]); // Reset topics when changing the subject
+    setTopics([]); 
     resetInputs();
   };
 
-  // Add subtopic handler
   const handleAddSubtopic = () => {
     if (!currentSubtopic.trim()) {
       toast.error("Please enter a subtopic", {
@@ -71,8 +67,6 @@ const SubjectForm = () => {
       });
       return;
     }
-
-    // Prevent duplicate subtopics
     if (currentTopicSubtopics.includes(currentSubtopic.trim())) {
       toast.error("This subtopic already exists", {
         position: "top-right",
@@ -85,15 +79,13 @@ const SubjectForm = () => {
       ...currentTopicSubtopics,
       currentSubtopic.trim(),
     ]);
-    setCurrentSubtopic(""); // Clear the subtopic input field
+    setCurrentSubtopic("");
 
     toast.success("Subtopic added successfully", {
       position: "top-right",
       autoClose: 5000,
     });
   };
-
-  // Add topic handler
   const handleAddTopic = () => {
     if (!currentTopic.trim()) {
       toast.error("Please enter a topic", {
@@ -110,8 +102,6 @@ const SubjectForm = () => {
       });
       return;
     }
-
-    // Prevent duplicate topics
     const isDuplicateTopic = topics.some(
       (topic) => topic.topic.toLowerCase() === currentTopic.trim().toLowerCase()
     );
@@ -138,7 +128,6 @@ const SubjectForm = () => {
     });
   };
 
-  // Remove topic handler
   const handleRemoveTopic = (topicToRemove) => {
     setTopics(topics.filter((topic) => topic !== topicToRemove));
     toast.info("Topic removed", {
@@ -147,11 +136,9 @@ const SubjectForm = () => {
     });
   };
 
-  // Form submission handler
   const handleSubjectFormSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate inputs
     if (!selectedSubject || selectedSubject === "Select Subject") {
       toast.error("Please select a subject", {
         position: "top-right",
@@ -168,7 +155,6 @@ const SubjectForm = () => {
       return;
     }
 
-    // Prepare data for submission
     const submitData = {
       subject: selectedSubject,
       topics: topics,
@@ -194,8 +180,6 @@ const SubjectForm = () => {
           },
         }
       );
-
-      // Success handling
       toast.success(
         response.data.message || "Subject data saved successfully",
         {
@@ -204,7 +188,6 @@ const SubjectForm = () => {
         }
       );
 
-      // Reset form
       setSelectedSubject("");
       setTopics([]);
       resetInputs();
@@ -231,7 +214,6 @@ const SubjectForm = () => {
         const token = localStorage.getItem("token");
         if (!token) {
           setError("Token not found. Please log in again.");
-          console.error("No token found");
           toast.error("Authentication token not found. Please log in again.");
           return;
         }
@@ -247,7 +229,6 @@ const SubjectForm = () => {
         );
   
         if (!response2.data || !response2.data.data) {
-          console.error("Invalid response format:", response2);
           throw new Error("Invalid response format");
         }
   
@@ -281,11 +262,6 @@ const SubjectForm = () => {
     fetchSubjects();
   }, []);
   
-  // Log `records` whenever it changes
-  useEffect(() => {
-    console.log("Updated records:", records);
-  }, [records]);
-  
 
   return (
     <div className='p-8 max-w-7xl mx-auto font-sans bg-gray-50 min-h-screen'>
@@ -314,7 +290,6 @@ const SubjectForm = () => {
 
         <form onSubmit={handleSubjectFormSubmit} className='space-y-6'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-            {/* Topic Input */}
             <div>
               <Input
                 label='Topic'
@@ -325,8 +300,6 @@ const SubjectForm = () => {
                 className='w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
               />
             </div>
-
-            {/* Subtopic Input */}
             <div>
               <Input
                 label='Subtopic'
@@ -338,8 +311,6 @@ const SubjectForm = () => {
               />
             </div>
           </div>
-
-          {/* Current Topic's Subtopics */}
           <div className='mt-4'>
             <h4 className='text-lg font-semibold mb-2'>
               Current Topic Subtopics:
@@ -381,8 +352,6 @@ const SubjectForm = () => {
               Add Topic
             </ButtonComponent>
           </div>
-
-          {/* Show all added topics */}
           <ButtonComponent
             type='submit'
             disabled={isSubmitting}

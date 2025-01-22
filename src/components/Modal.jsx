@@ -4,7 +4,6 @@ import { ButtonComponent } from "../components/component.js";
 const Modal = ({ isOpen, onClose, onConfirm, teacher }) => {
   const modalRef = useRef(null);
 
-  // Close modal when 'Esc' key is pressed
   useEffect(() => {
     const handleEscClose = (event) => {
       if (event.key === "Escape" && isOpen) {
@@ -15,26 +14,23 @@ const Modal = ({ isOpen, onClose, onConfirm, teacher }) => {
     if (isOpen) {
       window.addEventListener("keydown", handleEscClose);
     }
-
-    // Clean up listener when modal closes or component unmounts
     return () => {
       window.removeEventListener("keydown", handleEscClose);
     };
   }, [isOpen, onClose]);
 
-  // Focus modal when it opens
   useEffect(() => {
     if (isOpen && modalRef.current) {
       modalRef.current.focus();
     }
   }, [isOpen]);
 
-  if (!isOpen) return null; // Don't render modal if it's not open
+  if (!isOpen) return null; 
 
   return (
     <div
       ref={modalRef}
-      tabIndex="-1" // Make modal focusable
+      tabIndex="-1"
       className="fixed inset-0 backdrop-blur-sm bg-black/40 flex items-center justify-center z-50 p-4 animate-in fade-in duration-200"
     >
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-md transform scale-100 transition-all">

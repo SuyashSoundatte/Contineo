@@ -26,14 +26,12 @@ const TeacherForm = () => {
           }
         );
 
-        console.log(response.data.data);
-
         const enrichedData = response.data.data
-          .filter((row) => row.role !== "Student") // Exclude users with role 'Student'
+          .filter((row) => row.role !== "Student") 
           .map((row) => {
             return {
               ...row,
-              role: row.role === "OfficeStaff" ? "Office Staff" : "Teacher", // Map roles
+              role: row.role === "OfficeStaff" ? "Office Staff" : "Teacher", 
             };
           });
 

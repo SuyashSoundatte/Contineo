@@ -23,7 +23,6 @@ const AttendanceForm = () => {
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch students for selected class and division
   const fetchStudents = async () => {
     if (!selectedClass || !selectedDivision) {
       toast.error('Please select both class and division');
@@ -46,7 +45,6 @@ const AttendanceForm = () => {
         }
       );
 
-      // Transform students to match expected structure
       const fetchedStudents = response.data.data.map(student => ({
         id: student.stu_id,
         user_id: student.roll_no,
@@ -54,7 +52,7 @@ const AttendanceForm = () => {
         lname: student.lname,
         gender: student.gender,
         role: 'Student',
-        present: true // Default to present
+        present: true 
       }));
 
       setStudents(fetchedStudents);
@@ -67,20 +65,17 @@ const AttendanceForm = () => {
     }
   };
 
-  // Handle class selection
   const handleClassChange = (event) => {
     setSelectedClass(event.target.value);
     setSelectedDivision('');
     setShowAttendance(false);
   };
 
-  // Handle division selection
   const handleDivisionChange = (event) => {
     setSelectedDivision(event.target.value);
     setShowAttendance(false);
   };
 
-  // Handle attendance change for individual student
   const handleAttendanceChange = (id, status) => {
     setStudents((prevStudents) =>
       prevStudents.map((student) =>
@@ -89,21 +84,18 @@ const AttendanceForm = () => {
     );
   };
 
-  // Mark all students present
   const markAllPresent = () => {
     setStudents((prevStudents) =>
       prevStudents.map((student) => ({ ...student, present: true }))
     );
   };
 
-  // Mark all students absent
   const markAllAbsent = () => {
     setStudents((prevStudents) =>
       prevStudents.map((student) => ({ ...student, present: false }))
     );
   };
 
-  // Submit attendance
   const submitAttendance = async () => {
     if (students.length === 0) {
       toast.error('No students to mark attendance for');
@@ -135,7 +127,6 @@ const AttendanceForm = () => {
 
       toast.success(response.data.message || 'Attendance submitted successfully');
       
-      // Reset form after successful submission
       setSelectedClass('');
       setSelectedDivision('');
       setStudents([]);
@@ -146,7 +137,6 @@ const AttendanceForm = () => {
     }
   };
 
-  // Custom columns for ReactTable
   const customColumns = useMemo(
     () => [
       {

@@ -36,7 +36,6 @@ const ClassTeacherAllocate = () => {
         }));
 
         setRecords(enrichedData);
-        console.log(enrichedData);
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err.response?.data?.message || "Error fetching data");
@@ -51,7 +50,6 @@ const ClassTeacherAllocate = () => {
   const handleStdChange = (event) => setSelectedStd(event.target.value);
   const handleDivChange = (event) => setSelectedDiv(event.target.value);
 
-  // Allocate teacher to the selected standard and division
   const allocateTeacher = async (teacherId) => {
     if (!selectedStd || selectedStd === "Select Standard" || !selectedDiv || selectedDiv === "Select Division") {
       alert("Please select both Standard and Division to allocate a teacher.");
