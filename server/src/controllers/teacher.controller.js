@@ -145,6 +145,56 @@ const getTeacherByStd = asyncHandler(async (req, res) => {
   );
 });
 
+const getTeacherByAllocation = asyncHandler(async (req, res) => {
+  const { std, div, subject } = req.body; // Assuming these parameters are sent in the request body.
+
+  // Query to fetch the teacher by allocation with filters
+  const getTeacherByAllocationQuery = `
+    SELECT 
+      u.user_id, 
+      u.fname, 
+      u.lname, 
+      t.teacher_id, 
+      t.subjects, 
+      ta.std, 
+      ta.div
+    FROM 
+      users u
+    JOIN 
+      Teachers t ON u.user_id = t.user_id
+    JOIN 
+      Teacher_Allocates ta ON t.teacher_id = ta.teacher_id
+    WHERE 
+      ta.std = @Std AND
+      ta.div = @Div AND
+      t.subjects LIKE '%' + @Subject + '%';
+  `;
+
+  try {
+    // Execute the query with the provided parameters
+    const getTeacherByAllocationResult = await executeQuery(getTeacherByAllocationQuery, [
+      { name: "Std", value: std },
+      { name: "Div", value: div },
+      { name: "Subject", value: subject },
+    ]);
+
+    // Send the response
+    return res.send(
+      new ApiResponse(
+        200,
+        getTeacherByAllocationResult.recordset,
+        "Teacher fetched successfully"
+      )
+    );
+  } catch (error) {
+    // Handle errors
+    return res.status(500).send(
+      new ApiResponse(500, null, "Error fetching teacher by allocation")
+    );
+  }
+});
+
+
 const getTeacherBySubject = asyncHandler(async (req, res) => {
   const subject = req.params.sub;
 
@@ -395,4 +445,5 @@ export {
   getTeacherBySubject,
   assignClassTeacherByStdDiv,
   assignMentorByStdDiv,
+  getTeacherByAllocation,
 };

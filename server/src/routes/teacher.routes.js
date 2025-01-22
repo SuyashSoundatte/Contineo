@@ -4,6 +4,7 @@ import authRole from "../middlewares/role.middleware.js";
 import { updateTeacherSubject, getAllTeacher, getTeacherById, getTeacherBySubject, getTeacherByStd, allocateTeacherSubject,assignMentorByStdDiv, assignClassTeacherByStdDiv } from "../controllers/teacher.controller.js";
 import { validateCreateTeacherData } from "../middlewares/teacher.middleware.js";
 import {addSubjectData, getSyllabus} from "../controllers/subject.controller.js"
+import {getTeacherByAllocation} from "../controllers/teacher.controller.js"
 
 const router = Router();
 
@@ -19,6 +20,9 @@ router.get('/getAllTeacher', verifyToken, authRole("OfficeStaff", "SuperAdmin"),
 router.get('/getTeacherById/:id', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherById)
 
 // router.get('/getTeacherByStd/:std', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherByStd)
+
+router.post('/getTeacherByAllocation', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherByAllocation);
+
 
 router.get('/getTeacherBySubject/:sub', verifyToken, authRole("OfficeStaff", "SuperAdmin"), getTeacherBySubject)
 
