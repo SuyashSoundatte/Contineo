@@ -37,7 +37,6 @@ const MainPage = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
       <div
         className={`fixed lg:relative inset-y-0 left-0 w-64 bg-white shadow-xl z-40 lg:translate-x-0 transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -46,7 +45,6 @@ const MainPage = () => {
         <Dashboard />
       </div>
 
-      {/* Overlay for mobile */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
@@ -54,9 +52,7 @@ const MainPage = () => {
         ></div>
       )}
 
-      {/* Main Content */}
       <div className="flex-1 lg:ml-94 overflow-y-auto">
-        {/* Mobile toggle button */}
         <button
           className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded-md lg:hidden"
           onClick={toggleSidebar}
@@ -75,7 +71,6 @@ const MainPage = () => {
                 Manage Users, Students, Teachers, and More
               </p>
             </header>
-            {/* Render Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {renderFormCard(
                 "Staff Create",
