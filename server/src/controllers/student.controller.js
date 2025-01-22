@@ -258,7 +258,6 @@ const getStudentByDiv = asyncHandler(async (req, res) => {
 const assignStudentsToDivision = asyncHandler(async (req, res) => {
   const { studentIds, div } = req.body;
 
-  // Validate input
   if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0 || !div) {
     throw new ApiError(400, 'Invalid input. Provide studentIds as an array and a division.');
   }
@@ -267,26 +266,21 @@ const assignStudentsToDivision = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Invalid student IDs provided. Ensure all IDs are integers.');
   }
 
-    // Generate placeholders for dynamic query
     const studentIdPlaceholders = studentIds.map((_, index) => `@stu_id${index}`).join(',');
 
-    // Update query
     const query = `
       UPDATE Students
       SET div = @div
       WHERE stu_id IN (${studentIdPlaceholders})
     `;
 
-    // Prepare query parameters
     const params = [
       { name: 'div', value: div },
       ...studentIds.map((id, index) => ({ name: `stu_id${index}`, value: id })),
     ];
 
-    // Execute query
     const result = await executeQuery(query, params);
 
-    // Respond with success message
     res.status(200).send({
       message: 'Students assigned to the division successfully.',
       affectedRows: result.rowsAffected[0],

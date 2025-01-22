@@ -10,7 +10,6 @@ const addSubjectData = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, 'Please provide valid subject and topics data');
   }
 
-  // Get or create subject
   const subjectResult = await executeQuery(
     `MERGE INTO Subjects AS target
      USING (VALUES (@subject)) AS source (subject)
@@ -25,7 +24,6 @@ const addSubjectData = asyncHandler(async (req, res, next) => {
 
   const subjectId = subjectResult.recordset[0].sub_id;
 
-  // Process topics and subtopics
   for (const topicData of topics) {
     const { topic: topicTitle, subtopics } = topicData;
 
@@ -33,7 +31,6 @@ const addSubjectData = asyncHandler(async (req, res, next) => {
       throw new ApiError(400, 'Invalid topic title');
     }
 
-    // Get or create topic
     const topicResult = await executeQuery(
       `MERGE INTO Topics AS target
        USING (VALUES (@sub_id, @title)) AS source (sub_id, title)
@@ -51,9 +48,7 @@ const addSubjectData = asyncHandler(async (req, res, next) => {
 
     const topicId = topicResult.recordset[0].topic_id;
 
-    // Process subtopics
     if (Array.isArray(subtopics) && subtopics.length > 0) {
-      // Handle each subtopic individually
       for (const subtopic of subtopics) {
         if (subtopic?.trim()) {
           await executeQuery(

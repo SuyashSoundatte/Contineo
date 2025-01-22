@@ -14,7 +14,6 @@ const executeQuery = async (query, params) => {
   return request.query(query);
 };
 
-// User login handler
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -25,7 +24,6 @@ const loginUser = asyncHandler(async (req, res) => {
   const pool = await poolPromise;
   const request = pool.request();
 
-  // SQL query to fetch user by email
   const userQuery = `
     SELECT email, password, role FROM Users WHERE email = @Email;
   `;
@@ -37,14 +35,12 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const user = userResult.recordset[0];
 
-  // Verify the password
   const isPasswordCorrect = verifyPassword(user.password, password);
 
   if (!isPasswordCorrect) {
     throw new ApiError(401, "Invalid credentials");
   }
 
-  // Generate JWT token
   const token = jwt.sign(
     {
       user_id: user.user_id,
@@ -66,12 +62,10 @@ const loginUser = asyncHandler(async (req, res) => {
   );
 });
 
-// Get all users handler
 const getAllUsers = asyncHandler(async (req, res) => {
   const pool = await poolPromise;
   const request = pool.request();
 
-  // SQL query to fetch all users
   const usersQuery = `
     SELECT user_id, email, fname, lname, role, phone, gender
     FROM Users;
@@ -83,7 +77,6 @@ const getAllUsers = asyncHandler(async (req, res) => {
   );
 });
 
-// Get user by ID handler
 const getUserById = asyncHandler(async (req, res) => {
   const user_id = req.params.userId;
 
@@ -95,7 +88,6 @@ const getUserById = asyncHandler(async (req, res) => {
   const pool = await poolPromise;
   const request = pool.request();
 
-  // SQL query to fetch user by ID
   const userQuery = `
     SELECT user_id, email, fname, mname, address, lname, role, phone, gender, dob
     FROM Users
@@ -114,7 +106,6 @@ const getUserById = asyncHandler(async (req, res) => {
   );
 });
 
-// User logout handler
 const logOutUser = asyncHandler(async (req, res) => {
   res.clearCookie("token");
   return res.send(new ApiResponse(200, "User logged out successfully"));
