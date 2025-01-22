@@ -1,16 +1,22 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import Dashboard from "../../components/Dashboard"
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
+import { Menu, X } from "lucide-react"
 
 const MainPage = () => {
   const { isLoggedIn } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   useEffect(() => {
     if (!isLoggedIn) navigate("/login")
   }, [isLoggedIn, navigate])
+
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarOpen((prev) => !prev)
+  }, [])
 
   const renderFormCard = (title, description, link) => (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out">
@@ -30,19 +36,34 @@ const MainPage = () => {
   )
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <aside className="w-64 bg-white shadow-md">
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Mobile toggle button */}
+      <button
+        className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded-md lg:hidden"
+        onClick={toggleSidebar}
+        aria-label="Toggle sidebar"
+      >
+        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Sidebar container */}
+      <div
+        className={`fixed inset-y-0 left-0 transform lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 w-64
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
         <Dashboard />
-      </aside>
-      <main className="flex-1 overflow-x-hidden overflow-y-auto">
+      </div>
+
+      {/* Main content */}
+      <main className="flex-1 overflow-x-hidden overflow-y-auto min-h-screen w-full">
         {location.pathname === "/MainPage" ? (
-          <div className="container mx-auto px-6 py-8">
+          <div className="container mx-auto px-4 sm:px-6 py-8">
             <header className="mb-10 text-center">
-              <h1 className="text-4xl font-bold text-indigo-700 mb-2">Academics Management System</h1>
-              <p className="text-xl text-gray-600">Manage Users, Students, Teachers, and More</p>
+              <h1 className="text-3xl sm:text-4xl font-bold text-indigo-700 mb-2">Academics Management System</h1>
+              <p className="text-lg sm:text-xl text-gray-600">Manage Users, Students, Teachers, and More</p>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {renderFormCard(
                 "Staff Create",
                 "Create new users for the system with roles and permissions.",
@@ -85,6 +106,15 @@ const MainPage = () => {
           <Outlet />
         )}
       </main>
+
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={toggleSidebar}
+          aria-hidden="true"
+        ></div>
+      )}
     </div>
   )
 }
