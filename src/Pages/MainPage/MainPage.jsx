@@ -1,22 +1,22 @@
-import React, { useEffect, useState, useCallback } from "react"
-import Dashboard from "../../components/Dashboard"
-import { Outlet, useNavigate, useLocation, Link } from "react-router-dom"
-import { useAuth } from "../../context/AuthContext"
-import { Menu, X } from "lucide-react"
+import React, { useEffect, useState, useCallback } from "react";
+import Dashboard from "../../components/Dashboard";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { Menu, X } from "lucide-react";
 
 const MainPage = () => {
-  const { isLoggedIn } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn) navigate("/login")
-  }, [isLoggedIn, navigate])
+    if (!isLoggedIn) navigate("/login");
+  }, [isLoggedIn, navigate]);
 
   const toggleSidebar = useCallback(() => {
-    setIsSidebarOpen((prev) => !prev)
-  }, [])
+    setIsSidebarOpen((prev) => !prev);
+  }, []);
 
   const renderFormCard = (title, description, link) => (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 ease-in-out">
@@ -33,91 +33,98 @@ const MainPage = () => {
         </Link>
       </div>
     </div>
-  )
+  );
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Mobile toggle button */}
-      <button
-        className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded-md lg:hidden"
-        onClick={toggleSidebar}
-        aria-label="Toggle sidebar"
-      >
-        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Sidebar container */}
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 transform lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 w-64
-          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed lg:relative inset-y-0 left-0 w-64 bg-white shadow-xl z-40 lg:translate-x-0 transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out lg:h-auto`}
       >
         <Dashboard />
       </div>
 
-      {/* Main content */}
-      <main className="flex-1 overflow-x-hidden overflow-y-auto min-h-screen w-full">
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
+      {/* Main Content */}
+      <div className="flex-1 lg:ml-94 overflow-y-auto">
+        {/* Mobile toggle button */}
+        <button
+          className="fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded-md lg:hidden"
+          onClick={toggleSidebar}
+          aria-label="Toggle sidebar"
+        >
+          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
         {location.pathname === "/MainPage" ? (
           <div className="container mx-auto px-4 sm:px-6 py-8">
             <header className="mb-10 text-center">
-              <h1 className="text-3xl sm:text-4xl font-bold text-indigo-700 mb-2">Academics Management System</h1>
-              <p className="text-lg sm:text-xl text-gray-600">Manage Users, Students, Teachers, and More</p>
+              <h1 className="text-3xl sm:text-4xl font-bold text-indigo-700 mb-2">
+                Academics Management System
+              </h1>
+              <p className="text-lg sm:text-xl text-gray-600">
+                Manage Users, Students, Teachers, and More
+              </p>
             </header>
-
+            {/* Render Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {renderFormCard(
                 "Staff Create",
                 "Create new users for the system with roles and permissions.",
-                "/MainPage/UserForm",
+                "/MainPage/UserForm"
               )}
               {renderFormCard(
                 "Student Create",
                 "Add new students with details like name, roll number, and class.",
-                "/MainPage/StudentCreate",
+                "/MainPage/StudentCreate"
               )}
               {renderFormCard(
                 "Student Allocation",
                 "Allocate students to different classes or groups.",
-                "/MainPage/StudentAllocate",
+                "/MainPage/StudentAllocate"
               )}
               {renderFormCard(
                 "Teacher Allocation",
                 "Allocate teachers to classes and subjects as per timetable.",
-                "/MainPage/TeacherAllocate",
+                "/MainPage/TeacherAllocate"
               )}
               {renderFormCard(
                 "Class Teacher Allocation",
                 "Assign teachers as class teachers for student management.",
-                "/MainPage/ClassTeacherForm",
+                "/MainPage/ClassTeacherForm"
               )}
               {renderFormCard(
                 "Mentor Allocation",
                 "Allocate mentors to guide students in specific subjects.",
-                "/MainPage/MentorAllocate",
+                "/MainPage/MentorAllocate"
               )}
               {renderFormCard(
                 "Subject Master",
                 "Manage subjects and assign them to teachers.",
-                "/MainPage/SubjectForm",
+                "/MainPage/SubjectForm"
               )}
-              {renderFormCard("Attendance", "Manage and track student attendance.", "/MainPage/AttendanceForm")}
+              {renderFormCard(
+                "Attendance",
+                "Manage and track student attendance.",
+                "/MainPage/AttendanceForm"
+              )}
             </div>
           </div>
         ) : (
           <Outlet />
         )}
-      </main>
-
-      {/* Overlay for mobile */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
-          onClick={toggleSidebar}
-          aria-hidden="true"
-        ></div>
-      )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default MainPage
-
+export default MainPage;
