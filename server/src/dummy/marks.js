@@ -6,37 +6,41 @@ import ApiError from "../config/ApiError.js";
 import ApiResponse from "../config/ApiResponse.js";
 import asyncHandler from "../config/asyncHandler.js";
 
+// ✅ Function to parse Excel file
 const parseExcelFile = (filePath) => {
   const workbook = xlsx.readFile(filePath);
   const sheetName = workbook.SheetNames[0];
   return xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 };
 
+// ✅ Function to process and store marks in the database
 const processAndStoreMarks = async (data, examName) => {
   for (const row of data) {
-    const { roll_no, ...marks } = row; 
+    const { roll_no, ...marks } = row; // Extract roll_no and marks
 
-    const studentQuery = "SELECT stu_id FROM Student_Dummy WHERE roll_no = $1";
-    const studentResult = await executeQuery(studentQuery, [
-      { name: "roll_no", value: roll_no },
-    ]);
+    // ✅ Check if student exists
+    const studentQuery = "SELECT stu_id FROM Student_Dummy WHERE roll_no = @roll_no";
+    const studentResult = await executeQuery(studentQuery, [{ name: "roll_no", value: roll_no }]);
 
-    if (studentResult.rows.length === 0) {
+    if (!studentResult.recordset || studentResult.recordset.length === 0) {
       console.warn(`⚠️ Student with roll_no ${roll_no} not found! Skipping.`);
       continue;
     }
 
-    const stu_id = studentResult.rows[0].stu_id;
+    const stu_id = studentResult.recordset[0].stu_id; // Fetch Student ID
 
+    // ✅ Insert marks for each subject/date
     for (const [exam_date, mark] of Object.entries(marks)) {
+      if (!mark || isNaN(mark)) continue; // Skip invalid marks
+
       const insertQuery = `
         INSERT INTO Exams_Dummy (examname, exam_date, marks, Student_ID)
-        VALUES ($1, $2, $3, $4)
+        VALUES (@examname, @exam_date, @marks, @Student_ID)
       `;
 
       await executeQuery(insertQuery, [
         { name: "examname", value: examName },
-        { name: "exam_date", value: exam_date },
+        { name: "exam_date", value: new Date(exam_date) }, // Ensure correct date format
         { name: "marks", value: mark.toString() },
         { name: "Student_ID", value: stu_id },
       ]);
@@ -44,6 +48,7 @@ const processAndStoreMarks = async (data, examName) => {
   }
 };
 
+// ✅ Controller to handle file upload and processing
 export const uploadMarks = asyncHandler(async (req, res, next) => {
   if (!req.file) {
     return next(new ApiError(400, "No file uploaded"));
@@ -52,6 +57,7 @@ export const uploadMarks = asyncHandler(async (req, res, next) => {
   const filePath = path.join(process.cwd(), "uploads", req.file.filename);
   const fileName = req.file.originalname.toLowerCase();
 
+  // ✅ Detect Exam Type from File Name
   let examType = null;
   if (fileName.includes("jee")) {
     examType = "JEE";
@@ -60,14 +66,14 @@ export const uploadMarks = asyncHandler(async (req, res, next) => {
   } else if (fileName.includes("cet")) {
     examType = "CET";
   } else {
-    fs.unlinkSync(filePath);
+    fs.unlinkSync(filePath); // Remove invalid file
     return next(new ApiError(400, "Invalid file. Must contain 'jee', 'neet', or 'cet' in the filename."));
   }
 
-  const data = parseExcelFile(filePath);
-  await processAndStoreMarks(data, examType);
+  const data = parseExcelFile(filePath); // Read Excel data
+  await processAndStoreMarks(data, examType); // Insert into DB
 
-  fs.unlinkSync(filePath);
+  fs.unlinkSync(filePath); // Delete file after processing
 
   res.json(new ApiResponse(200, {}, `Marks for ${examType} uploaded successfully`));
 });
