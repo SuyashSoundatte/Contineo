@@ -15,6 +15,10 @@ import teacher from "./routes/teacher.routes.js";
 import classTeacher from "./routes/classTeacher.routes.js";
 import mentor from "./routes/mentor.routes.js"
 
+import marksRoutes_dummy from "./dummy/marksRoutes.js"
+import parentLogin from "./dummy/parentLogin.js"
+import student_dummy from "./dummy/student.js"
+
 const app = express();
 const port = process.env.PORT || 8080;
 
@@ -26,6 +30,10 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use('/marks', marksRoutes_dummy);
+app.use('/api/v1', parentLogin);
+app.use('/stu', student_dummy);
 
 app.use('/api/v1', superadmin);
 app.use('/api/v1', file);
