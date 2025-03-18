@@ -62,7 +62,7 @@ const getStuByRoll = asyncHandler(async (req, res) => {
 
   const result_marks = await executeQuery(query_marks, query_value);
 
-  return res.send(new ApiResponse(200, student.recordset[0], result_marks, 'Student retrieved successfully'));
+  return res.send(new ApiResponse(200, { student: student.recordset[0], result_marks: result_marks.recordset }, 'Student retrieved successfully'));
 });
 
 
