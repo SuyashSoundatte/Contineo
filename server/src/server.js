@@ -17,6 +17,7 @@ import mentor from "./routes/mentor.routes.js"
 
 import marksRoutes_dummy from "./dummy/marksRoutes.js"
 import StuDummyRoutes from "./dummy/StuDummyRoutes.js"
+import marksRoutes from "./dummy/marksRoutes.js"
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -31,7 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/marks', marksRoutes_dummy);
-app.use('/api/v1', StuDummyRoutes); //dummy
+app.use('/api/marks', marksRoutes);
+app.use('/api/v1', StuDummyRoutes);
 
 app.use('/api/v1', superadmin);
 app.use('/api/v1', file);
