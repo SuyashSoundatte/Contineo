@@ -8,7 +8,7 @@ import { validLogin } from "../middlewares/superadmin.middleware.js";
 const router = Router();
 
 router.post("/students", verifyToken, authRole("SuperAdmin"), createStu);
-router.get("/getStuByRoll/:roll_no", getStuByRoll)
+router.get("/getStuByRoll/:phone", getStuByRoll)
 
 router.post("/parentLogin", parentLogin)
 

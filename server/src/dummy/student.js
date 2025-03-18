@@ -39,23 +39,30 @@ const createStu = asyncHandler(async(req, res)=>{
 });
 
 const getStuByRoll = asyncHandler(async (req, res) => {
-  let { roll_no } = req.params;
+  let { phone } = req.params;
 
-  roll_no = roll_no.replace(/[^0-9]/g, ''); 
-
-  if (!roll_no || isNaN(roll_no)) {
+  if (!phone) {
     throw new ApiError(400, 'Please provide a valid roll number');
   }
 
-  const studentQuery = `SELECT * FROM Student_Dummy WHERE roll_no = @roll_no`;
+  const studentQuery = `SELECT * FROM Student_Dummy WHERE phone = @phone`;
 
-  const student = await executeQuery(studentQuery, [{ name: 'roll_no', value: parseInt(roll_no) }]);
+  const student = await executeQuery(studentQuery, [{ name: 'phone', value: phone }]);
 
   if (!student.recordset || student.recordset.length === 0) {
     throw new ApiError(404, 'Student not found');
   }
 
-  return res.send(new ApiResponse(200, student.recordset[0], 'Student retrieved successfully'));
+  const query_marks = `
+    select * from Exams_Dummy where Student_ID = @stu_id
+  `
+  const query_value = [
+    { name: "stu_id", value: student.recordset[0].stu_id}
+  ]
+
+  const result_marks = await executeQuery(query_marks, query_value);
+
+  return res.send(new ApiResponse(200, student.recordset[0], result_marks, 'Student retrieved successfully'));
 });
 
 
