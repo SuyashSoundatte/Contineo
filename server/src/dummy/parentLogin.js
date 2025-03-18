@@ -21,16 +21,26 @@ const parentLogin = asyncHandler(async (req, res, next) => {
   }
 
   const user = result.recordset[0]; // Use recordset instead of rows
+//   console.log(user);
 
   const token = jwt.sign(
-      { stu_id: user.stu_id, phone: user.phone },
+      { stu_id: user.stu_id, phone: result.recordset[0].stu_id },
       process.env.JWT_SEC,
       { expiresIn: "1h" }
   );
 
-  
+  const query_marks = `
+    select * from Exams_Dummy where Student_ID = @stu_id
+  `
+  const query_value = [
+    { name: "stu_id", value: user.stu_id}
+  ]
 
-  res.send(new ApiResponse(200, { token }, "Login successful"));
+  const result_marks = await executeQuery(query_marks, query_value);
+//   console.log(result_marks)
+
+
+  res.send(new ApiResponse(200, { token, result_marks }, "Login successful"));
 });
 
 export { parentLogin };
