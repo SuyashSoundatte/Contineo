@@ -28,19 +28,10 @@ const parentLogin = asyncHandler(async (req, res, next) => {
       process.env.JWT_SEC,
       { expiresIn: "1h" }
   );
-
-  const query_marks = `
-    select * from Exams_Dummy where Student_ID = @stu_id
-  `
-  const query_value = [
-    { name: "stu_id", value: user.stu_id}
-  ]
-
-  const result_marks = await executeQuery(query_marks, query_value);
 //   console.log(result_marks)
 
 
-  res.send(new ApiResponse(200, { token, result_marks }, "Login successful"));
+  res.send(new ApiResponse(200, { token }, "Login successful"));
 });
 
 export { parentLogin };
