@@ -13,7 +13,7 @@ const parentLogin = asyncHandler(async (req, res, next) => {
   }
 
   const query = "SELECT * FROM Student_Dummy WHERE phone = @phone and phone = @password";
-  const result = await executeQuery(query, [{ name: "phone", value: phone }]);
+  const result = await executeQuery(query, [{ name: "phone", value: phone }, { name:"password", value: password}]);
 
   console.log("Query result:", result); // Debugging log
 
