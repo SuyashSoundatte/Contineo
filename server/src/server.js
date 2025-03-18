@@ -31,8 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/marks', marksRoutes_dummy);
-app.use('/stu', StuDummyRoutes);
-app.use('/stu', StuDummyRoutes);
+app.use('/api/v1', StuDummyRoutes); //dummy
 
 app.use('/api/v1', superadmin);
 app.use('/api/v1', file);

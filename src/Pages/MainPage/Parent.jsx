@@ -3,9 +3,10 @@ import Dashboard from "../../components/Dashboard";
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, X } from "lucide-react";
+import ParentDashboard from "../../components/ParentDashboard";
 
 const MainPage = () => {
-  const { isLoggedIn, setIsLoggedIn, role, login, logout } = useAuth();
+  const { isLoggedIn, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -49,7 +50,7 @@ const MainPage = () => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out lg:h-auto`}
       >
-        <Dashboard />
+        <ParentDashboard />
       </div>
 
       {/* Overlay for mobile */}
@@ -82,7 +83,7 @@ const MainPage = () => {
               </p>
             </header>
             {/* Render Cards */}
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8'>
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {renderFormCard(
                 "Staff Create",
                 "Create new users for the system with roles and permissions.",
@@ -123,7 +124,7 @@ const MainPage = () => {
                 "Manage and track student attendance.",
                 "/MainPage/AttendanceForm"
               )}
-            </div>
+            </div> */}
           </div>
         ) : (
           <Outlet />

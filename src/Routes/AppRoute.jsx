@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LandingPage, Login, MainPage } from "../Pages/page.js";
+import { LandingPage, Login, MainPage, Parent } from "../Pages/page.js";
+import StudentMarks from "../components/StudentMarks.jsx";
 import  {
   AddFiles,
   AddSubjects,
@@ -38,6 +39,10 @@ const AppRoute = () => {
         <Route path="/" element={ <Login /> } />  
         <Route path="/login" element={<Login />} />
 
+        {/* private Routes parent */}
+        <Route path="/parent" element={<Parent />}>
+          <Route path="StudentMarks" element={<StudentMarks />} />
+        </Route>
         {/* private Routes */}
         <Route path="/MainPage" element={<MainPage />}>
           {/* Nested Routes */}

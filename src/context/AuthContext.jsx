@@ -1,25 +1,37 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    setIsLoggedIn(!!token); // Convert token existence to boolean
+    setIsLoading(false);
   }, []);
 
-  const value = {
-    isLoggedIn,
-    setIsLoggedIn,
+  const login = (token) => {
+    localStorage.setItem("token", token);
+    setIsLoggedIn(true);
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("loginType");
+    setIsLoggedIn(false);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Prevents flickering
+  }
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export const useAuth = () => useContext(AuthContext);
