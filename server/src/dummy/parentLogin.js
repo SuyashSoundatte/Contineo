@@ -28,6 +28,8 @@ const parentLogin = asyncHandler(async (req, res, next) => {
       { expiresIn: "1h" }
   );
 
+  
+
   res.send(new ApiResponse(200, { token }, "Login successful"));
 });
 
