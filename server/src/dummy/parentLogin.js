@@ -12,10 +12,8 @@ const parentLogin = asyncHandler(async (req, res, next) => {
       throw new ApiError(400, "Phone and Password are required");
   }
 
-  const query = "SELECT * FROM Student_Dummy WHERE phone = @phone";
-  const result = await executeQuery(query, [{ name: "phone", value: phone }]);
-
-  console.log("Query result:", result); // Debugging log
+  const query = "SELECT * FROM Student_Dummy WHERE phone = @phone and phone = @password";
+  const result = await executeQuery(query, [{ name: "phone", value: phone }, { name: "password", value: password }]);
 
   // Ensure result has the expected structure
   if (!result || !result.recordset || result.recordset.length === 0) {
