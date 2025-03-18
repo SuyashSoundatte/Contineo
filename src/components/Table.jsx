@@ -1,46 +1,134 @@
-import React from "react";
-import Table from "./Table"; 
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DataTable from 'react-data-table-component';
+import { Input, ButtonComponent } from './component.js';
 
-const StudentMarks = () => {
-  
-  const data = [
-    { examName: "Maths", date: "2025-02-10", marks: 85 },
-    { examName: "Science", date: "2025-02-15", marks: 90 },
-    { examName: "English", date: "2025-02-20", marks: 78 },
-    { examName: "History", date: "2025-02-25", marks: 88 },
-    { examName: "Geography", date: "2025-03-01", marks: 92 },
-  ];
+function Table({ records, loading, error, customColumns }) {
+  const navigate = useNavigate();
+  const [filterText, setFilterText] = useState('');
 
-  
-  const customColumns = [
-    {
-      name: "Sr No",
-      selector: (row, index) => index + 1,
-      sortable: false,
-    },
-    {
-      name: "Exam Name",
-      selector: (row) => row.examName,
-      sortable: true,
-    },
-    {
-      name: "Exam Date",
-      selector: (row) => row.date,
-      sortable: true,
-    },
-    {
-      name: "Marks",
-      selector: (row) => row.marks,
-      sortable: true,
-    },
-  ];
+  const columns = useMemo(
+    () =>
+      customColumns ||
+      [
+        {
+          name: 'Subject ID',
+          selector: (row) => row.sub_id,
+          sortable: true,
+        },
+        {
+          name: 'Subject Name',
+          selector: (row) => row.subject,
+          sortable: true,
+        },
+        {
+          name: 'Subtopics',
+          selector: (row) => row.subtopics,
+          sortable: true,
+        },
+        {
+          name: 'Title',
+          selector: (row) => row.title,
+          sortable: true,
+        },
+        {
+          name: 'Action',
+          cell: (row) => (
+            <ButtonComponent
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
+              onClick={() => navigate(`/MainPage/SubjectForm/${row.sub_id}`)}
+            >
+              View
+            </ButtonComponent>
+          ),
+          ignoreRowClick: true,
+          button: true,
+        },
+      ],
+    [customColumns, navigate]
+  );
+
+  const filteredRecords = useMemo(() => {
+    return records.filter(
+      (item) =>
+        item.subject?.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.subtopics?.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.title?.toLowerCase().includes(filterText.toLowerCase())
+    );
+  }, [records, filterText]);
+
+  const subHeaderComponent = useMemo(() => {
+    return (
+      <div className="flex items-center space-x-2 mb-4">
+        <span className="text-gray-400 mr-2">🔍</span>
+        <Input
+          type="text"
+          placeholder="Filter by subject name, subtopics, or title"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          className="w-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+    );
+  }, [filterText]);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-64">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 text-center">Error: {error}</div>;
+  }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Student Exam Marks</h2>
-      <Table records={data} customColumns={customColumns} loading={false} error={null} />
+    <div className="container mx-auto mt-5 p-4 bg-white rounded-lg shadow">
+      <DataTable
+        columns={columns}
+        data={filteredRecords}
+        pagination
+        paginationPerPage={10}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
+        highlightOnHover
+        pointerOnHover
+        responsive
+        subHeader
+        subHeaderComponent={subHeaderComponent}
+        persistTableHead
+        noDataComponent={
+          <div className="p-4 text-center text-gray-500">No records to display.</div>
+        }
+        customStyles={{
+          headRow: {
+            style: {
+              backgroundColor: '#f3f4f6',
+              borderBottomWidth: '1px',
+              borderColor: '#e5e7eb',
+            },
+          },
+          headCells: {
+            style: {
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              color: '#374151',
+              paddingLeft: '16px',
+              paddingRight: '16px',
+            },
+          },
+          rows: {
+            style: {
+              fontSize: '0.875rem',
+              color: '#1f2937',
+              '&:not(:last-of-type)': {
+                borderBottomStyle: 'solid',
+                borderBottomWidth: '1px',
+                borderColor: '#e5e7eb',
+              },
+            },
+          },
+        }}
+      />
     </div>
   );
-};
+}
 
-export default StudentMarks;
+export default Table;
