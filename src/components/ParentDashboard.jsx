@@ -59,77 +59,14 @@ const ParentDashboard = () => {
             <ul className='ml-4 space-y-2'>
               <li>
                 <Link
-                  to='/MainPage/TeacherForm'
+                  to='/parent/StudentMarks'
                   className={linkClass("/parent/StudentMarks")}
                 >
                   Test Marks
                 </Link>
               </li>
-              {/* <li>
-                <Link
-                  to='/MainPage/StudentMasterForm'
-                  className={linkClass("/MainPage/StudentMasterForm")}
-                >
-                  Student Registration
-                </Link>
-              </li> */}
             </ul>
           </div>
-          {/* <div className='space-y-4'>
-            <h2 className='text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50'>
-              Teacher
-            </h2>
-            <ul className='ml-4 space-y-2'>
-              <li>
-                <Link
-                  to='/MainPage/StudentAllocate'
-                  className={linkClass("/MainPage/StudentAllocate")}
-                >
-                  Student Allocate Form
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to='/MainPage/TeacherAllocate'
-                  className={linkClass("/MainPage/TeacherAllocate")}
-                >
-                  Teacher Allocate Form
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to='/MainPage/ClassTeacherForm'
-                  className={linkClass("/MainPage/ClassTeacherForm")}
-                >
-                  Class Teacher Allocate
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to='/MainPage/MentorAllocate'
-                  className={linkClass("/MainPage/MentorAllocate")}
-                >
-                  Mentor Allocate Form
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to='/MainPage/SubjectForm'
-                  className={linkClass("/MainPage/SubjectForm")}
-                >
-                  Subject Master Form
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to='/MainPage/AttendanceForm'
-                  className={linkClass("/MainPage/AttendanceForm")}
-                >
-                  Attendance Form
-                </Link>
-              </li>
-            </ul>
-          </div> */}
           <div className='space-y-4'>
             <h2 className='text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50'>
               <ButtonComponent
