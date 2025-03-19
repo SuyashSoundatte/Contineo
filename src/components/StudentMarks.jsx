@@ -1,155 +1,116 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Table from "./Table";
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
 
 const StudentMarks = () => {
-  const navigate = useNavigate();
-  
-  // Restructured dummy data to match the fields your Table component expects
-  const data = [
-    { 
-      sub_id: "M101", 
-      subject: "Mathematics", 
-      subtopics: "Algebra", 
-      title: "Mid-term Exam",
-      examDate: "2025-02-10", 
-      marks: 85 
-    },
-    { 
-      sub_id: "S102", 
-      subject: "Science", 
-      subtopics: "Physics", 
-      title: "Quarter Final",
-      examDate: "2025-02-15", 
-      marks: 90 
-    },
-    { 
-      sub_id: "E103", 
-      subject: "English", 
-      subtopics: "Grammar", 
-      title: "Weekly Test",
-      examDate: "2025-02-20", 
-      marks: 78 
-    },
-    { 
-      sub_id: "H104", 
-      subject: "History", 
-      subtopics: "World War II", 
-      title: "Assignment",
-      examDate: "2025-02-25", 
-      marks: 88 
-    },
-    { 
-      sub_id: "G105", 
-      subject: "Geography", 
-      subtopics: "Climate", 
-      title: "Final Exam",
-      examDate: "2025-03-01", 
-      marks: 92 
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [averageMarks, setAverageMarks] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { phone } = useAuth();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/Login");
-    }
-  }, [isLoggedIn, navigate]);
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Token not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
 
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.get("http://localhost:3000/api/v1/getStuByRoll", {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        withCredentials: true,
-      });
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/getStuByRoll/${phone}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-      localStorage.removeItem("token");
-      setIsLoggedIn(false);
-    } catch (err) {
-      console.error("Error during logout:", err);
-    }
-  };
+        console.log(response.data);
+        console.log(response.data.message.recordset)
+        // Ensure correct data extraction
+        if (response.data?.message?.recordset) {
+          setData(response.data.message.recordset);
 
-  // Custom columns for student marks that match the structure your Table expects
+          // Calculate average marks
+          const totalMarks = response.data.message.recordset.reduce(
+            (sum, record) => sum + parseFloat(record.marks),
+            0
+          );
+          const avgMarks =
+            response.data.message.recordset.length > 0
+              ? totalMarks / response.data.message.recordset.length
+              : 0;
+
+          setAverageMarks(avgMarks);
+        } else {
+          setError("No exam records found.");
+        }
+      } catch (err) {
+        setError(err.response?.data?.message || "Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [phone]);
+
   const customColumns = [
-    {
-      name: "Subject ID",
-      selector: row => row.sub_id,
-      sortable: true,
-    },
-    {
-      name: "Subject",
-      selector: row => row.subject,
-      sortable: true,
-    },
-    {
-      name: "Subtopics",
-      selector: row => row.subtopics,
-      sortable: true,
-    },
-    {
-      name: "Exam Title",
-      selector: row => row.title,
-      sortable: true,
-    },
-    {
-      name: "Date",
-      selector: row => row.examDate,
-      sortable: true,
-    },
+    { name: "Sr No", selector: (row, index) => index + 1, sortable: false },
+    { name: "Exam Name", selector: (row) => row.Exam_Name, sortable: true },
     {
       name: "Marks",
-      selector: row => row.marks,
-      sortable: true,
-      cell: row => (
-        <div className="flex items-center">
-          <span className="mr-2">{row.marks}</span>
-          <div className="w-16 bg-gray-200 rounded-full h-2">
+      selector: (row) => (
+        <div className='flex items-center'>
+          <span className='mr-2'>{row.marks}</span>
+          <div className='w-24 bg-gray-200 rounded-full h-2'>
             <div
               className={`h-full rounded-full ${
                 row.marks >= 90
                   ? "bg-green-500"
                   : row.marks >= 80
-                  ? "bg-blue-500"
-                  : row.marks >= 70
-                  ? "bg-yellow-500"
-                  : "bg-red-500"
+                    ? "bg-blue-500"
+                    : row.marks >= 70
+                      ? "bg-yellow-500"
+                      : "bg-red-500"
               }`}
               style={{ width: `${row.marks}%` }}
             ></div>
           </div>
         </div>
       ),
-    },
-    {
-      name: "Action",
-      cell: row => (
-        <button
-          className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
-          onClick={() => alert(`Details for ${row.subject}`)}
-        >
-          View
-        </button>
-      ),
-      ignoreRowClick: true,
-      button: true,
+      sortable: true,
     },
   ];
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Student Exam Marks</h2>
-      
-      {/* Table with data structure matching what the Table component expects */}
-      <Table 
-        records={data} 
-        customColumns={customColumns} 
-        loading={false} 
-        error={null} 
-      />
+    <div className='p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md'>
+      {loading ? (
+        <p className='text-center text-gray-500'>Loading...</p>
+      ) : error ? (
+        <p className='text-center text-red-500'>{error}</p>
+      ) : (
+        <>
+          <div className='flex justify-between items-center mb-6'>
+            <h2 className='text-2xl font-semibold text-gray-800'>
+              Student Exam Marks
+            </h2>
+            <div className='bg-blue-50 px-4 py-2 rounded-lg'>
+              <span className='text-sm text-gray-600'>Average Score:</span>
+              <span className='ml-2 font-bold text-blue-600'>
+                {averageMarks.toFixed(1)}%
+              </span>
+            </div>
+          </div>
+
+          <div className='bg-gray-50 rounded-lg p-4 mb-6'>
+            <Table records={data} customColumns={customColumns} loading={loading} error={error} />
+          </div>
+        </>
+      )}
     </div>
   );
 };

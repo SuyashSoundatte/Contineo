@@ -7,12 +7,11 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [loginType, setLoginType] = useState(localStorage.getItem("loginType") || "user");
 
-  const { isLoggedIn, login } = useAuth();
+  const { phone, setPhone, isLoggedIn, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +38,12 @@ const Login = () => {
       const token = response.data.data.token;
       localStorage.setItem("token", token);
       localStorage.setItem("loginType", loginType);
+
+      if (loginType === "parent") {
+        localStorage.setItem("phone", phone); // Store phone only for parent login
+        setPhone(phone);
+      }
+
       login(token);
     } catch (err) {
       setError("Invalid credentials. Please try again.");
@@ -92,7 +97,7 @@ const Login = () => {
                   label="Mobile Number"
                   type="tel"
                   placeholder="Enter your mobile number"
-                  value={phone}
+                  value={phone || ""} // Prevent uncontrolled input warnings
                   onChange={(e) => setPhone(e.target.value)}
                 />
               )}
