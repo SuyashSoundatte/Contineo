@@ -47,7 +47,7 @@ const ParentDashboard = () => {
     <div className='h-full bg-gradient-to-b from-gray-800 to-gray-900 text-white shadow-xl overflow-y-auto'>
       <div className='py-6 px-3'>
         <div className='mb-8'>
-          <h1 className='text-2xl font-bold text-blue-400 tracking-wide'>
+          <h1 className='mt-10 lg:mt-0  text-2xl font-bold text-blue-400 tracking-wide'>
             Dashboard
           </h1>
         </div>
@@ -68,15 +68,12 @@ const ParentDashboard = () => {
             </ul>
           </div>
           <div className='space-y-4'>
-            <h2 className='text-lg font-semibold text-gray-300 px-4 py-2 rounded-lg bg-gray-700 bg-opacity-50'>
-              <ButtonComponent
-                className='w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200'
-                onClick={handleLogout}
-              >
-                Log Out
-              </ButtonComponent>
-              <div className='fixed bottom-4 left-0 w-full p-4'></div>
-            </h2>
+            <ButtonComponent
+              className='w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200'
+              onClick={handleLogout}
+            >
+              Log Out
+            </ButtonComponent>
           </div>
         </nav>
       </div>

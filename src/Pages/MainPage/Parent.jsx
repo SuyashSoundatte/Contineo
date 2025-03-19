@@ -43,7 +43,7 @@ const MainPage = () => {
   );
 
   return (
-    <div className='flex h-screen overflow-hidden'>
+    <div className='flex h-screen overflow-hidden mt-10 lg:mt-0'>
       {/* Sidebar */}
       <div
         className={`fixed lg:relative inset-y-0 left-0 w-64 bg-white shadow-xl z-40 lg:translate-x-0 transform ${
@@ -69,7 +69,7 @@ const MainPage = () => {
           onClick={toggleSidebar}
           aria-label='Toggle sidebar'
         >
-          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
 
         {location.pathname === "/MainPage" ? (

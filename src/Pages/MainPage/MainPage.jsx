@@ -42,7 +42,7 @@ const MainPage = () => {
   );
 
   return (
-    <div className='flex h-screen overflow-hidden'>
+    <div className='flex h-screen overflow-hidden mt-14 lg:mt-0'>
       {/* Sidebar */}
       <div
         className={`fixed lg:relative inset-y-0 left-0 w-64 bg-white shadow-xl z-40 lg:translate-x-0 transform ${
