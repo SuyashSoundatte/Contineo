@@ -28,22 +28,28 @@ const StudentMarks = () => {
           }
         );
 
-        console.log(response.data);
-        console.log(response.data.message.recordset)
-        // Ensure correct data extraction
-        if (response.data?.message?.recordset) {
-          setData(response.data.message.recordset);
+        const resultMarks = response.data.data.result_marks || [];
+        console.log("API response result_marks:", resultMarks);
+        
+        if (resultMarks.length > 0) {
+          // Ensure data is in a format compatible with the Table component
+          // Add required fields for filtering if they don't exist
+          const processedData = resultMarks.map(record => ({
+            ...record,
+            // Add these fields for the filter to work with our custom data
+            subject: record.Exam_Name || "",
+            subtopics: "",
+            title: `Marks: ${record.marks}` || ""
+          }));
+          
+          setData(processedData);
 
           // Calculate average marks
-          const totalMarks = response.data.message.recordset.reduce(
+          const totalMarks = resultMarks.reduce(
             (sum, record) => sum + parseFloat(record.marks),
             0
           );
-          const avgMarks =
-            response.data.message.recordset.length > 0
-              ? totalMarks / response.data.message.recordset.length
-              : 0;
-
+          const avgMarks = totalMarks / resultMarks.length;
           setAverageMarks(avgMarks);
         } else {
           setError("No exam records found.");
@@ -58,24 +64,29 @@ const StudentMarks = () => {
     fetchData();
   }, [phone]);
 
+  // Log when data changes
+  useEffect(() => {
+    console.log("Data state updated:", data);
+  }, [data]);
+
   const customColumns = [
     { name: "Sr No", selector: (row, index) => index + 1, sortable: false },
     { name: "Exam Name", selector: (row) => row.Exam_Name, sortable: true },
     {
       name: "Marks",
       selector: (row) => (
-        <div className='flex items-center'>
-          <span className='mr-2'>{row.marks}</span>
-          <div className='w-24 bg-gray-200 rounded-full h-2'>
+        <div className="flex items-center">
+          <span className="mr-2">{row.marks}</span>
+          <div className="w-24 bg-gray-200 rounded-full h-2">
             <div
               className={`h-full rounded-full ${
                 row.marks >= 90
                   ? "bg-green-500"
                   : row.marks >= 80
-                    ? "bg-blue-500"
-                    : row.marks >= 70
-                      ? "bg-yellow-500"
-                      : "bg-red-500"
+                  ? "bg-blue-500"
+                  : row.marks >= 70
+                  ? "bg-yellow-500"
+                  : "bg-red-500"
               }`}
               style={{ width: `${row.marks}%` }}
             ></div>
@@ -87,27 +98,32 @@ const StudentMarks = () => {
   ];
 
   return (
-    <div className='p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md'>
+    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md">
       {loading ? (
-        <p className='text-center text-gray-500'>Loading...</p>
+        <p className="text-center text-gray-500">Loading...</p>
       ) : error ? (
-        <p className='text-center text-red-500'>{error}</p>
+        <p className="text-center text-red-500">{error}</p>
       ) : (
         <>
-          <div className='flex justify-between items-center mb-6'>
-            <h2 className='text-2xl font-semibold text-gray-800'>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800">
               Student Exam Marks
             </h2>
-            <div className='bg-blue-50 px-4 py-2 rounded-lg'>
-              <span className='text-sm text-gray-600'>Average Score:</span>
-              <span className='ml-2 font-bold text-blue-600'>
+            <div className="bg-blue-50 px-4 py-2 rounded-lg">
+              <span className="text-sm text-gray-600">Average Score:</span>
+              <span className="ml-2 font-bold text-blue-600">
                 {averageMarks.toFixed(1)}%
               </span>
             </div>
           </div>
 
-          <div className='bg-gray-50 rounded-lg p-4 mb-6'>
-            <Table records={data} customColumns={customColumns} loading={loading} error={error} />
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <Table 
+              records={data} 
+              customColumns={customColumns} 
+              loading={loading}
+              error={error}
+            />
           </div>
         </>
       )}
