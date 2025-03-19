@@ -29,6 +29,7 @@
     "react-router-dom": "^7.1.1",
     "react-table": "^7.8.0",
     "react-toastify": "^11.0.3",
+    "recharts": "^2.15.1",
     "shadcn-ui": "^0.9.4",
     "tailwind-merge": "^2.6.0"
   },
