@@ -59,6 +59,14 @@ const ParentDashboard = () => {
             <ul className='ml-4 space-y-2'>
               <li>
                 <Link
+                  to='/parent'
+                  className={linkClass("/parent")}
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
                   to='/parent/StudentMarks'
                   className={linkClass("/parent/StudentMarks")}
                 >

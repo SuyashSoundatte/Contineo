@@ -4,6 +4,7 @@ import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Menu, X } from "lucide-react";
 import ParentDashboard from "../../components/ParentDashboard";
+import StudentInfoCard from "../../components/StudentInfo";
 
 const MainPage = () => {
   const { isLoggedIn, role } = useAuth();
@@ -74,21 +75,24 @@ const MainPage = () => {
 
         {location.pathname === "/parent" ? (
           <div className='container mx-auto px-4 sm:px-6 py-8'>
-            <header className='mb-10 text-center'>
-              <h1 className='text-3xl sm:text-4xl font-bold text-indigo-700 mb-2'>
-                Academics Management System
+            <header className='mb-10'>
+              <h1 className='text-xl sm:text-xl font-bold text-indigo-700 mb-2'>
+                DKTE Academy , Ichalkaranji
               </h1>
               <p className='text-lg sm:text-xl text-gray-600'>
                   
               </p>
             </header>
             {/* Render Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {renderFormCard(
                 "View Marks",
                 "View Marks of Student Day wise",
                 "/parent/StudentMarks"
               )}
+            </div> */}
+            <div>
+              <StudentInfoCard />
             </div>
           </div>
         ) : (
