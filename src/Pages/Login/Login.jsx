@@ -11,7 +11,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [loginType, setLoginType] = useState(localStorage.getItem("loginType") || "user");
 
-  const { phone, setPhone, isLoggedIn, login } = useAuth();
+  const { mobile, setMobile, isLoggedIn, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const Login = () => {
 
     try {
       const endpoint = loginType === "user" ? "login" : "parentLogin";
-      const credentials = loginType === "user" ? { email, password } : { phone, password };
+      const credentials = loginType === "user" ? { email, password } : { mobile, password };
 
       const response = await axios.post(`http://localhost:3000/api/v1/${endpoint}`, credentials, {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -40,8 +40,8 @@ const Login = () => {
       localStorage.setItem("loginType", loginType);
 
       if (loginType === "parent") {
-        localStorage.setItem("phone", phone); // Store phone only for parent login
-        setPhone(phone);
+        localStorage.setItem("mobile", mobile); // Store mobile only for parent login
+        setMobile(mobile);
       }
 
       login(token);
@@ -97,8 +97,8 @@ const Login = () => {
                   label="Mobile Number"
                   type="tel"
                   placeholder="Enter your mobile number"
-                  value={phone || ""} // Prevent uncontrolled input warnings
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={mobile || ""} // Prevent uncontrolled input warnings
+                  onChange={(e) => setMobile(e.target.value)}
                 />
               )}
 

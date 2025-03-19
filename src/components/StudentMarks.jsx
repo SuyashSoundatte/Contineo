@@ -19,7 +19,7 @@ const StudentMarks = () => {
   const [totalMarks, setTotalMarks] = useState(0);
   const [viewDetails, setViewDetails] = useState(false);
 
-  const { phone } = useAuth();
+  const { mobile } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +32,7 @@ const StudentMarks = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/getStuByRoll/${phone}`,
+          `http://localhost:3000/api/v1/getStuByRoll/${mobile}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -76,7 +76,7 @@ const StudentMarks = () => {
     };
 
     fetchData();
-  }, [phone]);
+  }, [mobile]);
 
   const customColumns = [
     {

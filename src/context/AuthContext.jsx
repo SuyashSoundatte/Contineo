@@ -4,15 +4,15 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [phone, setPhone] = useState(localStorage.getItem("phone") || ""); // Persist phone
+  const [mobile, setMobile] = useState(localStorage.getItem("mobile") || ""); // Persist mobile
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const storedPhone = localStorage.getItem("phone");
+    const storedmobile = localStorage.getItem("mobile");
     
     setIsLoggedIn(!!token);
-    if (storedPhone) setPhone(storedPhone); // Restore phone on refresh
+    if (storedmobile) setMobile(storedmobile); // Restore mobile on refresh
 
     setIsLoading(false);
   }, []);
@@ -25,9 +25,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("loginType");
-    localStorage.removeItem("phone"); // Clear phone on logout
+    localStorage.removeItem("mobile"); // Clear mobile on logout
     setIsLoggedIn(false);
-    setPhone("");
+    setMobile("");
   };
 
   if (isLoading) {
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, login, logout, phone, setPhone }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, login, logout, mobile, setMobile }}>
       {children}
     </AuthContext.Provider>
   );

@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { UserCircle } from "lucide-react";
 
 const StudentInfoCard = () => {
-  const { phone } = useAuth();
+  const { mobile } = useAuth();
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ const StudentInfoCard = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/getStuByRoll/${phone}`,
+          `http://localhost:3000/api/v1/getStuByRoll/${mobile}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -37,7 +37,7 @@ const StudentInfoCard = () => {
     };
 
     fetchData();
-  }, [phone]);
+  }, [mobile]);
 
   if (loading) {
     return (
