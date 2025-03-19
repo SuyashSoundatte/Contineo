@@ -3,11 +3,18 @@ import axios from "axios";
 import Table from "./Table";
 import { useAuth } from "../context/AuthContext";
 
+const MAX_MARKS_MAPPING = {
+  NEET: 720,
+  JEE: 300,
+  CET: 200, // Add more if needed
+};
+
 const StudentMarks = () => {
   const [data, setData] = useState([]);
   const [averageMarks, setAverageMarks] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [totalMarks, setTotalMarks] = useState(0);
 
   const { phone } = useAuth();
 
@@ -29,29 +36,32 @@ const StudentMarks = () => {
         );
 
         const resultMarks = response.data.data.result_marks || [];
-        console.log("API response result_marks:", resultMarks);
         
         if (resultMarks.length > 0) {
-          // Process the data to match our needed format
-          const processedData = resultMarks.map(record => ({
-            examName: record.Exam_Name || "",
-            marks: parseFloat(record.marks),
-            date: record.Exam_Date,
-            // Add these properties for Table component's filter to work
-            subject: record.Exam_Name || "",
-            subtopics: "",
-            title: `Marks: ${record.marks}` || ""
-          }));
-          
+          const processedData = resultMarks.map(record => {
+            const examName = record.Exam_Name || "";
+            const totalMarks = MAX_MARKS_MAPPING[examName] || 100; // Default to 100 if not found
+            setTotalMarks(totalMarks);
+            const marks = parseFloat(record.marks);
+            return {
+              examName,
+              marks,
+              date: record.Exam_Date,
+              subject: examName,
+              subtopics: "",
+              title: `Marks: ${marks}`,
+              percentage: (marks / totalMarks) * 100, // Normalize marks based on exam max score
+            };
+          });
+
           setData(processedData);
 
-          // Calculate average marks
-          const totalMarks = processedData.reduce(
-            (sum, record) => sum + record.marks,
+          // Calculate average marks as a percentage of each exam's total marks
+          const totalPercentage = processedData.reduce(
+            (sum, record) => sum + record.percentage,
             0
           );
-          const avgMarks = totalMarks / processedData.length;
-          setAverageMarks(avgMarks);
+          setAverageMarks(totalPercentage / processedData.length);
         } else {
           setError("No exam records found.");
         }
@@ -89,15 +99,15 @@ const StudentMarks = () => {
           <div className="w-24 bg-gray-200 rounded-full h-2">
             <div
               className={`h-full rounded-full ${
-                row.marks >= 90
+                row.percentage >= 80
                   ? "bg-green-500"
-                  : row.marks >= 80
+                  : row.percentage >= 60
                   ? "bg-blue-500"
-                  : row.marks >= 70
+                  : row.percentage >= 40
                   ? "bg-yellow-500"
                   : "bg-red-500"
               }`}
-              style={{ width: `${row.marks}%` }}
+              style={{ width: `${row.percentage}%` }}
             ></div>
           </div>
         </div>
@@ -107,10 +117,8 @@ const StudentMarks = () => {
   ];
 
   // Calculate highest and lowest scores
-  const highestScore = data.length > 0 ? Math.max(...data.map(item => item.marks)) : 0;
-  const lowestScore = data.length > 0 ? Math.min(...data.map(item => item.marks)) : 0;
-  const highestScoreExam = data.find(item => item.marks === highestScore);
-  const lowestScoreExam = data.find(item => item.marks === lowestScore);
+  const highestScoreExam = data.reduce((max, item) => (item.marks > (max?.marks || 0) ? item : max), null);
+  const lowestScoreExam = data.reduce((min, item) => (item.marks < (min?.marks || Infinity) ? item : min), null);
 
   return (
     <div className="p-6 max-w-7xl mx-auto bg-white rounded-lg shadow-md">
@@ -154,20 +162,20 @@ const StudentMarks = () => {
             />
           </div>
           
-          {data.length > 0 && (
+          {data.length > 0 && highestScoreExam && lowestScoreExam && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-medium mb-2">Highest Score</h3>
                 <div className="flex items-center">
                   <div className="p-3 bg-green-100 rounded-full mr-3">
                     <span className="text-green-700 font-bold">
-                      {highestScore}
+                      {highestScoreExam.marks} / {totalMarks}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium">{highestScoreExam?.examName}</p>
+                    <p className="font-medium">{highestScoreExam.examName}</p>
                     <p className="text-sm text-gray-500">
-                      {highestScoreExam?.date ? new Date(highestScoreExam.date).toLocaleDateString() : "N/A"}
+                      {highestScoreExam.date ? new Date(highestScoreExam.date).toLocaleDateString() : "N/A"}
                     </p>
                   </div>
                 </div>
@@ -178,13 +186,13 @@ const StudentMarks = () => {
                 <div className="flex items-center">
                   <div className="p-3 bg-yellow-100 rounded-full mr-3">
                     <span className="text-yellow-700 font-bold">
-                      {lowestScore}
+                      {lowestScoreExam.marks} / {totalMarks}
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium">{lowestScoreExam?.examName}</p>
+                    <p className="font-medium">{lowestScoreExam.examName}</p>
                     <p className="text-sm text-gray-500">
-                      {lowestScoreExam?.date ? new Date(lowestScoreExam.date).toLocaleDateString() : "N/A"}
+                      {lowestScoreExam.date ? new Date(lowestScoreExam.date).toLocaleDateString() : "N/A"}
                     </p>
                   </div>
                 </div>

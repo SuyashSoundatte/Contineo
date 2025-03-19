@@ -72,59 +72,24 @@ const MainPage = () => {
           {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
 
-        {location.pathname === "/MainPage" ? (
+        {location.pathname === "/parent" ? (
           <div className='container mx-auto px-4 sm:px-6 py-8'>
             <header className='mb-10 text-center'>
               <h1 className='text-3xl sm:text-4xl font-bold text-indigo-700 mb-2'>
                 Academics Management System
               </h1>
               <p className='text-lg sm:text-xl text-gray-600'>
-                Manage Users, Students, Teachers, and More
+                  
               </p>
             </header>
             {/* Render Cards */}
-            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {renderFormCard(
-                "Staff Create",
-                "Create new users for the system with roles and permissions.",
-                "/MainPage/UserForm"
+                "View Marks",
+                "View Marks of Student Day wise",
+                "/parent/StudentMarks"
               )}
-              {renderFormCard(
-                "Student Create",
-                "Add new students with details like name, roll number, and class.",
-                "/MainPage/StudentCreate"
-              )}
-              {renderFormCard(
-                "Student Allocation",
-                "Allocate students to different classes or groups.",
-                "/MainPage/StudentAllocate"
-              )}
-              {renderFormCard(
-                "Teacher Allocation",
-                "Allocate teachers to classes and subjects as per timetable.",
-                "/MainPage/TeacherAllocate"
-              )}
-              {renderFormCard(
-                "Class Teacher Allocation",
-                "Assign teachers as class teachers for student management.",
-                "/MainPage/ClassTeacherForm"
-              )}
-              {renderFormCard(
-                "Mentor Allocation",
-                "Allocate mentors to guide students in specific subjects.",
-                "/MainPage/MentorAllocate"
-              )}
-              {renderFormCard(
-                "Subject Master",
-                "Manage subjects and assign them to teachers.",
-                "/MainPage/SubjectForm"
-              )}
-              {renderFormCard(
-                "Attendance",
-                "Manage and track student attendance.",
-                "/MainPage/AttendanceForm"
-              )}
-            </div> */}
+            </div>
           </div>
         ) : (
           <Outlet />
