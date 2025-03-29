@@ -5,7 +5,11 @@ const API = {
   BASE_URL: import.meta.env.VITE_API_BASE_URL,
   STUDENTS: import.meta.env.VITE_STUDENT_API,
   LOGIN: "/login",
+
+
+
   PARENT_LOGIN: "/parentLogin",
+  STUDENT_BY_ROLL: "/getStuByRoll",
 };
 
 // Create a reusable Axios instance
@@ -44,6 +48,11 @@ export const apiRequest = async (method, endpoint, data = null, requiresAuth = f
 
 // **Fetch Students API Function**
 export const fetchStudents = async () => apiRequest("GET", API.STUDENTS, null, true);
+
+// **Fetch Student by Roll API Function**
+export const fetchStudentByRoll = async (mobile) =>
+  apiRequest("GET", `${API.STUDENT_BY_ROLL}/${mobile}`, null, true);
+
 
 export const loginUser = async (loginType, credentials) => {
   const endpoint = loginType === "user" ? API.LOGIN : API.PARENT_LOGIN;
