@@ -28,10 +28,7 @@ const StudentMarks = () => {
       try {
         const studentData = await fetchStudentByRoll(mobile);
         setData(studentData.student);
-        console.log(studentData.student);
-
         const resultMarks = studentData.result_marks || [];
-        console.log(resultMarks);
 
         if (resultMarks.length > 0) {
           const processedData = resultMarks.map((record) => {

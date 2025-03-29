@@ -16,7 +16,6 @@ const StudentInfoCard = () => {
       try {
         const studentData = await fetchStudentByRoll(mobile);
         setStudent(studentData.student);
-        console.log(studentData.student);
       } catch (err) {
         setError(err?.message || String(err) || "Error fetching data");
       } finally {

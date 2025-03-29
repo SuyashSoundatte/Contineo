@@ -2,15 +2,13 @@ import axios from "axios";
 
 // Define API endpoints
 const API = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL,
-  STUDENTS: import.meta.env.VITE_STUDENT_API,
-  LOGIN: "/login",
-
-
-
-  PARENT_LOGIN: "/parentLogin",
-  STUDENT_BY_ROLL: "/getStuByRoll",
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1",
+  STUDENTS: import.meta.env.VITE_STUDENT_API || "/getAllStudents",
+  LOGIN: import.meta.env.VITE_AUTH_API || "/login",
+  PARENT_LOGIN: import.meta.env.VITE_PARENT_LOGIN || "/parentLogin",
+  STUDENT_BY_ROLL: import.meta.env.VITE_STUDENT_BY_ROLL || "/getStuByRoll",
 };
+
 
 // Create a reusable Axios instance
 const api = axios.create({
@@ -59,9 +57,14 @@ export const fetchStudentResult = async (mobile) =>
 
 
 export const loginUser = async (loginType, credentials) => {
-  const endpoint = loginType === "user" ? API.LOGIN : API.PARENT_LOGIN;
+  const endpoint =
+    loginType === "user"
+      ? `${API.BASE_URL}${API.LOGIN}`
+      : `${API.BASE_URL}${API.PARENT_LOGIN}`;
+
   return apiRequest("POST", endpoint, credentials, false);
 };
+
 
 // **Logout API Function**
 export const logoutUser = async () => {
