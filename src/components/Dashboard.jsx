@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { ButtonComponent } from "./component.js";
+import { logoutUser } from "../services/api.js";
 
 const Dashboard = () => {
   const { setIsLoggedIn, isLoggedIn } = useAuth();
@@ -19,18 +20,10 @@ const Dashboard = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      await axios.get("http://localhost:3000/api/v1/logout", {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        withCredentials: true,
-      });
-
-      localStorage.removeItem("token");
+      await logoutUser();
       setIsLoggedIn(false);
     } catch (err) {
-      console.error("Error during logout:", err);
+      console.error("Logout failed:", err);
     }
   };
 
@@ -131,13 +124,12 @@ const Dashboard = () => {
             </ul>
           </div>
           <div className='space-y-4'>
-            
             <ButtonComponent
-                className='w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200'
-                onClick={handleLogout}
-              >
-                Log Out
-              </ButtonComponent>
+              className='w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200'
+              onClick={handleLogout}
+            >
+              Log Out
+            </ButtonComponent>
           </div>
         </nav>
       </div>

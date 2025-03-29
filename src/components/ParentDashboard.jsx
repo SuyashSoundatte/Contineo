@@ -4,33 +4,21 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { ButtonComponent } from "./component.js";
+import { logoutUser } from "../services/api.js";
 
 const ParentDashboard = () => {
   const { setIsLoggedIn, isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/Login");
-    }
-  }, [isLoggedIn, navigate]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      await axios.get("http://localhost:3000/api/v1/logout", {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        withCredentials: true,
-      });
-
-      localStorage.removeItem("token");
+      await logoutUser();
       setIsLoggedIn(false);
     } catch (err) {
-      console.error("Error during logout:", err);
+      console.error("Logout failed:", err);
     }
   };
 
@@ -58,10 +46,7 @@ const ParentDashboard = () => {
             </h2>
             <ul className='ml-4 space-y-2'>
               <li>
-                <Link
-                  to='/parent'
-                  className={linkClass("/parent")}
-                >
+                <Link to='/parent' className={linkClass("/parent")}>
                   Home
                 </Link>
               </li>

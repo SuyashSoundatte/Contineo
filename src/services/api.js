@@ -62,3 +62,16 @@ export const loginUser = async (loginType, credentials) => {
   const endpoint = loginType === "user" ? API.LOGIN : API.PARENT_LOGIN;
   return apiRequest("POST", endpoint, credentials, false);
 };
+
+// **Logout API Function**
+export const logoutUser = async () => {
+  try {
+    await apiRequest("GET", "/logout", null, true);
+    localStorage.removeItem("token");
+    return true; // Indicate successful logout
+  } catch (error) {
+    console.error("Error during logout:", error);
+    throw error;
+  }
+};
+
