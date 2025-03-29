@@ -53,6 +53,10 @@ export const fetchStudents = async () => apiRequest("GET", API.STUDENTS, null, t
 export const fetchStudentByRoll = async (mobile) =>
   apiRequest("GET", `${API.STUDENT_BY_ROLL}/${mobile}`, null, true);
 
+// **Fetch Student Result API Function**
+export const fetchStudentResult = async (mobile) =>
+  apiRequest("GET", `${API.STUDENT_BY_ROLL}/${mobile}`, null, true);
+
 
 export const loginUser = async (loginType, credentials) => {
   const endpoint = loginType === "user" ? API.LOGIN : API.PARENT_LOGIN;

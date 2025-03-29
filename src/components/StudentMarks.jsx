@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import MarksBarChart from "./MarksBarChart";
 import ButtonComponent from "./ButtonComponent";
 
+import { fetchStudentByRoll } from "../services/api.js";
+
 const MAX_MARKS_MAPPING = {
   NEET: 720,
   JEE: 300,
@@ -23,22 +25,13 @@ const StudentMarks = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("Token not found. Please log in again.");
-        setLoading(false);
-        return;
-      }
-
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/getStuByRoll/${mobile}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const studentData = await fetchStudentByRoll(mobile);
+        setData(studentData.student);
+        console.log(studentData.student);
 
-        const resultMarks = response.data.data.result_marks || [];
+        const resultMarks = studentData.result_marks || [];
+        console.log(resultMarks);
 
         if (resultMarks.length > 0) {
           const processedData = resultMarks.map((record) => {
@@ -53,7 +46,10 @@ const StudentMarks = () => {
               subject: record.Exam_Name || "",
               subtopics: "",
               title: `Marks: ${record.marks}`,
-              percentage: (parseFloat(record.marks) / (MAX_MARKS_MAPPING[record.Exam_Name] || 100)) * 100,
+              percentage:
+                (parseFloat(record.marks) /
+                  (MAX_MARKS_MAPPING[record.Exam_Name] || 100)) *
+                100,
             };
           });
 
@@ -69,7 +65,7 @@ const StudentMarks = () => {
           setError("No exam records found.");
         }
       } catch (err) {
-        setError(err.response?.data?.message || "Error fetching data");
+        setError(err?.message || String(err) || "Error fetching data");
       } finally {
         setLoading(false);
       }
