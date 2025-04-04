@@ -3,8 +3,8 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser"
 import GlobalErrorHandler from "./config/errorHandler.js";
+import helmet from "helmet"
 
 import ConnectDB from "./config/db.js";
 
@@ -24,10 +24,11 @@ const port = process.env.PORT || 8080;
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: '*',
     credentials: true,
   })
 );
+app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
