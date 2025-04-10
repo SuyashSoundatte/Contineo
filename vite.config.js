@@ -10,4 +10,8 @@ export default defineConfig({
     target: "esnext",  // Use the latest JavaScript version
     cssCodeSplit: true, // Optimize CSS
   },
+  server: {
+    port: 3001,
+    host: true
+  }
 })
