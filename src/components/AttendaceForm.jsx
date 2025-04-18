@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useMemo } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReactTable from './ReactTable';
 import { ButtonComponent } from './component';
+import { attendanceStudent, getStudentByStandardDivision } from '../services/api';
 
 const AttendanceForm = () => {
   const [classes, setClasses] = useState([
@@ -32,19 +32,7 @@ const AttendanceForm = () => {
 
     setIsLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error('Authentication token not found. Please log in.');
-        setIsLoading(false);
-        return;
-      }
-
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/getStudentByStdDiv/${selectedClass}/${selectedDivision}`,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      const response = await getStudentByStandardDivision(`/getStudentByStdDiv/${selectedClass}/${selectedDivision}`)
 
       // Transform students to match expected structure
       const fetchedStudents = response.data.data.map(student => ({
@@ -111,7 +99,6 @@ const AttendanceForm = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
       const payload = {
         class: selectedClass,
         division: selectedDivision,
@@ -121,17 +108,8 @@ const AttendanceForm = () => {
           present: student.present
         }))
       };
-
-      const response = await axios.post(
-        'http://localhost:3000/api/v1/attendaceStudent', 
-        payload,
-        {
-          headers: { 
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      
+      const response = await attendanceStudent(payload);
 
       toast.success(response.data.message || 'Attendance submitted successfully');
       

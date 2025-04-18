@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Input, ReactTable, ButtonComponent } from "./component.js";
+import { useState, useEffect } from "react";
+import { ReactTable, ButtonComponent } from "./component.js";
 import { useNavigate } from "react-router-dom";
 import { fetchStudents } from "../services/api.js";
 

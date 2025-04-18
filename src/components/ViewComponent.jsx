@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
-import axios from "axios"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { getUserById } from "../services/api"
 
 const ViewComponent = () => {
   const { user_id } = useParams()
@@ -27,9 +27,7 @@ const ViewComponent = () => {
         }
 
         // Correcting the template literal for URL
-        const response = await axios.get(`http://localhost:3000/api/v1/getUserById/${user_id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const response = await getUserById(user_id);
 
         if (response.data && response.data.data) {
           setUserData(response.data.data) // Only set data if it exists

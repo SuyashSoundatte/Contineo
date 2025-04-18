@@ -1,7 +1,5 @@
-import React from "react";
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { ButtonComponent } from "./component.js";
 import { logoutUser } from "../services/api.js";

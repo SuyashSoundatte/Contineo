@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { API } from "../services/api";
 
 const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSuccess }) => {
   const [files, setFiles] = useState([]);
@@ -80,11 +81,13 @@ const DocumentUploadForm = ({ userId, name, isDisabled, resetForm, onUploadSucce
     try {
       setIsUploading(true);
       setUploadProgress(0);
-  
+
       const token = localStorage.getItem("token");
       
+      if (!token) throw new Error("Token not found. Please log in again.");
+      
       const response = await axios.post(
-        "http://localhost:3000/api/v1/upload", 
+        `${API.BASE_URL}${API.VERSION}/upload`,
         formData, 
         {
           headers: {

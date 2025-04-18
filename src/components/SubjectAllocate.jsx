@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { Input, ReactTable,ButtonComponent, Select, } from './component.js';
-import { useNavigate } from 'react-router-dom';
+import { getAllTeacher } from '../services/api.js';
 
 const SubjectAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -21,9 +20,7 @@ const SubjectAllocate = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/getAllTeacher', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await getAllTeacher();
 
         console.log("Fetched Data:", response.data); // Log full response
         setRecords(response.data.data); // Set records after fetching data

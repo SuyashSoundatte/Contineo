@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { getStudentById } from "../services/api"
 import {
   Input,
-  Select,
   ButtonComponent,
   AddFiles,
 } from './component.js';
@@ -26,23 +25,9 @@ const StudentForm = () => {
  useEffect(() => {
   const fetchUserData = async () => {
     try {
-      console.log("User ID from URL:", user_id);
-
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("No token found. Please log in again.");
-        return;
-      }
       setLoading(true);
 
-      const response = await axios.get(
-        `http://localhost:3000/api/v1/getStudentId/${user_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = getStudentById(user_id)
 
       const user = response.data.data;
       console.log("Fetched user data:", user);
