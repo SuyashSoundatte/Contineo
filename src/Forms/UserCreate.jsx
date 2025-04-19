@@ -81,10 +81,10 @@ const UserCreate = () => {
       };
 
       const response = await createUser(formattedData);
-      
+      setCreatedUserId(response.id);
 
       toast.success("User created successfully!");
-      setCreatedUserId(response.data.data.id);
+      // setCreatedUserId(response.data.data.id);
       
       // Scroll to document upload section
       const documentSection = document.querySelector('#document-upload-section');

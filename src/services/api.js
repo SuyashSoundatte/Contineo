@@ -46,22 +46,23 @@ export const apiRequest = async (method, endpoint, data = null, requiresAuth = f
 
     return response.data.data; // Standardized return
   } catch (error) {
-    throw error.response?.data?.message || "API request failed.";
+    throw new Error(error.response?.data?.message || "API request failed.");
   }
 };
 
-export const fetchStudents = async () => apiRequest("GET", API.STUDENTS, null, true);
+export const fetchStudents =  () => 
+  apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/getAllStudents`, null, true);
 
-export const fetchStudentByRoll = async (mobile) =>
+export const fetchStudentByRoll =  (mobile) =>
   apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/getStuByRoll/${mobile}`, null, true);
 
-export const fetchStudentResult = async (mobile) =>
+export const fetchStudentResult =  (mobile) =>
   apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/getStuByRoll/${mobile}`, null, true);
 
-export const createStudent = async (data)=>
-  apiRequest(METHOD.POST, `${API.BASE_URL}${API.VERSION}/getStuByRoll`, data, true)
+export const createStudent =  (data)=>
+  apiRequest(METHOD.POST, `${API.BASE_URL}${API.VERSION}/createStudent`, data, true)
 
-export const loginUser = async (loginType, credentials) => {
+export const loginUser = (loginType, credentials) => {
   const endpoint =
     loginType === "user"
       ? `${API.BASE_URL}${API.VERSION}/login`
@@ -70,9 +71,9 @@ export const loginUser = async (loginType, credentials) => {
   return apiRequest("POST", endpoint, credentials, false);
 };
 
-export const logoutUser = async () => {
+export const logoutUser = () => {
   try {
-    await apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/logout`, null, true);
+    apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/logout`, null, true);
     localStorage.removeItem("token");
     return true; // Indicate successful logout
   } catch (error) {
@@ -120,16 +121,16 @@ export const getAllTeacher = async () =>
 export const addSubjectData = async(data)=>
   apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/addSubjectData`, data, true);
 
-export const getSyllabus = async()=>
+export const getSyllabus = ()=>
   apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/getSyllabus`, null, true);
 
-export const getTeacherByAllocation = async()=>
+export const getTeacherByAllocation = ()=>
   apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/getTeacherByAllocation`, null, true);
 
-export const allocateTeacherSubject = async(data)=>
+export const allocateTeacherSubject = (data)=>
   apiRequest(METHOD.PUT, `${API.BASE_URL}${API.VERSION}/allocateTeacherSubject`, data, true);
 
-export const getAllUsers = async() =>
+export const getAllUsers = () =>
   apiRequest(METHOD.GET, `${API.BASE_URL}${API.VERSION}/getAllUsers`, null, true);
 
 export const getTeacherById = async(params) =>

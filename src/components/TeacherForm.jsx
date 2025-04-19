@@ -14,9 +14,7 @@ const TeacherForm = () => {
       try {
         const response = await getAllUsers();
 
-        console.log(response);
-
-        const enrichedData = response.data.data
+        const enrichedData = response
           .filter((row) => row.role !== "Student") // Exclude users with role 'Student'
           .map((row) => {
             return {
@@ -29,7 +27,7 @@ const TeacherForm = () => {
 
         setRecords(enrichedData);
       } catch (err) {
-        setError(err.response?.data?.message || "Error fetching data");
+        setError(err.message || "Error fetching data");
       } finally {
         setLoading(false);
       }
