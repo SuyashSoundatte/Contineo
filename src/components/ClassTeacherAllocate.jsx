@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   ReactTable,
   Select,
   ButtonComponent,
 } from "../components/component.js";
-import { assignClassTeacherByStdDiv, getAllClassTeacher } from "../services/api.js";
 
 const ClassTeacherAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -23,8 +23,12 @@ const ClassTeacherAllocate = () => {
       }
 
       try {
-
-        const response = await getAllClassTeacher();
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/getAllClassTeacher",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         const enrichedData = response.data.data.map((record) => ({
           ...record,
@@ -60,13 +64,18 @@ const ClassTeacherAllocate = () => {
       return;
     }
   
-    const formatedData = {
-      userId: teacherId,
-      std: selectedStd,
-      div: selectedDiv,
-    }
     try {
-      const response = await assignClassTeacherByStdDiv(formatedData)
+      const response = await axios.post(
+        `http://localhost:3000/api/v1/assignClassTeacherByStdDiv`,
+        {
+          userId: teacherId,
+          std: selectedStd,
+          div: selectedDiv,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
   
       if (response.data.success) {
         setRecords((prevRecords) =>

@@ -6,7 +6,6 @@ import { Input, Select, ButtonComponent } from "../components/component.js";
 import DocumentUploadForm from "../components/DocumentUploadForm";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createStudent } from "../services/api.js";
 
 const StudentCreate = () => {
   const [createdUserId, setCreatedUserId] = useState(null);
@@ -58,7 +57,16 @@ const StudentCreate = () => {
         dob: formatDate(data.dob),
       };
 
-      const response = await createStudent(formattedData);
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/createStudent",
+        formattedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success("Student created successfully!");
       setCreatedUserId(response.data.data.id);

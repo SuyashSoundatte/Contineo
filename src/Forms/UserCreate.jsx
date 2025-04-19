@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -9,7 +10,6 @@ import {
   AddSubjects,
 } from "../components/component.js";
 import DocumentUploadForm from "../components/DocumentUploadForm";
-import { createUser } from "../services/api.js";
 
 const UserCreate = () => {
   const [createdUserId, setCreatedUserId] = useState(null);
@@ -80,8 +80,16 @@ const UserCreate = () => {
         subjects: addedSubjects.filter(sub => sub.name).map((sub) => sub.name),
       };
 
-      const response = await createUser(formattedData);
-      
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/createUser",
+        formattedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success("User created successfully!");
       setCreatedUserId(response.data.data.id);

@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
+  Input,
   ReactTable,
   Select,
   ButtonComponent,
   CheckboxComponent,
 } from "./component.js";
-import { assignMultipleStudentByDivsionStandard, getAllStudents } from "../services/api.js";
 
 const StudentAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -22,8 +23,20 @@ const StudentAllocate = () => {
   }, []);
 
   const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Token not found. Please log in again.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await getAllStudents();
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/getAllStudents",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const enrichedData = response.data.data.map((record) => ({
         ...record,
@@ -96,14 +109,19 @@ const StudentAllocate = () => {
   
       // Extract stu_id values and convert them to integers
       const studentIds = selectedRecords.map(record => parseInt(record.stu_id));
-      // console.log(studentIds);
-
-      const formatedData = {
-        studentIds: studentIds,
-        div: selectedDiv
-      }
+      console.log(studentIds);
       // Make single API call with all student IDs
-      await assignMultipleStudentByDivsionStandard(formatedData);
+      await axios.post(
+        "http://localhost:3000/api/v1/assignMultipleStudentByDivStd",
+        {
+          studentIds: studentIds,
+          div: selectedDiv
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
       await fetchData();
       setSelectedStudents([]);
       setSuccess("Students successfully allocated to division.");

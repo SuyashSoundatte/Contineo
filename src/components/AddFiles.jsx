@@ -1,10 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import {
   ButtonComponent,
   Input,
   Select,
 } from "./component.js";
-import { fileUpload } from "../services/api.js";
 
 const AddFiles = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,6 +32,7 @@ const AddFiles = () => {
     setFile(e.target.files[0]); // Get the selected file
   };
 
+  // Add file to the uploadedFiles array
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -50,7 +51,15 @@ const AddFiles = () => {
       formData.append("file", file); // Add the file
 
       // Send data using axios
-      const response = await fileUpload(formData);
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure the request is treated as multipart
+          },
+        }
+      );
 
       console.log("Response:", response.data);
       alert("File uploaded successfully!");

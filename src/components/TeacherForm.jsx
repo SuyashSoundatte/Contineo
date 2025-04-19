@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ButtonComponent, ReactTable } from "./component.js";
-import { getAllUsers } from "../services/api.js";
 
 const TeacherForm = () => {
   const [records, setRecords] = useState([]);
@@ -11,10 +11,22 @@ const TeacherForm = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await getAllUsers();
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Token not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
 
-        console.log(response);
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/getAllUsers",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        console.log(response.data.data);
 
         const enrichedData = response.data.data
           .filter((row) => row.role !== "Student") // Exclude users with role 'Student'
@@ -24,8 +36,6 @@ const TeacherForm = () => {
               role: row.role === "OfficeStaff" ? "Office Staff" : "Teacher", // Map roles
             };
           });
-
-          console.log(enrichedData);
 
         setRecords(enrichedData);
       } catch (err) {

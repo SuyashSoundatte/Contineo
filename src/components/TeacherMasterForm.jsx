@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Input, ButtonComponent, AddFiles } from "./component.js";
-import { getTeacherById } from "../services/api"
+import axios from "axios";
+import { Input, Select, ButtonComponent, AddFiles } from "./component.js";
 
 const TeacherMasterForm = () => {
   const { user_id } = useParams(); // Access the userId parameter from the URL
@@ -30,7 +30,14 @@ const TeacherMasterForm = () => {
         }
         setLoading(true);
 
-        const response = await getTeacherById();
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/getTeacherById/${user_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const user = response.data.data;
         console.log(user);

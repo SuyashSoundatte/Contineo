@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { ButtonComponent } from "../components/component.js";
 
 const Modal = ({ isOpen, onClose, onConfirm, teacher }) => {

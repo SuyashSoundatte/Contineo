@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
+  Input,
   ReactTable,
   Select,
   ButtonComponent,
   Modal,
 } from "../components/component.js";
-import { getAllTeacher, getTeacherByAllocation, allocateTeacherSubject } from "../services/api.js";
 
 const TeacherAllocate = () => {
   const [records, setRecords] = useState([]);
@@ -25,8 +26,20 @@ const TeacherAllocate = () => {
   // Fetch all teachers initially
   useEffect(() => {
     const fetchAllTeachers = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Token not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await getAllTeacher();
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/getAllTeacher",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         const enrichedData = response.data.data.map((record) => ({
           ...record,
@@ -61,8 +74,20 @@ const TeacherAllocate = () => {
       }
 
       setLoading(true);
+      const token = localStorage.getItem("token");
+
       try {
-        const response = await getTeacherByAllocation();
+        const response = await axios.post(
+          "http://localhost:3000/api/v1/getTeacherByAllocation",
+          {
+            std: selectedStd,
+            div: selectedDiv,
+            subject: selectedSubject,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         setAllocatedTeachers(response.data.data || []);
         setError(null);
@@ -107,14 +132,23 @@ const TeacherAllocate = () => {
       return;
     }
 
-    const formatedData = {
-      teacherId: selectedTeacher.teacher_id,
-      std: selectedStd,
-      div: selectedDiv,
-      subject: selectedSubject,
-    }
     try {
-      await allocateTeacherSubject(formatedData)
+      const token = localStorage.getItem("token");
+      await axios.put(
+        "http://localhost:3000/api/v1/allocateTeacherSubject",
+        {
+          teacherId: selectedTeacher.teacher_id,
+          std: selectedStd,
+          div: selectedDiv,
+          subject: selectedSubject,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       alert("Teacher allocated successfully!");
 
       // Refresh the allocated teachers list

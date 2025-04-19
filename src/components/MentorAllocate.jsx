@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { ReactTable, Select, ButtonComponent } from "../components/component.js";
-import { assignMentorByStandardDivision, getAllMentors } from "../services/api.js";
+  import React, { useState, useEffect } from "react";
+  import axios from "axios";
+  import { ReactTable, Select, ButtonComponent } from "../components/component.js";
 
   const MentorAllocate = () => {
     const [records, setRecords] = useState([]);
@@ -19,7 +19,12 @@ import { assignMentorByStandardDivision, getAllMentors } from "../services/api.j
         }
 
         try {
-          const response = await getAllMentors();
+          const response = await axios.get(
+            "http://localhost:3000/api/v1/getAllMentors",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
 
           setRecords(response.data.data);
           console.log(response.data.data);
@@ -52,15 +57,25 @@ import { assignMentorByStandardDivision, getAllMentors } from "../services/api.j
         alert("This mentor is already assigned to the selected standard and division.");
         return;
       }
-
-      const formatedData = {
-        userId: mentorId,
-        std: selectedStd,
-        div: selectedDiv,
+    
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Token not found. Please log in again.");
+        return;
       }
     
       try {
-        const response = await assignMentorByStandardDivision(formatedData);
+        const response = await axios.post(
+          "http://localhost:3000/api/v1/assignMentorByStdDiv",
+          {
+            userId: mentorId,
+            std: selectedStd,
+            div: selectedDiv,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
     
         if (response.data.success) {
           setRecords((prevRecords) =>

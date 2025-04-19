@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Table from "./Table";
 import { useAuth } from "../context/AuthContext";
 import MarksBarChart from "./MarksBarChart";
