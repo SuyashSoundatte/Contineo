@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Input,
   Select,
-  ReactTable,
   ButtonComponent,
   Table,
 } from "./component.js";
+import { addSubjectData, getSyllabus } from "../services/api.js";
 
 const SubjectForm = () => {
   // State for form inputs and data
-  const [subjects, setSubjects] = useState([]);
+  // const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [topics, setTopics] = useState([]);
   const [currentTopic, setCurrentTopic] = useState("");
@@ -184,16 +183,7 @@ const SubjectForm = () => {
         return;
       }
 
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/addSubjectData",
-        submitData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await addSubjectData(submitData);
 
       // Success handling
       toast.success(
@@ -228,23 +218,7 @@ const SubjectForm = () => {
     const fetchSubjects = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setError("Token not found. Please log in again.");
-          console.error("No token found");
-          toast.error("Authentication token not found. Please log in again.");
-          return;
-        }
-  
-        const response2 = await axios.get(
-          "http://localhost:3000/api/v1/getSyllabus",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response2 = await getSyllabus();
   
         if (!response2.data || !response2.data.data) {
           console.error("Invalid response format:", response2);
