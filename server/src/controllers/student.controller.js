@@ -79,7 +79,7 @@ const createStudent = asyncHandler(async (req, res) => {
     INSERT INTO Students (user_id, roll_no, std)
     VALUES (@UserId, @RollNo, @ClassStd);
   `;
-  console.log(userId);
+  // console.log(userId);
   const studentParams = [
     { name: "UserId", value: userId },
     { name: "RollNo", value: roll_no },

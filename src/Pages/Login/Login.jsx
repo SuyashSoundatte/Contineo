@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Input, ButtonComponent } from "../../components/component.js";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../services/api.js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,33 +21,30 @@ const Login = () => {
     }
   }, [isLoggedIn, navigate]);
 
+  // Login handler function
   const loginHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const endpoint = loginType === "user" ? "login" : "parentLogin";
-      const credentials = loginType === "user" ? { email, password } : { mobile, password };
+      const credentials =
+        loginType === "user" ? { email, password } : { mobile, password };
 
-      const response = await axios.post(`http://localhost:3000/api/v1/${endpoint}`, credentials, {
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        withCredentials: true,
-      });
+      const data = await loginUser(loginType, credentials);
+      const token = data.token;
 
-      const token = response.data.data.token;
       localStorage.setItem("token", token);
       localStorage.setItem("loginType", loginType);
 
       if (loginType === "parent") {
-        localStorage.setItem("mobile", mobile); // Store mobile only for parent login
-        setMobile(mobile);
+        localStorage.setItem("mobile", mobile);
       }
 
       login(token);
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
-      console.error("Error during login:", err);
+      setError(err || "Invalid credentials. Please try again.");
+      console.error("Login error:", err);
     } finally {
       setLoading(false);
     }

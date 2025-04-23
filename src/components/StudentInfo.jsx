@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { UserCircle } from "lucide-react";
+import { fetchStudentByRoll } from "../services/api.js";
 
 const StudentInfoCard = () => {
   const { mobile } = useAuth();
@@ -12,32 +12,19 @@ const StudentInfoCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("Token not found. Please log in again.");
-        setLoading(false);
-        return;
-      }
-
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/getStuByRoll/${mobile}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        setStudent(response.data.data.student);
-        console.log(response.data.data.student);
+        const studentData = await fetchStudentByRoll(mobile);
+        setStudent(studentData.student);
       } catch (err) {
-        setError(err.response?.data?.message || "Error fetching data");
+        setError(err?.message || String(err) || "Error fetching data");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, [mobile]);
+  
 
   if (loading) {
     return (

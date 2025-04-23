@@ -1,11 +1,11 @@
 // StudentCreate.js
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { Input, Select, ButtonComponent } from "../components/component.js";
 import DocumentUploadForm from "../components/DocumentUploadForm";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createStudent } from "../services/api.js";
 
 const StudentCreate = () => {
   const [createdUserId, setCreatedUserId] = useState(null);
@@ -57,19 +57,10 @@ const StudentCreate = () => {
         dob: formatDate(data.dob),
       };
 
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/createStudent",
-        formattedData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      const response = await createStudent(formattedData);
+      // console.log(response)
       toast.success("Student created successfully!");
-      setCreatedUserId(response.data.data.id);
+      setCreatedUserId(response.id);
       
       // Scroll to document upload section
       const documentSection = document.querySelector('#document-upload-section');
@@ -77,7 +68,7 @@ const StudentCreate = () => {
         documentSection.scrollIntoView({ behavior: 'smooth' });
       }
     } catch (error) {
-      console.error("Error creating student:", error.response?.data || error.message);
+      console.error(error.message);
       toast.error("Failed to create student. Please try again.");
     }
   };
