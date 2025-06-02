@@ -35,7 +35,7 @@ const AttendanceForm = () => {
       const response = await getStudentByStandardDivision(`/getStudentByStdDiv/${selectedClass}/${selectedDivision}`)
 
       // Transform students to match expected structure
-      const fetchedStudents = response.data.data.map(student => ({
+      const fetchedStudents = response.map(student => ({
         id: student.stu_id,
         user_id: student.roll_no,
         fname: student.fname,
@@ -46,6 +46,7 @@ const AttendanceForm = () => {
       }));
 
       setStudents(fetchedStudents);
+      console.log(fetchedStudents)
       setShowAttendance(true);
     } catch (error) {
       console.error('Error fetching students:', error);

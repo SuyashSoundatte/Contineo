@@ -1,65 +1,72 @@
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { getUserById } from "../services/api"
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getUserById } from "../services/api";
 
 const ViewComponent = () => {
-  const { user_id } = useParams()
-  const [userData, setUserData] = useState({
-    fname: "",
-    mname: "",
-    lname: "",
-    email: "",
-    phone: "",
-    address: "",
-    gender: "",
-    dob: "",
-    role: "",
-  })
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { user_id } = useParams();
+  const [userData, setUserData] = useState(null); // Initialize as null
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true; // Flag to track mounted state
+
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token");
         if (!token) {
-          throw new Error("Token not found. Please log in again.")
+          throw new Error("Token not found. Please log in again.");
         }
 
-        // Correcting the template literal for URL
         const response = await getUserById(user_id);
+        console.log("API Response:", response); // Debug log
 
-        if (response.data && response.data.data) {
-          setUserData(response.data.data) // Only set data if it exists
-        } else {
-          throw new Error("User data not found.")
+        // Handle different response structures
+        const responseData = response?.data?.data || response?.data || response;
+
+        if (!responseData || typeof responseData !== "object") {
+          throw new Error("Invalid user data format");
         }
-        
-        console.log(response.data.data)
-        setLoading(false)
-      } catch (error) {
-        console.error("Failed to fetch user data:", error)
-        setError(error.message)
-        setLoading(false)
-      }
-    }
 
-    fetchData()
-  }, [user_id])
+        if (isMounted) {
+          setUserData(responseData);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+        if (isMounted) {
+          setError(error.message);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false; // Cleanup function
+    };
+  }, [user_id]);
 
   const InfoItem = ({ label, value }) => (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-      <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-gray-600 mb-1">
+        {label}
+      </label>
       <p className="text-lg text-gray-800">{value || "N/A"}</p>
     </div>
-  )
+  );
 
   if (loading) {
-    return <div className="text-center py-8">Loading...</div>
+    return <div className="text-center py-8">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-center py-8 text-red-600">{error}</div>
+    return <div className="text-center py-8 text-red-600">{error}</div>;
+  }
+
+  if (!userData) {
+    return <div className="text-center py-8">No user data available</div>;
   }
 
   return (
@@ -83,7 +90,7 @@ const ViewComponent = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ViewComponent
+export default ViewComponent;

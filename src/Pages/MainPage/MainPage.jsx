@@ -75,10 +75,10 @@ const MainPage = () => {
           <div className='container mx-auto px-4 sm:px-6 py-8'>
             <header className='mb-10 text-center'>
               <h1 className='text-3xl sm:text-4xl font-bold text-indigo-700 mb-2'>
-                Academics Management System
+                Academix Portal
               </h1>
               <p className='text-lg sm:text-xl text-gray-600'>
-                Manage Users, Students, Teachers, and More
+                Manage Users, Students, Teachers, and More...
               </p>
             </header>
             {/* Render Cards */}

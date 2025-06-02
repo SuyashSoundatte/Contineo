@@ -28,7 +28,7 @@ const TeacherAllocate = () => {
       try {
         const response = await getAllTeacher();
 
-        const enrichedData = response.data.data.map((record) => ({
+        const enrichedData = response.map((record) => ({
           ...record,
           selected: false,
         }));

@@ -21,7 +21,7 @@ const SubjectForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [records, setRecords] = useState([]);
   const [error, setError] = useState(null);
-  
+
 
   const Sbcolumns = [
     {
@@ -215,51 +215,65 @@ const SubjectForm = () => {
   };
 
   useEffect(() => {
+    let isMounted = true; // Flag to prevent state updates if component unmounts
+
     const fetchSubjects = async () => {
       setIsLoading(true);
       try {
-        const response2 = await getSyllabus();
-  
-        if (!response2.data || !response2.data.data) {
-          console.error("Invalid response format:", response2);
-          throw new Error("Invalid response format");
+        const response = await getSyllabus();
+        console.log("API Response:", response); // Debug log
+
+        // Handle different response structures
+        const responseData = Array.isArray(response)
+          ? response
+          : response?.data?.data || response?.data || response;
+
+        if (!Array.isArray(responseData)) {
+          console.error("Invalid response format - expected array:", response);
+          throw new Error("Invalid response format - expected array");
         }
-  
-        // Enriching and organizing data with detailed logging
-        const enrichedData = response2.data.data.map((row) => {
-          return {
-            sub_id: row.sub_id,
-            subject: row.subject,
-            title: row.title,
-            subtopics: Array.isArray(row.subtopics)
-              ? row.subtopics.join(", ")
-              : typeof row.subtopics === "string"
+
+        // Enriching and organizing data
+        const enrichedData = responseData.map((row) => ({
+          sub_id: row.sub_id || row.id || '',
+          subject: row.subject || '',
+          title: row.title || row.topic || '',
+          subtopics: Array.isArray(row.subtopics)
+            ? row.subtopics.join(", ")
+            : typeof row.subtopics === 'string'
               ? row.subtopics
-              : "",
-          };
-        });
-  
-        setRecords(enrichedData);
-  
+              : '',
+        }));
+
+        if (isMounted) {
+          setRecords(enrichedData);
+        }
+
       } catch (error) {
-        setError(error.response?.data?.message || "Error fetching data");
-        const errorMessage =
-          error.response?.data?.message ||
-          "An error occurred while fetching subjects";
-        toast.error(errorMessage);
+        console.error("Fetch error:", error);
+        if (isMounted) {
+          setError(error.message);
+          toast.error(error.message || "Error fetching syllabus data");
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
-  
+
     fetchSubjects();
+
+    return () => {
+      isMounted = false; // Cleanup function
+    };
   }, []);
-  
+
   // Log `records` whenever it changes
   useEffect(() => {
     console.log("Updated records:", records);
   }, [records]);
-  
+
 
   return (
     <div className='p-8 max-w-7xl mx-auto font-sans bg-gray-50 min-h-screen'>
@@ -360,11 +374,10 @@ const SubjectForm = () => {
           <ButtonComponent
             type='submit'
             disabled={isSubmitting}
-            className={`mt-8 px-8 py-3 rounded-md text-white transition duration-150 ease-in-out ${
-              isSubmitting
+            className={`mt-8 px-8 py-3 rounded-md text-white transition duration-150 ease-in-out ${isSubmitting
                 ? "bg-gray-500 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            }`}
+              }`}
           >
             {isSubmitting ? "Saving..." : "Save Subject Data"}
           </ButtonComponent>
